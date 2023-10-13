@@ -167,12 +167,14 @@
 	for(var/turf/T in changedturfs)
 		T.update_icon(1)
 
+//The below contains the xenoarcheology spawning logic. Trying to read it on your own will cause confusion and headache.
+//For a detailed and properly documented version, please see the Xenoarch subsystem file under the proc called SetupXenoarch.
 /datum/rogue/zonemaster/proc/place_resources(var/turf/simulated/mineral/M)
 	#define XENOARCH_SPAWN_CHANCE 0.3
 	#define DIGSITESIZE_LOWER 4
 	#define DIGSITESIZE_UPPER 12
-	#define ARTIFACTSPAWNNUM_LOWER 6
-	#define ARTIFACTSPAWNNUM_UPPER 12 //Replace with difficulty-based ones.
+	#define ARTIFACTSPAWNNUM_LOWER 2 //This is how many artifacts spawn per rogue mining asteroid.
+	#define ARTIFACTSPAWNNUM_UPPER 4 //This was 6-12 before, but 2-4 seems more appropriate given rogue mining is infinite.
 
 	if(!M.mineral && prob(rm_controller.diffstep_chances[rm_controller.diffstep])) //Difficulty translates directly into ore chance
 		rm_controller.dbg("ZM(par): Adding mineral to [M.x],[M.y].")

@@ -97,7 +97,7 @@
 	if(istype(W, /obj/item/disk/body_record/)) //Traitgenes Storing the entire body record
 		if(!diskette)
 			user.drop_item()
-			W.loc = src
+			W.forceMove(src)
 			diskette = W
 			to_chat(user, "You insert [W].")
 			SStgui.update_uis(src)
@@ -154,17 +154,18 @@
 			if(pod.efficiency > 5)
 				canpodautoprocess = 1
 
+			var/mob/living/L = pod.occupant?.resolve()
 			var/status = "idle"
 			if(pod.mess)
 				status = "mess"
-			else if(pod.occupant && !(pod.stat & NOPOWER))
+			else if(L && !(pod.stat & NOPOWER))
 				status = "cloning"
 			tempods.Add(list(list(
 				"pod" = "\ref[pod]",
 				"name" = sanitize(capitalize(pod.name)),
 				"biomass" = pod.get_biomass(),
 				"status" = status,
-				"progress" = (pod.occupant && pod.occupant.stat != DEAD) ? pod.get_completion() : 0
+				"progress" = (L && L.stat != DEAD) ? pod.get_completion() : 0
 			)))
 			data["pods"] = tempods
 
@@ -294,7 +295,7 @@
 					set_temp("Successfully saved to disk.", "success")
 				if("eject")
 					if(!isnull(diskette))
-						diskette.loc = loc
+						diskette.forceMove(get_turf(src))
 						diskette = null
 		if("refresh")
 			SStgui.update_uis(src)
@@ -407,7 +408,8 @@
 		return
 
 	for(var/obj/machinery/clonepod/pod in pods)
-		if(pod.occupant && pod.occupant.mind == subject.mind)
+		var/mob/living/L = pod.occupant?.resolve()
+		if(L && L.mind == subject.mind)
 			set_scan_temp("Subject already getting cloned.")
 			SStgui.update_uis(src)
 			return

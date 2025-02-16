@@ -4430,6 +4430,7 @@
 #include "code\unit_tests\reagent_tests.dm"
 #include "code\unit_tests\recipe_tests.dm"
 #include "code\unit_tests\research_tests.dm"
+#include "code\unit_tests\sins_against_man_and_god.dm"
 #include "code\unit_tests\sqlite_tests.dm"
 #include "code\unit_tests\subsystem_tests.dm"
 #include "code\unit_tests\unit_test.dm"

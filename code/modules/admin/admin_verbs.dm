@@ -453,7 +453,7 @@
 	set category = "Admin.Game"
 	if(holder)
 		var/list/jobs = list()
-		for (var/datum/job/J in job_master.occupations)
+		for (var/datum/job/J in SSoccupations.occupations)
 			if (J.current_positions >= J.total_positions && J.total_positions != -1)
 				jobs += J.title
 		if (!jobs.len)
@@ -461,7 +461,7 @@
 			return
 		var/job = tgui_input_list(usr, "Please select job slot to free", "Free job slot", jobs)
 		if (job)
-			job_master.FreeRole(job)
+			SSoccupations.FreeRole(job)
 			message_admins("A job slot for [job] has been opened by [key_name_admin(usr)]")
 			return
 

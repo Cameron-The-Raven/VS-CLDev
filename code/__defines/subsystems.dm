@@ -123,6 +123,7 @@ var/global/list/runlevel_flags = list(RUNLEVEL_LOBBY, RUNLEVEL_SETUP, RUNLEVEL_G
 #define INIT_ORDER_DBCORE			39
 #define INIT_ORDER_MEDIA_TRACKS		38 // Gotta get that lobby music up, yo
 #define INIT_ORDER_INPUT			37
+#define INIT_ORDER_OCCUPATIONS		36
 #define INIT_ORDER_CHEMISTRY		35
 #define INIT_ORDER_ROBOT_SPRITES	34
 #define INIT_ORDER_VIS				32

@@ -394,7 +394,7 @@
 	return timer - world.time
 
 /mob/new_player/proc/IsJobAvailable(rank)
-	var/datum/job/job = job_master.GetJob(rank)
+	var/datum/job/job = SSoccupations.GetJob(rank)
 	if(!job)
 		return 0
 	if(!job.is_position_available())
@@ -429,7 +429,7 @@
 		return 0
 
 	//Find our spawning point.
-	var/list/join_props = job_master.LateSpawn(client, rank)
+	var/list/join_props = SSoccupations.LateSpawn(client, rank)
 
 	if(!join_props)
 		return
@@ -444,10 +444,10 @@
 	spawning = 1
 	close_spawn_windows()
 
-	job_master.AssignRole(src, rank, 1)
+	SSoccupations.AssignRole(src, rank, 1)
 
 	var/mob/living/character = create_character(T)	//creates the human and transfers vars and mind
-	character = job_master.EquipRank(character, rank, 1)					//equips the human
+	character = SSoccupations.EquipRank(character, rank, 1)					//equips the human
 	UpdateFactionList(character)
 	if(character && character.client)
 		var/obj/screen/splash/Spl = new(character.client, TRUE)

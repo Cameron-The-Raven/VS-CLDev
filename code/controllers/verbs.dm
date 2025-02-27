@@ -90,7 +90,6 @@ INITIALIZE_IMMEDIATE(/obj/effect/statclick)
 
 	//Goon PS stuff, and other yet-to-be-subsystem things.
 	options["LEGACY: master_controller"] = master_controller
-	options["LEGACY: radio_controller"] = radio_controller
 	options["LEGACY: emergency_shuttle"] = emergency_shuttle
 	options["LEGACY: paiController"] = paiController
 	options["LEGACY: cameranet"] = cameranet

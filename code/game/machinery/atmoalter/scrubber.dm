@@ -18,7 +18,7 @@
 	var/minrate = 0
 	var/maxrate = 10 * ONE_ATMOSPHERE
 
-	var/list/scrubbing_gas = list(REAGENT_ID_PHORON, REAGENT_ID_CARBON_DIOXIDE, REAGENT_ID_NITROGEN, REAGENT_ID_VOLATILE_FUEL)
+	var/list/scrubbing_gas = list(REAGENT_ID_PHORON, REAGENT_ID_CARBON_DIOXIDE, REAGENT_ID_NITROUS_OXIDE, REAGENT_ID_VOLATILE_FUEL)
 
 /obj/machinery/portable_atmospherics/powered/scrubber/Initialize(mapload, skip_cell)
 	. = ..()

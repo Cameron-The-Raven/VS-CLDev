@@ -52,7 +52,7 @@
 		if(3) //removing CO2
 			filtered_out = list(REAGENT_ID_CARBON_DIOXIDE)
 		if(4)//removing N2O
-			filtered_out = list(REAGENT_ID_NITROGEN)
+			filtered_out = list(REAGENT_ID_NITROUS_OXIDE)
 
 	air1.volume = ATMOS_DEFAULT_VOLUME_FILTER
 	air2.volume = ATMOS_DEFAULT_VOLUME_FILTER
@@ -214,7 +214,7 @@
 				if(3) //removing CO2
 					filtered_out += REAGENT_ID_CARBON_DIOXIDE
 				if(4)//removing N2O
-					filtered_out += REAGENT_ID_NITROGEN
+					filtered_out += REAGENT_ID_NITROUS_OXIDE
 
 	add_fingerprint(ui.user)
 	update_icon()

@@ -37,7 +37,7 @@
 	var/phoron_amt = Tank.air_contents.gas[REAGENT_ID_PHORON]
 	var/co2_amt = Tank.air_contents.gas[REAGENT_ID_CARBON_DIOXIDE]
 	var/oxy_amt = Tank.air_contents.gas[REAGENT_ID_OXYGEN]
-	var/n2o_amt = Tank.air_contents.gas[REAGENT_ID_NITROGEN]
+	var/n2o_amt = Tank.air_contents.gas[REAGENT_ID_NITROUS_OXIDE]
 
 	if(isnull(co2_amt))
 		co2_amt = 0

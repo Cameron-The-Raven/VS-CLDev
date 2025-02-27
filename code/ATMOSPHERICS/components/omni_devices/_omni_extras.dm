@@ -103,6 +103,6 @@
 		if(ATM_P)
 			return REAGENT_ID_PHORON
 		if(ATM_N2O)
-			return REAGENT_ID_NITROGEN
+			return REAGENT_ID_NITROUS_OXIDE
 		else
 			return null

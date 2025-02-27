@@ -15,7 +15,7 @@
 
 
 /datum/event2/event/gas_leak
-	var/potential_gas_choices = list(REAGENT_ID_CARBON_DIOXIDE, REAGENT_ID_NITROGEN, REAGENT_ID_PHORON, REAGENT_ID_VOLATILE_FUEL)
+	var/potential_gas_choices = list(REAGENT_ID_CARBON_DIOXIDE, REAGENT_ID_NITROUS_OXIDE, REAGENT_ID_PHORON, REAGENT_ID_VOLATILE_FUEL)
 	var/chosen_gas = null
 	var/turf/chosen_turf = null
 

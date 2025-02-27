@@ -76,7 +76,7 @@
 	/// red warning minimum value, yellow warning minimum value, yellow warning maximum value, red warning maximum value
 	/// Use code\defines\gases.dm as reference for id/name. Please keep it consistent
 	var/list/TLV = list()
-	var/list/trace_gas = list(REAGENT_ID_NITROGEN, REAGENT_ID_VOLATILE_FUEL) //list of other gases that this air alarm is able to detect
+	var/list/trace_gas = list(REAGENT_ID_NITROUS_OXIDE, REAGENT_ID_VOLATILE_FUEL) //list of other gases that this air alarm is able to detect
 
 	var/danger_level = 0
 	var/pressure_dangerlevel = 0

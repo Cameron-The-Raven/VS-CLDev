@@ -14,7 +14,7 @@
 	effect = EFFECT_AURA
 	if(random)
 		//effect = pick(EFFECT_TOUCH, EFFECT_AURA) //Changed to just AURA for now.
-		gas_type = pick(REAGENT_ID_CARBON_DIOXIDE, REAGENT_ID_NITROGEN, REAGENT_ID_NITROGEN, REAGENT_ID_OXYGEN, REAGENT_ID_PHORON, REAGENT_ID_VOLATILE_FUEL) //the only way you will EVER see volatile fuel.
+		gas_type = pick(REAGENT_ID_CARBON_DIOXIDE, REAGENT_ID_NITROGEN, REAGENT_ID_NITROUS_OXIDE, REAGENT_ID_OXYGEN, REAGENT_ID_PHORON, REAGENT_ID_VOLATILE_FUEL) //the only way you will EVER see volatile fuel.
 
 /datum/artifact_effect/gas/DoEffectTouch(var/mob/user)
 	var/atom/holder = get_master_holder()
@@ -42,7 +42,7 @@
 
 /datum/artifact_effect/gas/sleeping
 	random = FALSE
-	gas_type = REAGENT_ID_NITROGEN
+	gas_type = REAGENT_ID_NITROUS_OXIDE
 
 /datum/artifact_effect/gas/oxy
 	random = FALSE
@@ -58,7 +58,7 @@
 
 /datum/artifact_effect/gas/nitro
 	random = FALSE
-	gas_type = REAGENT_ID_NITROGEN
+	gas_type = REAGENT_ID_NITROUS_OXIDE
 
 /datum/artifact_effect/gas/fuel
 	random = FALSE

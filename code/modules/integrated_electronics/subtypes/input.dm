@@ -741,9 +741,9 @@
 	outputs = list(
 		"pressure"       = IC_PINTYPE_NUMBER,
 		"temperature" = IC_PINTYPE_NUMBER,
-		REAGENT_ID_OXYGEN         = IC_PINTYPE_NUMBER,
-		REAGENT_ID_NITROGEN          = IC_PINTYPE_NUMBER,
-		"carbon dioxide"           = IC_PINTYPE_NUMBER,
+		REAGENT_ID_OXYGEN         	= IC_PINTYPE_NUMBER,
+		REAGENT_ID_NITROGEN         = IC_PINTYPE_NUMBER,
+		REAGENT_ID_CARBON_DIOXIDE   = IC_PINTYPE_NUMBER,
 		REAGENT_ID_PHORON           = IC_PINTYPE_NUMBER,
 		"other"           = IC_PINTYPE_NUMBER
 	)

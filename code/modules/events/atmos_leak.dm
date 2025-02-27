@@ -19,7 +19,7 @@
 
 // Decide which area will be targeted!
 /datum/event/atmos_leak/setup()
-	var/gas_choices = list(REAGENT_ID_CARBON_DIOXIDE, REAGENT_ID_NITROGEN) // Annoying
+	var/gas_choices = list(REAGENT_ID_CARBON_DIOXIDE, REAGENT_ID_NITROUS_OXIDE) // Annoying
 	if(severity >= EVENT_LEVEL_MODERATE)
 		gas_choices += REAGENT_ID_PHORON // Dangerous
 	// if(severity >= EVENT_LEVEL_MAJOR)

@@ -532,7 +532,7 @@
 				if(my_mob.max_tox)
 					my_mob.max_tox = gaslist[REAGENT_ID_PHORON] * 1.2
 				if(my_mob.max_n2)
-					my_mob.max_n2 = gaslist[REAGENT_ID_NITROGEN] * 1.2
+					my_mob.max_n2 = gaslist[REAGENT_ID_NITROUS_OXIDE] * 1.2
 				if(my_mob.max_co2)
 					my_mob.max_co2 = gaslist[REAGENT_ID_CARBON_DIOXIDE] * 1.2
 /* //VORESTATION AI TEMPORARY REMOVAL

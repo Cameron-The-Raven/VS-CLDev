@@ -406,13 +406,13 @@ update_flag
 /obj/machinery/portable_atmospherics/canister/nitrous_oxide/Initialize(mapload)
 	. = ..()
 
-	air_contents.adjust_gas(REAGENT_ID_NITROGEN, MolesForPressure())
+	air_contents.adjust_gas(REAGENT_ID_NITROUS_OXIDE, MolesForPressure())
 	update_icon()
 
 //Dirty way to fill room with gas. However it is a bit easier to do than creating some floor/engine/n2o -rastaf0
 /obj/machinery/portable_atmospherics/canister/nitrous_oxide/roomfiller/Initialize()
 	. = ..()
-	air_contents.gas[REAGENT_ID_NITROGEN] = 9*4000
+	air_contents.gas[REAGENT_ID_NITROUS_OXIDE] = 9*4000
 	var/turf/simulated/location = src.loc
 	if (istype(src.loc))
 		location.assume_air(air_contents)

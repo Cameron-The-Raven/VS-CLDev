@@ -174,7 +174,7 @@
 	triggered = TRUE
 	for (var/turf/simulated/floor/target in range(1,src))
 		if(!target.blocks_air)
-			target.assume_gas(REAGENT_ID_NITROGEN, 30)
+			target.assume_gas(REAGENT_ID_NITROUS_OXIDE, 30)
 	visible_message("\The [src.name] detonates!")
 	SSmotiontracker.ping(src,100)
 	spawn(0)

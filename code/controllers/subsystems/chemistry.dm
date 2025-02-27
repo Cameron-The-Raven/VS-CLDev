@@ -21,6 +21,7 @@ SUBSYSTEM_DEF(chemistry)
 /datum/controller/subsystem/chemistry/Initialize()
 	initialize_chemical_reagents()
 	initialize_chemical_reactions()
+	initialize_gas_data()
 	return SS_INIT_SUCCESS
 
 /datum/controller/subsystem/chemistry/stat_entry(msg)
@@ -72,7 +73,7 @@ SUBSYSTEM_DEF(chemistry)
 	icon_state = ico
 
 //Chemical Gasses - Initialises all atmospheric gasses
-/datum/controller/subsystem/chemistry/proc/generateGasData()
+/datum/controller/subsystem/chemistry/proc/initialize_gas_data()
 	for(var/key in chemical_reagents)
 		var/datum/reagent/gas = chemical_reagents[key]
 		if(gas.id in atmo_gases)

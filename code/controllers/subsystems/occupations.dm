@@ -3,15 +3,14 @@ SUBSYSTEM_DEF(occupations)
 	flags = SS_NO_FIRE
 	runlevels = RUNLEVEL_INIT
 	init_order = INIT_ORDER_OCCUPATIONS
-
-	//List of all jobs
-	var/static/list/occupations = list()
-	//Players who need jobs
-	var/static/list/unassigned = list()
-	//Cache of icons for job info window
-	var/static/list/job_icons = list()
+	var/static/list/occupations //List of all jobs
+	var/static/list/unassigned //Players who need jobs
+	var/static/list/job_icons //Cache of icons for job info window
 
 /datum/controller/subsystem/occupations/Initialize()
+	occupations = list()
+	unassigned = list()
+	job_icons = list()
 	SetupOccupations()
 	LoadJobs("config/jobs.txt")
 	return SS_INIT_SUCCESS

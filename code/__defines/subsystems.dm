@@ -153,6 +153,7 @@ var/global/list/runlevel_flags = list(RUNLEVEL_LOBBY, RUNLEVEL_SETUP, RUNLEVEL_G
 #define INIT_ORDER_AI_FAST			-23
 #define INIT_ORDER_GAME_MASTER		-24
 #define INIT_ORDER_PERSISTENCE		-25
+#define INIT_ORDER_AUTOTRANSFER		-26
 #define INIT_ORDER_SKYBOX			-30 //Visual only, irrelevant to gameplay, but needs to be late enough to have overmap populated fully
 #define INIT_ORDER_TICKER			-50
 #define INIT_ORDER_MAPRENAME		-60 //Initiating after Ticker to ensure everything is loaded and everything we rely on us working

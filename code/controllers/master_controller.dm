@@ -38,7 +38,7 @@ var/global/last_tick_duration = 0
 	// setupgenetics() Moved to SSatoms
 	// SetupXenoarch() - Moved to SSxenoarch
 
-	transfer_controller = new
+	// transfer_controller = new - Move to SStransfer_controller
 	admin_notice(span_danger("Initializations complete."), R_DEBUG)
 
 // #if UNIT_TEST

@@ -17,7 +17,7 @@ SUBSYSTEM_DEF(occupations)
 	return SS_INIT_SUCCESS
 
 /datum/controller/subsystem/occupations/stat_entry(msg)
-	msg = "J:[occupations.len] | U:[unassigned.len] | I:[job_icons.len]"
+	msg = "J:[occupations.len]"
 	return ..()
 
 /datum/controller/subsystem/occupations/proc/SetupOccupations(var/faction = FACTION_STATION)
@@ -157,7 +157,6 @@ SUBSYSTEM_DEF(occupations)
 		if((player) && (player.mind))
 			player.mind.assigned_role = null
 			player.mind.special_role = null
-	SetupOccupations()
 	unassigned = list()
 	return
 
@@ -220,7 +219,6 @@ SUBSYSTEM_DEF(occupations)
 /datum/controller/subsystem/occupations/proc/DivideOccupations()
 	//Setup new player list and get the jobs list
 	// Debug("Running DO")
-	SetupOccupations()
 
 	//Holder for Triumvirate is stored in the ticker, this just processes it
 	if(ticker && ticker.triai)

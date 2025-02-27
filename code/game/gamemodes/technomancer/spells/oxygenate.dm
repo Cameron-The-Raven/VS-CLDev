@@ -27,7 +27,7 @@
 	else if(isturf(hit_atom))
 		var/turf/T = hit_atom
 		if(pay_energy(1500))
-			T.assume_gas(GAS_O2, 200)
-			T.assume_gas(GAS_N2, 800)
+			T.assume_gas(REAGENT_ID_OXYGEN, 200)
+			T.assume_gas(REAGENT_ID_NITROGEN, 800)
 			playsound(src, 'sound/effects/spray.ogg', 50, 1, -3)
 			adjust_instability(10)

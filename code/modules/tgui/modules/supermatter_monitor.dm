@@ -57,17 +57,17 @@
 		data["SM_EPR"] = active.get_epr()
 		//data["SM_EPR"] = active.get_epr()
 		if(air.total_moles)
-			data["SM_gas_O2"] = round(100*air.gas[GAS_O2]/air.total_moles,0.01)
-			data["SM_gas_CO2"] = round(100*air.gas[GAS_CO2]/air.total_moles,0.01)
-			data["SM_gas_N2"] = round(100*air.gas[GAS_N2]/air.total_moles,0.01)
-			data["SM_gas_PH"] = round(100*air.gas[GAS_PHORON]/air.total_moles,0.01)
-			data["SM_gas_N2O"] = round(100*air.gas["sleeping_agent"]/air.total_moles,0.01)
+			data["SM_REAGENT_ID_OXYGEN"] = round(100*air.gas[REAGENT_ID_OXYGEN]/air.total_moles,0.01)
+			data["SM_REAGENT_ID_CARBON_DIOXIDE"] = round(100*air.gas[REAGENT_ID_CARBON_DIOXIDE]/air.total_moles,0.01)
+			data["SM_REAGENT_ID_NITROGEN"] = round(100*air.gas[REAGENT_ID_NITROGEN]/air.total_moles,0.01)
+			data["SM_gas_PH"] = round(100*air.gas[REAGENT_ID_PHORON]/air.total_moles,0.01)
+			data["SM_REAGENT_ID_NITROGEN"] = round(100*air.gas["sleeping_agent"]/air.total_moles,0.01)
 		else
-			data["SM_gas_O2"] = 0
-			data["SM_gas_CO2"] = 0
-			data["SM_gas_N2"] = 0
+			data["SM_REAGENT_ID_OXYGEN"] = 0
+			data["SM_REAGENT_ID_CARBON_DIOXIDE"] = 0
+			data["SM_REAGENT_ID_NITROGEN"] = 0
 			data["SM_gas_PH"] = 0
-			data["SM_gas_N2O"] = 0
+			data["SM_REAGENT_ID_NITROGEN"] = 0
 	else
 		var/list/SMS = list()
 		for(var/obj/machinery/power/supermatter/S in supermatters)

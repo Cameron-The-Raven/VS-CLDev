@@ -21,7 +21,7 @@ type Data = {
   SM_ambienttemp: number;
   SM_ambientpressure: number;
   SM_EPR: number;
-  SM_gas_O2: number;
+  SM_REAGENT_ID_OXYGEN: number;
   SM_gas_CO2: number;
   SM_gas_N2: number;
   SM_gas_PH: number;
@@ -99,7 +99,7 @@ const SupermatterMonitorActive = (props) => {
     SM_ambienttemp,
     SM_ambientpressure,
     SM_EPR,
-    SM_gas_O2,
+    SM_REAGENT_ID_OXYGEN,
     SM_gas_CO2,
     SM_gas_N2,
     SM_gas_PH,
@@ -180,7 +180,7 @@ const SupermatterMonitorActive = (props) => {
         <LabeledList.Item label="Gas Composition">
           <LabeledList>
             <LabeledList.Item label="O²">
-              <AnimatedNumber value={SM_gas_O2} />%
+              <AnimatedNumber value={SM_REAGENT_ID_OXYGEN} />%
             </LabeledList.Item>
             <LabeledList.Item label="CO²">
               <AnimatedNumber value={SM_gas_CO2} />%

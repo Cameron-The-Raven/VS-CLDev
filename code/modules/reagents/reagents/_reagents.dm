@@ -44,6 +44,15 @@
 	var/glass_desc = "It's a glass of... what, exactly?"
 	var/list/glass_special = null // null equivalent to list()
 
+	// Atmo reagent (replaces XGM gasses)
+	var/specific_heat = 20	// J/(mol*K)
+	var/molar_mass = 0.032	// kg/mol
+
+	var/overlay_limit = INFINITY
+	var/atom/movable/gas_visuals/tile_overlay = null
+
+	var/atmo_flags = 0
+
 /datum/reagent/proc/remove_self(var/amount) // Shortcut
 	if(holder)
 		holder.remove_reagent(id, amount)

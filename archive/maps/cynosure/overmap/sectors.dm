@@ -26,8 +26,8 @@
 
 /obj/effect/overmap/visitable/planet/Sif/Initialize()
 	atmosphere = new(CELL_VOLUME)
-	atmosphere.adjust_gas_temp(GAS_O2, MOLES_O2STANDARD, 273)
-	atmosphere.adjust_gas_temp(GAS_N2, MOLES_N2STANDARD, 273)
+	atmosphere.adjust_gas_temp(REAGENT_ID_OXYGEN, MOLES_O2STANDARD, 273)
+	atmosphere.adjust_gas_temp(REAGENT_ID_NITROGEN, MOLES_N2STANDARD, 273)
 
 	. = ..()
 

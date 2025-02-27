@@ -10,6 +10,9 @@ SUBSYSTEM_DEF(chemistry)
 //	var/list/fusion_reactions_by_reagent = list() // TODO: Fusion reactions as chemical reactions
 	var/list/chemical_reagents = list()
 
+	//Simple list of all atmospheric gas IDs.
+	var/list/atmo_gases = list()
+
 /datum/controller/subsystem/chemistry/Recover()
 	log_debug("[name] subsystem Recover().")
 	chemical_reactions = SSchemistry.chemical_reactions
@@ -57,3 +60,60 @@ SUBSYSTEM_DEF(chemistry)
 		if(!D.name)
 			continue
 		chemical_reagents[D.id] = D
+
+//Gas overlays
+/atom/movable/gas_visuals
+	icon = 'icons/effects/tile_effects.dmi'
+	mouse_opacity = 0
+	plane = ABOVE_MOB_PLANE
+
+/atom/movable/gas_visuals/Initialize(mapload, ico)
+	. = ..()
+	icon_state = ico
+
+//Chemical Gasses - Initialises all atmospheric gasses
+/datum/controller/subsystem/chemistry/proc/generateGasData()
+	for(var/key in chemical_reagents)
+		var/datum/reagent/gas = chemical_reagents[key]
+		if(gas.id in atmo_gases)
+			error("Duplicate gas id `[gas.id]`")
+			continue
+		if(gas.atmo_flags & IS_XGM_GAS)
+			atmo_gases[gas.id] = gas
+			gas.tile_overlay = new /atom/movable/gas_visuals(null, gas.id)
+
+/datum/controller/subsystem/chemistry/proc/get_gas_name(var/id)
+	if(!atmo_gases[id])
+		return "?"
+	var/datum/reagent/gas = atmo_gases[id]
+	return gas.name
+
+/datum/controller/subsystem/chemistry/proc/get_gas_flags(var/id)
+	if(!atmo_gases[id])
+		return 0
+	var/datum/reagent/gas = atmo_gases[id]
+	return gas.atmo_flags
+
+/datum/controller/subsystem/chemistry/proc/get_gas_overlay_threshold(var/id)
+	if(!atmo_gases[id])
+		return INFINITY
+	var/datum/reagent/gas = atmo_gases[id]
+	return gas.overlay_limit
+
+/datum/controller/subsystem/chemistry/proc/get_gas_overlay(var/id)
+	if(!atmo_gases[id])
+		return null
+	var/datum/reagent/gas = atmo_gases[id]
+	return gas.tile_overlay
+
+/datum/controller/subsystem/chemistry/proc/get_gas_specific_heat(var/id)
+	if(!atmo_gases[id])
+		return 0
+	var/datum/reagent/gas = atmo_gases[id]
+	return gas.specific_heat
+
+/datum/controller/subsystem/chemistry/proc/get_gas_molar_mass(var/id)
+	if(!atmo_gases[id])
+		return 0
+	var/datum/reagent/gas = atmo_gases[id]
+	return gas.molar_mass

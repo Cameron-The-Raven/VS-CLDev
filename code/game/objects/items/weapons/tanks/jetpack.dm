@@ -92,7 +92,7 @@
 
 /obj/item/tank/jetpack/void/Initialize()
 	. = ..()
-	air_contents.adjust_gas(GAS_O2, (6*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C))
+	air_contents.adjust_gas(REAGENT_ID_OXYGEN, (6*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C))
 
 /obj/item/tank/jetpack/oxygen
 	name = "jetpack (oxygen)"
@@ -102,7 +102,7 @@
 
 /obj/item/tank/jetpack/oxygen/Initialize()
 	. = ..()
-	air_contents.adjust_gas(GAS_O2, (6*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C))
+	air_contents.adjust_gas(REAGENT_ID_OXYGEN, (6*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C))
 
 /obj/item/tank/jetpack/breaker
 	name = "CSC industrial jetpack"
@@ -112,7 +112,7 @@
 
 /obj/item/tank/jetpack/breaker/Initialize()
 	. = ..()
-	air_contents.adjust_gas(GAS_VOLATILE_FUEL, (6*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C))
+	air_contents.adjust_gas(REAGENT_ID_VOLATILE_FUEL, (6*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C))
 
 /obj/item/tank/jetpack/carbondioxide
 	name = "jetpack (carbon dioxide)"
@@ -123,7 +123,7 @@
 
 /obj/item/tank/jetpack/carbondioxide/Initialize()
 	. = ..()
-	air_contents.adjust_gas(GAS_CO2, (6*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C))
+	air_contents.adjust_gas(REAGENT_ID_CARBON_DIOXIDE, (6*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C))
 
 /obj/item/tank/jetpack/rig
 	name = "jetpack"

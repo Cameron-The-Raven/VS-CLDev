@@ -186,7 +186,7 @@
 /datum/nifsoft/spare_breath/proc/resp_breath()
 	if(!active) return null
 	var/datum/gas_mixture/breath = new(BREATH_VOLUME)
-	breath.adjust_gas(GAS_O2, BREATH_MOLES)
+	breath.adjust_gas(REAGENT_ID_OXYGEN, BREATH_MOLES)
 	breath.temperature = T20C
 	return breath
 

@@ -1,7 +1,7 @@
 /// Verified to work with the Artifact Harvester
 /datum/artifact_effect/gas
 	name = "Gas creation"
-	var/gas_type = GAS_O2 //O2 by default. Changed in /New(). Do NOT MODIFY THIS TO SOMETHING
+	var/gas_type = REAGENT_ID_OXYGEN //O2 by default. Changed in /New(). Do NOT MODIFY THIS TO SOMETHING
 	var/random = TRUE
 	effect_type = EFFECT_GAS
 	effect = EFFECT_AURA
@@ -14,7 +14,7 @@
 	effect = EFFECT_AURA
 	if(random)
 		//effect = pick(EFFECT_TOUCH, EFFECT_AURA) //Changed to just AURA for now.
-		gas_type = pick(GAS_CO2, GAS_N2, GAS_N2O, GAS_O2, GAS_PHORON, GAS_VOLATILE_FUEL) //the only way you will EVER see volatile fuel.
+		gas_type = pick(REAGENT_ID_CARBON_DIOXIDE, REAGENT_ID_NITROGEN, REAGENT_ID_NITROGEN, REAGENT_ID_OXYGEN, REAGENT_ID_PHORON, REAGENT_ID_VOLATILE_FUEL) //the only way you will EVER see volatile fuel.
 
 /datum/artifact_effect/gas/DoEffectTouch(var/mob/user)
 	var/atom/holder = get_master_holder()
@@ -42,24 +42,24 @@
 
 /datum/artifact_effect/gas/sleeping
 	random = FALSE
-	gas_type = GAS_N2O
+	gas_type = REAGENT_ID_NITROGEN
 
 /datum/artifact_effect/gas/oxy
 	random = FALSE
-	gas_type = GAS_O2
+	gas_type = REAGENT_ID_OXYGEN
 
 /datum/artifact_effect/gas/phoron
 	random = FALSE
-	gas_type = GAS_PHORON
+	gas_type = REAGENT_ID_PHORON
 
 /datum/artifact_effect/gas/carbondiox
 	random = FALSE
-	gas_type = GAS_CO2
+	gas_type = REAGENT_ID_CARBON_DIOXIDE
 
 /datum/artifact_effect/gas/nitro
 	random = FALSE
-	gas_type = GAS_N2
+	gas_type = REAGENT_ID_NITROGEN
 
 /datum/artifact_effect/gas/fuel
 	random = FALSE
-	gas_type = GAS_VOLATILE_FUEL
+	gas_type = REAGENT_ID_VOLATILE_FUEL

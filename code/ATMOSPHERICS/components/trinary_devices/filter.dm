@@ -44,15 +44,15 @@
 
 	switch(filter_type)
 		if(0) //removing hydrocarbons
-			filtered_out = list(GAS_PHORON)
+			filtered_out = list(REAGENT_ID_PHORON)
 		if(1) //removing O2
-			filtered_out = list(GAS_O2)
+			filtered_out = list(REAGENT_ID_OXYGEN)
 		if(2) //removing N2
-			filtered_out = list(GAS_N2)
+			filtered_out = list(REAGENT_ID_NITROGEN)
 		if(3) //removing CO2
-			filtered_out = list(GAS_CO2)
+			filtered_out = list(REAGENT_ID_CARBON_DIOXIDE)
 		if(4)//removing N2O
-			filtered_out = list(GAS_N2O)
+			filtered_out = list(REAGENT_ID_NITROGEN)
 
 	air1.volume = ATMOS_DEFAULT_VOLUME_FILTER
 	air2.volume = ATMOS_DEFAULT_VOLUME_FILTER
@@ -205,16 +205,16 @@
 			filtered_out.Cut()	//no need to create new lists unnecessarily
 			switch(filter_type)
 				if(0) //removing hydrocarbons
-					filtered_out += GAS_PHORON
+					filtered_out += REAGENT_ID_PHORON
 					filtered_out += "oxygen_agent_b"
 				if(1) //removing O2
-					filtered_out += GAS_O2
+					filtered_out += REAGENT_ID_OXYGEN
 				if(2) //removing N2
-					filtered_out += GAS_N2
+					filtered_out += REAGENT_ID_NITROGEN
 				if(3) //removing CO2
-					filtered_out += GAS_CO2
+					filtered_out += REAGENT_ID_CARBON_DIOXIDE
 				if(4)//removing N2O
-					filtered_out += GAS_N2O
+					filtered_out += REAGENT_ID_NITROGEN
 
 	add_fingerprint(ui.user)
 	update_icon()

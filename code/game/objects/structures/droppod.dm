@@ -141,5 +141,5 @@
 /datum/gas_mixture/pod_air/New()
     . = ..()
     gas = list(
-        GAS_O2 = 21,
-        GAS_N2 = 79)
+        REAGENT_ID_OXYGEN = 21,
+        REAGENT_ID_NITROGEN = 79)

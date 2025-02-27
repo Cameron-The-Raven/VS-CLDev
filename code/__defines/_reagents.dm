@@ -4,23 +4,17 @@
 #define REAGENT_DESC_DEVELOPER_WARNING "A non-descript chemical."
 
 
-// Gasses
-#define GAS_CO2 "carbon_dioxide"
-#define GAS_N2 "nitrogen"
-#define GAS_N2O "nitrous_oxide"
-#define GAS_O2 "oxygen"
-#define GAS_PHORON "phoron"
-#define GAS_VOLATILE_FUEL "volatile_fuel"
-
-
 // Gas Reagents
 #define REAGENT_CARBON_DIOXIDE "Carbon Dioxide"
+#define REAGENT_ID_CARBON_DIOXIDE "carbon_dioxide"
 #define REAGENT_NITROGEN "Nitrogen"
 #define REAGENT_ID_NITROGEN "nitrogen"
 #define REAGENT_NITROUS_OXIDE "Nitrous Oxide"
+#define REAGENT_ID_NITROUS_OXIDE "nitrous_oxide"
 #define REAGENT_OXYGEN "Oxygen"
 #define REAGENT_ID_OXYGEN "oxygen"
 #define REAGENT_VOLATILE_FUEL "Volatile Fuel"
+#define REAGENT_ID_VOLATILE_FUEL "volatile_fuel"
 #define REAGENT_HYDROGEN "Hydrogen"
 #define REAGENT_ID_HYDROGEN "hydrogen"
 #define REAGENT_FLUORINE "Fluorine"

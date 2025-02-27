@@ -63,14 +63,14 @@
 	OT.master = V
 
 	PT.valve_welded = 1
-	PT.air_contents.gas[GAS_PHORON] = phoron_amt
-	PT.air_contents.gas[GAS_CO2] = carbon_amt
+	PT.air_contents.gas[REAGENT_ID_PHORON] = phoron_amt
+	PT.air_contents.gas[REAGENT_ID_CARBON_DIOXIDE] = carbon_amt
 	PT.air_contents.total_moles = phoron_amt + carbon_amt
 	PT.air_contents.temperature = PHORON_MINIMUM_BURN_TEMPERATURE+1
 	PT.air_contents.update_values()
 
 	OT.valve_welded = 1
-	OT.air_contents.gas[GAS_O2] = oxygen_amt
+	OT.air_contents.gas[REAGENT_ID_OXYGEN] = oxygen_amt
 	OT.air_contents.total_moles = oxygen_amt
 	OT.air_contents.temperature = PHORON_MINIMUM_BURN_TEMPERATURE+1
 	OT.air_contents.update_values()

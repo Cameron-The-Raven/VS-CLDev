@@ -88,7 +88,7 @@
 	var/sizemult
 	var/weight
 	var/aflags
-	var/breath_type = GAS_O2
+	var/breath_type = REAGENT_ID_OXYGEN
 
 /datum/transhuman/body_record/New(var/copyfrom, var/add_to_db = 0, var/ckeylock = 0)
 	..()

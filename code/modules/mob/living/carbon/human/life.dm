@@ -653,13 +653,13 @@
 	if(species.breath_type)
 		breath_type = species.breath_type
 	else
-		breath_type = GAS_O2
+		breath_type = REAGENT_ID_OXYGEN
 	inhaling = breath.gas[breath_type]
 
 	if(species.poison_type)
 		poison_type = species.poison_type
 	else
-		poison_type = GAS_PHORON
+		poison_type = REAGENT_ID_PHORON
 	poison = breath.gas[poison_type]
 
 	if(species.exhale_type)
@@ -686,17 +686,17 @@
 		failed_inhale = 1
 
 		switch(breath_type)
-			if(GAS_O2)
+			if(REAGENT_ID_OXYGEN)
 				throw_alert("oxy", /obj/screen/alert/not_enough_oxy)
-			if(GAS_PHORON)
+			if(REAGENT_ID_PHORON)
 				throw_alert("oxy", /obj/screen/alert/not_enough_tox)
-			if(GAS_N2)
+			if(REAGENT_ID_NITROGEN)
 				throw_alert("oxy", /obj/screen/alert/not_enough_nitro)
-			if(GAS_CO2)
+			if(REAGENT_ID_CARBON_DIOXIDE)
 				throw_alert("oxy", /obj/screen/alert/not_enough_co2)
-			if(GAS_VOLATILE_FUEL)
+			if(REAGENT_ID_VOLATILE_FUEL)
 				throw_alert("oxy", /obj/screen/alert/not_enough_fuel)
-			if(GAS_N2O)
+			if(REAGENT_ID_NITROUS_OXIDE)
 				throw_alert("oxy", /obj/screen/alert/not_enough_n2o)
 
 	else
@@ -748,8 +748,8 @@
 		clear_alert("tox_in_air")
 
 	// If there's some other shit in the air lets deal with it here.
-	if(breath.gas[GAS_N2O])
-		var/SA_pp = (breath.gas[GAS_N2O] / breath.total_moles) * breath_pressure
+	if(breath.gas[REAGENT_ID_NITROUS_OXIDE])
+		var/SA_pp = (breath.gas[REAGENT_ID_NITROUS_OXIDE] / breath.total_moles) * breath_pressure
 
 		// Enough to make us paralysed for a bit
 		if(SA_pp > SA_para_min)
@@ -765,7 +765,7 @@
 		else if(SA_pp > 0.15)
 			if(prob(20))
 				spawn(0) emote(pick("giggle", "laugh"))
-		breath.adjust_gas(GAS_N2O, -breath.gas[GAS_N2O]/6, update = 0) //update after
+		breath.adjust_gas(REAGENT_ID_NITROUS_OXIDE, -breath.gas[REAGENT_ID_NITROUS_OXIDE]/6, update = 0) //update after
 
 	// Were we able to breathe?
 	if (failed_inhale || failed_exhale)
@@ -914,7 +914,7 @@
 
 	//Check for contaminants before anything else because we don't want to skip it.
 	for(var/g in environment.gas)
-		if(gas_data.flags[g] & XGM_GAS_CONTAMINANT && environment.gas[g] > gas_data.overlay_limit[g] + 1)
+		if(SSchemistry.get_gas_flags(g) & XGM_GAS_CONTAMINANT && environment.gas[g] > SSchemistry.get_gas_overlay_threshold(g) + 1)
 			pl_effects()
 			break
 

@@ -109,9 +109,9 @@
 	if(!istype(T))
 		return
 	..()
-	T.assume_gas(GAS_PHORON, CEILING(volume/2, 1), T20C)
+	T.assume_gas(REAGENT_ID_PHORON, CEILING(volume/2, 1), T20C)
 	for(var/turf/simulated/floor/target_tile in range(0,T))
-		target_tile.assume_gas(GAS_PHORON, volume/2, 400+T0C)
+		target_tile.assume_gas(REAGENT_ID_PHORON, volume/2, 400+T0C)
 		spawn (0) target_tile.hotspot_expose(700, 400)
 	remove_self(volume)
 
@@ -148,6 +148,12 @@
 	strength = 30
 	touch_met = 5
 	skin_danger = 1
+	//Note that this has a significant impact on TTV yield.
+	//Because it is so high, any leftover phoron soaks up a lot of heat and drops the yield pressure.
+	//Hypothetical group 14 (same as carbon), period 8 element.
+	//Using multiplicity rule, it's atomic number is 162
+	//and following a N/Z ratio of 1.5, the molar mass of a monatomic gas is:
+	MAKE_XGM_GAS("P",0.405, 0.7, XGM_GAS_FUEL|XGM_GAS_CONTAMINANT|XGM_GAS_FUSION_FUEL)
 
 /datum/reagent/toxin/phoron/touch_mob(var/mob/living/L, var/amount)
 	..()
@@ -175,8 +181,17 @@
 	..()
 	if(!istype(T))
 		return
-	T.assume_gas(GAS_VOLATILE_FUEL, amount, T20C)
+	T.assume_gas(REAGENT_ID_VOLATILE_FUEL, amount, T20C)
 	remove_self(amount)
+
+/datum/reagent/toxin/volatile_fuel
+	name = REAGENT_VOLATILE_FUEL
+	id = REAGENT_ID_VOLATILE_FUEL
+	description = "An extremely volatile gas."
+	taste_mult = 1.5
+	reagent_state = GAS
+	color = "#f1a834"
+	MAKE_XGM_GAS("C8H18",253, 0.114, 0, XGM_GAS_FUEL) // C8H18 gasoline. Isobaric, but good enough.
 
 /datum/reagent/toxin/cyanide //Fast and Lethal
 	name = REAGENT_CYANIDE

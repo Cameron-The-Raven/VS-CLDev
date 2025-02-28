@@ -240,7 +240,7 @@
 	mat_storage = max(mat_storage - fuel_used, 0)
 	var/turf/T = get_turf(src)
 	if(T)
-		T.assume_gas(GAS_CO2, fuel_used * 0.01, T0C+200)
+		T.assume_gas(REAGENT_ID_CARBON_DIOXIDE, fuel_used * 0.01, T0C+200)
 
 /obj/item/gun/magnetic/matfed/phoronbore/proc/toggle_generator(mob/living/user)
 	if(!generator_state && !mat_storage)

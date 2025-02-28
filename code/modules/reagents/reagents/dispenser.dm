@@ -58,6 +58,15 @@
 		else
 			dirtoverlay.alpha = min(dirtoverlay.alpha + volume * 30, 255)
 
+/datum/reagent/carbon_dioxide
+	name = REAGENT_CARBON_DIOXIDE
+	id = REAGENT_ID_CARBON_DIOXIDE
+	description = "A gas, often the product of combustion."
+	taste_description = "nothing"
+	reagent_state = GAS
+	color = "#1C1300"
+	MAKE_XGM_GAS("CO2",30, 0.044, 0, XGM_GAS_OXIDIZER)
+
 /datum/reagent/chlorine
 	name = REAGENT_CHLORINE
 	id = REAGENT_ID_CHLORINE
@@ -281,6 +290,16 @@
 	taste_mult = 0 //no taste
 	reagent_state = GAS
 	color = "#808080"
+	MAKE_XGM_GAS("N2",20, 0.028, 0, 0)
+
+/datum/reagent/nitrous_oxide
+	id = REAGENT_ID_NITROUS_OXIDE
+	name = REAGENT_NITROUS_OXIDE
+	description = "A colorless, odorless, but very sleepy, gas."
+	taste_mult = 0 //no taste
+	reagent_state = GAS
+	color = "#808080"
+	MAKE_XGM_GAS("N2O",40, 0.044, 1, XGM_GAS_OXIDIZER)
 
 /datum/reagent/oxygen
 	name = REAGENT_OXYGEN
@@ -289,6 +308,7 @@
 	taste_mult = 0
 	reagent_state = GAS
 	color = "#808080"
+	MAKE_XGM_GAS("O2",20, 0.032, 0, XGM_GAS_OXIDIZER)
 
 /datum/reagent/oxygen/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_VOX)

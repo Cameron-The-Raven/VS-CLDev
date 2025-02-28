@@ -99,7 +99,7 @@ var/image/contamination_overlay = image('icons/effects/contamination.dmi')
 		return
 
 	//Burn skin if exposed.
-	if(vsc.plc.SKIN_BURNS && (species.breath_type != GAS_PHORON))
+	if(vsc.plc.SKIN_BURNS && (species.breath_type != REAGENT_ID_PHORON))
 		if(!pl_head_protected() || !pl_suit_protected())
 			burn_skin(0.75)
 			if(prob(20))
@@ -107,7 +107,7 @@ var/image/contamination_overlay = image('icons/effects/contamination.dmi')
 			updatehealth()
 
 	//Burn eyes if exposed.
-	if(vsc.plc.EYE_BURNS && species.breath_type && (species.breath_type != GAS_PHORON))		//VOREStation Edit: those who don't breathe
+	if(vsc.plc.EYE_BURNS && species.breath_type && (species.breath_type != REAGENT_ID_PHORON))		//VOREStation Edit: those who don't breathe
 		var/burn_eyes = 1
 
 		//Check for protective glasses
@@ -131,7 +131,7 @@ var/image/contamination_overlay = image('icons/effects/contamination.dmi')
 			burn_eyes()
 
 	//Genetic Corruption
-	if(vsc.plc.GENETIC_CORRUPTION && (species.breath_type != GAS_PHORON))
+	if(vsc.plc.GENETIC_CORRUPTION && (species.breath_type != REAGENT_ID_PHORON))
 		if(rand(1,10000) < vsc.plc.GENETIC_CORRUPTION)
 			randmutb(src)
 			to_chat(src, span_danger("High levels of toxins cause you to spontaneously mutate!"))
@@ -192,6 +192,6 @@ var/image/contamination_overlay = image('icons/effects/contamination.dmi')
 		if(!env)
 			return
 		for(var/g in env.gas)
-			if(gas_data.flags[g] & XGM_GAS_CONTAMINANT && env.gas[g] > gas_data.overlay_limit[g] + 1)
+			if(SSchemistry.get_gas_flags(g) & XGM_GAS_CONTAMINANT && env.gas[g] > SSchemistry.get_gas_overlay_threshold(g) + 1)
 				I.contaminate()
 				break

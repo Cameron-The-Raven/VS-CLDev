@@ -15,7 +15,7 @@
 
 
 /datum/event2/event/gas_leak
-	var/potential_gas_choices = list(GAS_CO2, GAS_N2O, GAS_PHORON, GAS_VOLATILE_FUEL)
+	var/potential_gas_choices = list(REAGENT_ID_CARBON_DIOXIDE, REAGENT_ID_NITROUS_OXIDE, REAGENT_ID_PHORON, REAGENT_ID_VOLATILE_FUEL)
 	var/chosen_gas = null
 	var/turf/chosen_turf = null
 
@@ -31,7 +31,7 @@
 
 /datum/event2/event/gas_leak/announce()
 	if(chosen_turf)
-		command_announcement.Announce("Warning, hazardous [lowertext(gas_data.name[chosen_gas])] gas leak detected in \the [chosen_turf.loc], evacuate the area.", "Hazard Alert")
+		command_announcement.Announce("Warning, hazardous [lowertext(SSchemistry.get_gas_name(chosen_gas))] gas leak detected in \the [chosen_turf.loc], evacuate the area.", "Hazard Alert")
 
 /datum/event2/event/gas_leak/start()
 	// Okay, time to actually put the gas in the room!

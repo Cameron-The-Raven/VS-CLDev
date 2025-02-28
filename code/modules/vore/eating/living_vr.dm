@@ -794,8 +794,8 @@
 /datum/gas_mixture/belly_air/New()
     . = ..()
     gas = list(
-        GAS_O2 = 21,
-        GAS_N2 = 79)
+        REAGENT_ID_OXYGEN = 21,
+        REAGENT_ID_NITROGEN = 79)
 
 /datum/gas_mixture/belly_air/vox
     volume = 2500
@@ -805,7 +805,7 @@
 /datum/gas_mixture/belly_air/vox/New()
     . = ..()
     gas = list(
-        GAS_PHORON = 100)
+        REAGENT_ID_PHORON = 100)
 
 /datum/gas_mixture/belly_air/zaddat
     volume = 2500
@@ -815,7 +815,7 @@
 /datum/gas_mixture/belly_air/zaddat/New()
     . = ..()
     gas = list(
-        GAS_O2 = 100)
+        REAGENT_ID_OXYGEN = 100)
 
 /datum/gas_mixture/belly_air/nitrogen_breather
     volume = 2500
@@ -825,7 +825,7 @@
 /datum/gas_mixture/belly_air/nitrogen_breather/New()
     . = ..()
     gas = list(
-        GAS_N2 = 100)
+        REAGENT_ID_NITROGEN = 100)
 
 
 /mob/living/proc/feed_grabbed_to_self_falling_nom(var/mob/living/user, var/mob/living/prey)

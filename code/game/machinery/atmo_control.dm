@@ -44,18 +44,18 @@
 			var/total_moles = air_sample.total_moles
 			if(total_moles > 0)
 				if(output&4)
-					signal.data[GAS_O2] = round(100*air_sample.gas[GAS_O2]/total_moles,0.1)
+					signal.data[REAGENT_ID_OXYGEN] = round(100*air_sample.gas[REAGENT_ID_OXYGEN]/total_moles,0.1)
 				if(output&8)
-					signal.data[GAS_PHORON] = round(100*air_sample.gas[GAS_PHORON]/total_moles,0.1)
+					signal.data[REAGENT_ID_PHORON] = round(100*air_sample.gas[REAGENT_ID_PHORON]/total_moles,0.1)
 				if(output&16)
-					signal.data[GAS_N2] = round(100*air_sample.gas[GAS_N2]/total_moles,0.1)
+					signal.data[REAGENT_ID_NITROGEN] = round(100*air_sample.gas[REAGENT_ID_NITROGEN]/total_moles,0.1)
 				if(output&32)
-					signal.data[GAS_CO2] = round(100*air_sample.gas[GAS_CO2]/total_moles,0.1)
+					signal.data[REAGENT_ID_CARBON_DIOXIDE] = round(100*air_sample.gas[REAGENT_ID_CARBON_DIOXIDE]/total_moles,0.1)
 			else
-				signal.data[GAS_O2] = 0
-				signal.data[GAS_PHORON] = 0
-				signal.data[GAS_N2] = 0
-				signal.data[GAS_CO2] = 0
+				signal.data[REAGENT_ID_OXYGEN] = 0
+				signal.data[REAGENT_ID_PHORON] = 0
+				signal.data[REAGENT_ID_NITROGEN] = 0
+				signal.data[REAGENT_ID_CARBON_DIOXIDE] = 0
 		signal.data["sigtype"]="status"
 		radio_connection.post_signal(src, signal, radio_filter = RADIO_ATMOSIA)
 

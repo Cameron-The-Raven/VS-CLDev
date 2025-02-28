@@ -236,9 +236,9 @@ If it gains pressure too slowly, it may leak or just rupture instead of explodin
 
 		//*** Get the fuel and oxidizer amounts
 		for(var/g in gas)
-			if(gas_data.flags[g] & XGM_GAS_FUEL)
+			if(SSchemistry.get_gas_flags(g) & XGM_GAS_FUEL)
 				gas_fuel += gas[g]
-			if(gas_data.flags[g] & XGM_GAS_OXIDIZER)
+			if(SSchemistry.get_gas_flags(g) & XGM_GAS_OXIDIZER)
 				total_oxidizers += gas[g]
 		gas_fuel *= group_multiplier
 		total_oxidizers *= group_multiplier
@@ -303,7 +303,7 @@ If it gains pressure too slowly, it may leak or just rupture instead of explodin
 		//remove_by_flag() and adjust_gas() handle the group_multiplier for us.
 		remove_by_flag(XGM_GAS_OXIDIZER, used_oxidizers)
 		remove_by_flag(XGM_GAS_FUEL, used_gas_fuel)
-		adjust_gas(GAS_CO2, used_oxidizers)
+		adjust_gas(REAGENT_ID_CARBON_DIOXIDE, used_oxidizers)
 
 		if(zone)
 			zone.remove_liquidfuel(used_liquid_fuel, !check_combustability())
@@ -323,7 +323,7 @@ If it gains pressure too slowly, it may leak or just rupture instead of explodin
 /datum/gas_mixture/proc/check_recombustability(list/fuel_objs)
 	. = 0
 	for(var/g in gas)
-		if(gas_data.flags[g] & XGM_GAS_OXIDIZER && gas[g] >= 0.1)
+		if(SSchemistry.get_gas_flags(g) & XGM_GAS_OXIDIZER && gas[g] >= 0.1)
 			. = 1
 			break
 
@@ -335,14 +335,14 @@ If it gains pressure too slowly, it may leak or just rupture instead of explodin
 
 	. = 0
 	for(var/g in gas)
-		if(gas_data.flags[g] & XGM_GAS_FUEL && gas[g] >= 0.1)
+		if(SSchemistry.get_gas_flags(g) & XGM_GAS_FUEL && gas[g] >= 0.1)
 			. = 1
 			break
 
 /datum/gas_mixture/proc/check_combustability(obj/effect/decal/cleanable/liquid_fuel/liquid=null)
 	. = 0
 	for(var/g in gas)
-		if(gas_data.flags[g] & XGM_GAS_OXIDIZER && QUANTIZE(gas[g] * vsc.fire_consuption_rate) >= 0.1)
+		if(SSchemistry.get_gas_flags(g) & XGM_GAS_OXIDIZER && QUANTIZE(gas[g] * vsc.fire_consuption_rate) >= 0.1)
 			. = 1
 			break
 
@@ -354,7 +354,7 @@ If it gains pressure too slowly, it may leak or just rupture instead of explodin
 
 	. = 0
 	for(var/g in gas)
-		if(gas_data.flags[g] & XGM_GAS_FUEL && QUANTIZE(gas[g] * vsc.fire_consuption_rate) >= 0.005)
+		if(SSchemistry.get_gas_flags(g) & XGM_GAS_FUEL && QUANTIZE(gas[g] * vsc.fire_consuption_rate) >= 0.005)
 			. = 1
 			break
 

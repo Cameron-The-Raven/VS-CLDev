@@ -137,9 +137,9 @@
 
 	// Environment tolerance/life processes vars.
 	var/reagent_tag											//Used for metabolizing reagents.
-	var/breath_type = GAS_O2								// Non-oxygen gas breathed, if any.
-	var/poison_type = GAS_PHORON								// Poisonous air.
-	var/exhale_type = GAS_CO2								// Exhaled gas type.
+	var/breath_type = REAGENT_ID_OXYGEN								// Non-oxygen gas breathed, if any.
+	var/poison_type = REAGENT_ID_PHORON								// Poisonous air.
+	var/exhale_type = REAGENT_ID_CARBON_DIOXIDE								// Exhaled gas type.
 	var/water_breather = FALSE
 	var/suit_inhale_sound = 'sound/effects/mob_effects/suit_breathe_in.ogg'
 	var/suit_exhale_sound = 'sound/effects/mob_effects/suit_breathe_out.ogg'

@@ -57,11 +57,11 @@
 		data["SM_EPR"] = active.get_epr()
 		//data["SM_EPR"] = active.get_epr()
 		if(air.total_moles)
-			data["SM_gas_O2"] = round(100*air.gas[GAS_O2]/air.total_moles,0.01)
-			data["SM_gas_CO2"] = round(100*air.gas[GAS_CO2]/air.total_moles,0.01)
-			data["SM_gas_N2"] = round(100*air.gas[GAS_N2]/air.total_moles,0.01)
-			data["SM_gas_PH"] = round(100*air.gas[GAS_PHORON]/air.total_moles,0.01)
-			data["SM_gas_N2O"] = round(100*air.gas["sleeping_agent"]/air.total_moles,0.01)
+			data["SM_gas_O2"] = round(100*air.gas[REAGENT_ID_OXYGEN]/air.total_moles,0.01)
+			data["SM_gas_CO2"] = round(100*air.gas[REAGENT_ID_CARBON_DIOXIDE]/air.total_moles,0.01)
+			data["SM_gas_N2"] = round(100*air.gas[REAGENT_ID_NITROGEN]/air.total_moles,0.01)
+			data["SM_gas_PH"] = round(100*air.gas[REAGENT_ID_PHORON]/air.total_moles,0.01)
+			data["SM_gas_N2O"] = round(100*air.gas[REAGENT_ID_NITROUS_OXIDE]/air.total_moles,0.01)
 		else
 			data["SM_gas_O2"] = 0
 			data["SM_gas_CO2"] = 0

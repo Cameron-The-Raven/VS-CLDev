@@ -344,7 +344,7 @@
 /turf/simulated/floor/reinforced/n20/Initialize()
 	. = ..()
 	if(!air) make_air()
-	air.adjust_gas(GAS_N2O, ATMOSTANK_NITROUSOXIDE)
+	air.adjust_gas(REAGENT_ID_NITROUS_OXIDE, ATMOSTANK_NITROUSOXIDE)
 
 /turf/simulated/floor/cult
 	name = "engraved floor"

@@ -87,7 +87,23 @@ em						{font-style: normal;font-weight: bold;}
 .alert, .valert			{color: #ff0000;}
 h1.alert, h2.alert		{color: #000000;}
 .ghostalert				{color: #5c00e6;	font-style: italic; font-weight: bold;}
-.wingdings				{font-family: Wingdings, Webdings}
+.wingdings				{font-family: Wingdings, Webdings;}
+.hypnophrase 			{color: #0d0d0d; font-weight: bold;
+	@keyframes hypnocolor {
+		0%		{color: #0d0d0d;}
+		25%		{color: #410194;}
+		50%		{color: #7f17d8;}
+		75%		{color: #410194;}
+		100%	{color: #3bb5d3;}
+}
+.painflash 				{color: #d60707;font-weight: bold;
+	@keyframes paincycle {
+		0%		{color: #a41010;}
+		25%		{color: #b72b08;}
+		50%		{color: #e7380c;}
+		75%		{color: #b72b08;}
+		100%	{color: #a41010;}
+}
 
 /* VOREStation Edit Start */
 .emote					{}

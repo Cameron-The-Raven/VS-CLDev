@@ -196,6 +196,8 @@ h1.alert, h2.alert		{color: #000000;}
 .interface				{color: #330033;}
 .psionic				{color: #993399;}
 .wingdings				{color: #0077FF;font-family: Wingdings, Webdings}
+.hypnophrase 			{color: #0d0d0d;font-weight: bold;}
+.painflash 				{color: #d60707;font-weight: bold;}
 .spacer					{color: #9c660b;} /* VOREStation Add */
 .blob					{color: #ff950d; font-weight: bold; font-style: italic;}
 .teppi					{color: #816540; word-spacing:4pt; font-family: "Segoe Script Bold","Segoe Script",sans-serif,Verdana;}

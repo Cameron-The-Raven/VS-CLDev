@@ -65,11 +65,7 @@
 	taste_description = "nothing"
 	reagent_state = GAS
 	color = "#1C1300"
-
-	// Atmo
-	specific_heat = 30	// J/(mol*K)
-	molar_mass = 0.044	// kg/mol
-	atmo_flags = IS_XGM_GAS
+	MAKE_XGM_GAS("CO2",30, 0.044, 0, XGM_GAS_OXIDIZER)
 
 /datum/reagent/chlorine
 	name = REAGENT_CHLORINE
@@ -294,11 +290,7 @@
 	taste_mult = 0 //no taste
 	reagent_state = GAS
 	color = "#808080"
-
-	// Atmo
-	specific_heat = 20	// J/(mol*K)
-	molar_mass = 0.028	// kg/mol
-	atmo_flags = IS_XGM_GAS
+	MAKE_XGM_GAS("N2",20, 0.028, 0, 0)
 
 /datum/reagent/nitrous_oxide
 	id = REAGENT_ID_NITROUS_OXIDE
@@ -307,12 +299,7 @@
 	taste_mult = 0 //no taste
 	reagent_state = GAS
 	color = "#808080"
-
-	// Atmo
-	specific_heat = 40	// J/(mol*K)
-	molar_mass = 0.044	// kg/mol. N2O
-	overlay_limit = 1
-	atmo_flags = IS_XGM_GAS | XGM_GAS_OXIDIZER
+	MAKE_XGM_GAS("N2O",40, 0.044, 1, XGM_GAS_OXIDIZER)
 
 /datum/reagent/oxygen
 	name = REAGENT_OXYGEN
@@ -321,11 +308,7 @@
 	taste_mult = 0
 	reagent_state = GAS
 	color = "#808080"
-
-	// Atmo
-	specific_heat = 20	// J/(mol*K)
-	molar_mass = 0.032	// kg/mol
-	atmo_flags = IS_XGM_GAS | XGM_GAS_OXIDIZER
+	MAKE_XGM_GAS("O2",20, 0.032, 0, XGM_GAS_OXIDIZER)
 
 /datum/reagent/oxygen/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_VOX)

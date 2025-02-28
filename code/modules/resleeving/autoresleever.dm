@@ -189,9 +189,9 @@
 	//If desired, apply equipment.
 	if(equip_body)
 		if(charjob)
-			job_master.EquipRank(new_character, charjob, 1)
+			SSoccupations.EquipRank(new_character, charjob, 1)
 			new_character.mind.assigned_role = charjob
-			new_character.mind.role_alt_title = job_master.GetPlayerAltTitle(new_character, charjob)
+			new_character.mind.role_alt_title = SSoccupations.GetPlayerAltTitle(new_character, charjob)
 
 	//A redraw for good measure
 	new_character.regenerate_icons()

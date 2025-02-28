@@ -12,7 +12,7 @@ var/list/job_whitelist = list()
 		job_whitelist = splittext(text, "\n")
 
 /proc/is_job_whitelisted(mob/M, var/rank)
-	var/datum/job/job = job_master.GetJob(rank)
+	var/datum/job/job = SSoccupations.GetJob(rank)
 	if(!job.whitelist_only)
 		return 1
 	if(rank == JOB_ALT_VISITOR) //VOREStation Edit - Visitor not Assistant

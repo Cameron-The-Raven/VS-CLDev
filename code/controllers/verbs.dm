@@ -90,12 +90,9 @@ INITIALIZE_IMMEDIATE(/obj/effect/statclick)
 
 	//Goon PS stuff, and other yet-to-be-subsystem things.
 	options["LEGACY: master_controller"] = master_controller
-	options["LEGACY: job_master"] = job_master
-	options["LEGACY: radio_controller"] = radio_controller
 	options["LEGACY: emergency_shuttle"] = emergency_shuttle
 	options["LEGACY: paiController"] = paiController
 	options["LEGACY: cameranet"] = cameranet
-	options["LEGACY: transfer_controller"] = transfer_controller
 	options["LEGACY: gas_data"] = gas_data
 
 	var/pick = tgui_input_list(mob, "Choose a controller to debug/view variables of.", "VV controller:", options)

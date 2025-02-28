@@ -1,51 +1,52 @@
-var/global/datum/controller/occupations/job_master
+SUBSYSTEM_DEF(occupations)
+	name = "Occupations"
+	flags = SS_NO_FIRE
+	runlevels = RUNLEVEL_INIT
+	init_order = INIT_ORDER_OCCUPATIONS
+	var/static/list/occupations //List of all jobs
+	var/static/list/unassigned //Players who need jobs
+	var/static/list/job_icons //Cache of icons for job info window
 
-/datum/controller/occupations
-		//List of all jobs
-	var/list/occupations = list()
-		//Players who need jobs
-	var/list/unassigned = list()
-		//Debug info
-	var/list/job_debug = list()
-		//Cache of icons for job info window
-	var/list/job_icons = list()
-
-/datum/controller/occupations/proc/SetupOccupations(var/faction = FACTION_STATION)
+/datum/controller/subsystem/occupations/Initialize()
 	occupations = list()
-	//var/list/all_jobs = typesof(/datum/job)
+	unassigned = list()
+	job_icons = list()
+	SetupOccupations()
+	LoadJobs("config/jobs.txt")
+	return SS_INIT_SUCCESS
+
+/datum/controller/subsystem/occupations/stat_entry(msg)
+	msg = "J:[occupations.len]"
+	return ..()
+
+/datum/controller/subsystem/occupations/proc/SetupOccupations(var/faction = FACTION_STATION)
 	var/list/all_jobs = list(/datum/job/assistant) | using_map.allowed_jobs
 	if(!all_jobs.len)
-		to_world(span_boldannounce("Error setting up jobs, no job datums found!"))
-		return 0
+		CRASH(span_boldannounce("Error setting up jobs, no job datums found!"))
 	for(var/J in all_jobs)
 		var/datum/job/job = new J()
-		if(!job)	continue
-		if(job.faction != faction)	continue
+		if(!job)
+			continue
+		if(job.faction != faction)
+			continue
 		occupations += job
 	sortTim(occupations, GLOBAL_PROC_REF(cmp_job_datums))
 
-
-	return 1
-
-
-/datum/controller/occupations/proc/Debug(var/text)
-	if(!Debug2)	return 0
-	job_debug.Add(text)
-	return 1
-
-
-/datum/controller/occupations/proc/GetJob(var/rank)
-	if(!rank)	return null
+/datum/controller/subsystem/occupations/proc/GetJob(var/rank)
+	if(!rank)
+		return null
 	for(var/datum/job/J in occupations)
-		if(!J)	continue
-		if(J.title == rank)	return J
+		if(!J)
+			continue
+		if(J.title == rank)
+			return J
 	return null
 
-/datum/controller/occupations/proc/GetPlayerAltTitle(mob/new_player/player, rank)
+/datum/controller/subsystem/occupations/proc/GetPlayerAltTitle(mob/new_player/player, rank)
 	return player.client.prefs.GetPlayerAltTitle(GetJob(rank))
 
-/datum/controller/occupations/proc/AssignRole(var/mob/new_player/player, var/rank, var/latejoin = 0)
-	Debug("Running AR, Player: [player], Rank: [rank], LJ: [latejoin]")
+/datum/controller/subsystem/occupations/proc/AssignRole(var/mob/new_player/player, var/rank, var/latejoin = 0)
+	// Debug("Running AR, Player: [player], Rank: [rank], LJ: [latejoin]")
 	if(player && player.mind && rank)
 		var/datum/job/job = GetJob(rank)
 		if(!job)
@@ -56,67 +57,63 @@ var/global/datum/controller/occupations/job_master
 			return 0
 		if(!job.player_old_enough(player.client))
 			return 0
-		//VOREStation Add
 		if(!job.player_has_enough_playtime(player.client))
 			return 0
 		if(!is_job_whitelisted(player, rank))
 			return 0
-		//VOREStation Add End
 
 		var/position_limit = job.total_positions
 		if(!latejoin)
 			position_limit = job.spawn_positions
 		if((job.current_positions < position_limit) || position_limit == -1)
-			Debug("Player: [player] is now Rank: [rank], JCP:[job.current_positions], JPL:[position_limit]")
+			// Debug("Player: [player] is now Rank: [rank], JCP:[job.current_positions], JPL:[position_limit]")
 			player.mind.assigned_role = rank
 			player.mind.role_alt_title = GetPlayerAltTitle(player, rank)
 			unassigned -= player
 			job.current_positions++
 			return 1
-	Debug("AR has failed, Player: [player], Rank: [rank]")
+	// Debug("AR has failed, Player: [player], Rank: [rank]")
 	return 0
 
-/datum/controller/occupations/proc/FreeRole(var/rank)	//making additional slot on the fly
+/datum/controller/subsystem/occupations/proc/FreeRole(var/rank)	//making additional slot on the fly
 	var/datum/job/job = GetJob(rank)
 	if(job && job.total_positions != -1)
 		job.total_positions++
 		return 1
 	return 0
 
-/datum/controller/occupations/proc/FindOccupationCandidates(datum/job/job, level, flag)
-	Debug("Running FOC, Job: [job], Level: [level], Flag: [flag]")
+/datum/controller/subsystem/occupations/proc/FindOccupationCandidates(datum/job/job, level, flag)
+	// Debug("Running FOC, Job: [job], Level: [level], Flag: [flag]")
 	var/list/candidates = list()
 	for(var/mob/new_player/player in unassigned)
 		if(jobban_isbanned(player, job.title))
-			Debug("FOC isbanned failed, Player: [player]")
+			// Debug("FOC isbanned failed, Player: [player]")
 			continue
 		if(!job.player_old_enough(player.client))
-			Debug("FOC player not old enough, Player: [player]")
+			// Debug("FOC player not old enough, Player: [player]")
 			continue
 		if(job.minimum_character_age && (player.read_preference(/datum/preference/numeric/human/age) < job.get_min_age(player.client.prefs.species, player.client.prefs.organ_data["brain"])))
-			Debug("FOC character not old enough, Player: [player]")
+			// Debug("FOC character not old enough, Player: [player]")
 			continue
-		//VOREStation Code Start
 		if(!job.player_has_enough_playtime(player.client))
-			Debug("FOC character not enough playtime, Player: [player]")
+			// Debug("FOC character not enough playtime, Player: [player]")
 			continue
 		if(!is_job_whitelisted(player, job.title))
-			Debug("FOC is_job_whitelisted failed, Player: [player]")
+			// Debug("FOC is_job_whitelisted failed, Player: [player]")
 			continue
-		//VOREStation Code End
 		if(job.is_species_banned(player.client.prefs.species, player.client.prefs.organ_data["brain"]) == TRUE)
-			Debug("FOC character species invalid for job, Player: [player]")
+			// Debug("FOC character species invalid for job, Player: [player]")
 			continue
 		if(flag && !(player.client.prefs.be_special & flag))
-			Debug("FOC flag failed, Player: [player], Flag: [flag], ")
+			// Debug("FOC flag failed, Player: [player], Flag: [flag], ")
 			continue
 		if(player.client.prefs.GetJobDepartment(job, level) & job.flag)
-			Debug("FOC pass, Player: [player], Level:[level]")
+			// Debug("FOC pass, Player: [player], Level:[level]")
 			candidates += player
 	return candidates
 
-/datum/controller/occupations/proc/GiveRandomJob(var/mob/new_player/player)
-	Debug("GRJ Giving random job, Player: [player]")
+/datum/controller/subsystem/occupations/proc/GiveRandomJob(var/mob/new_player/player)
+	// Debug("GRJ Giving random job, Player: [player]")
 	for(var/datum/job/job in shuffle(occupations))
 		if(!job)
 			continue
@@ -127,47 +124,44 @@ var/global/datum/controller/occupations/job_master
 		if(job.is_species_banned(player.client.prefs.species, player.client.prefs.organ_data["brain"]) == TRUE)
 			continue
 
-		if(istype(job, GetJob(JOB_ALT_VISITOR))) // We don't want to give him assistant, that's boring! //VOREStation Edit - Visitor not Assistant
+		if(istype(job, GetJob(JOB_ALT_VISITOR))) // We don't want to give him assistant, that's boring!
 			continue
 
 		if(SSjob.is_job_in_department(job.title, DEPARTMENT_COMMAND)) //If you want a command position, select it!
 			continue
 
 		if(jobban_isbanned(player, job.title))
-			Debug("GRJ isbanned failed, Player: [player], Job: [job.title]")
+			// Debug("GRJ isbanned failed, Player: [player], Job: [job.title]")
 			continue
 
 		if(!job.player_old_enough(player.client))
-			Debug("GRJ player not old enough, Player: [player]")
+			// Debug("GRJ player not old enough, Player: [player]")
 			continue
 
-		//VOREStation Code Start
 		if(!job.player_has_enough_playtime(player.client))
-			Debug("GRJ player not enough playtime, Player: [player]")
+			// Debug("GRJ player not enough playtime, Player: [player]")
 			continue
 		if(!is_job_whitelisted(player, job.title))
-			Debug("GRJ player not whitelisted for this job, Player: [player], Job: [job.title]")
+			// Debug("GRJ player not whitelisted for this job, Player: [player], Job: [job.title]")
 			continue
-		//VOREStation Code End
 
 		if((job.current_positions < job.spawn_positions) || job.spawn_positions == -1)
-			Debug("GRJ Random job given, Player: [player], Job: [job]")
+			// Debug("GRJ Random job given, Player: [player], Job: [job]")
 			AssignRole(player, job.title)
 			unassigned -= player
 			break
 
-/datum/controller/occupations/proc/ResetOccupations()
+/datum/controller/subsystem/occupations/proc/ResetOccupations()
 	for(var/mob/new_player/player in player_list)
 		if((player) && (player.mind))
 			player.mind.assigned_role = null
 			player.mind.special_role = null
-	SetupOccupations()
 	unassigned = list()
 	return
 
 
 ///This proc is called before the level loop of DivideOccupations() and will try to select a head, ignoring ALL non-head preferences for every level until it locates a head or runs out of levels to check
-/datum/controller/occupations/proc/FillHeadPosition()
+/datum/controller/subsystem/occupations/proc/FillHeadPosition()
 	for(var/level = 1 to 3)
 		for(var/command_position in SSjob.get_job_titles_in_department(DEPARTMENT_COMMAND))
 			var/datum/job/job = GetJob(command_position)
@@ -206,7 +200,7 @@ var/global/datum/controller/occupations/job_master
 
 
 ///This proc is called at the start of the level loop of DivideOccupations() and will cause head jobs to be checked before any other jobs of the same level
-/datum/controller/occupations/proc/CheckHeadPositions(var/level)
+/datum/controller/subsystem/occupations/proc/CheckHeadPositions(var/level)
 	for(var/command_position in SSjob.get_job_titles_in_department(DEPARTMENT_COMMAND))
 		var/datum/job/job = GetJob(command_position)
 		if(!job)	continue
@@ -221,10 +215,9 @@ var/global/datum/controller/occupations/job_master
  *  fills var "assigned_role" for all ready players.
  *  This proc must not have any side effect besides of modifying "assigned_role".
  **/
-/datum/controller/occupations/proc/DivideOccupations()
+/datum/controller/subsystem/occupations/proc/DivideOccupations()
 	//Setup new player list and get the jobs list
-	Debug("Running DO")
-	SetupOccupations()
+	// Debug("Running DO")
 
 	//Holder for Triumvirate is stored in the ticker, this just processes it
 	if(ticker && ticker.triai)
@@ -238,7 +231,7 @@ var/global/datum/controller/occupations/job_master
 		if(player.ready && player.mind && !player.mind.assigned_role)
 			unassigned += player
 
-	Debug("DO, Len: [unassigned.len]")
+	// Debug("DO, Len: [unassigned.len]")
 	if(unassigned.len == 0)	return 0
 
 	//Shuffle players and jobs
@@ -247,23 +240,23 @@ var/global/datum/controller/occupations/job_master
 	HandleFeedbackGathering()
 
 	//People who wants to be assistants, sure, go on.
-	Debug("DO, Running Assistant Check 1")
+	// Debug("DO, Running Assistant Check 1")
 	var/datum/job/assist = new DEFAULT_JOB_TYPE ()
 	var/list/assistant_candidates = FindOccupationCandidates(assist, 3)
-	Debug("AC1, Candidates: [assistant_candidates.len]")
+	// Debug("AC1, Candidates: [assistant_candidates.len]")
 	for(var/mob/new_player/player in assistant_candidates)
-		Debug("AC1 pass, Player: [player]")
-		AssignRole(player, JOB_ALT_VISITOR) //VOREStation Edit - Visitor not Assistant
+		// Debug("AC1 pass, Player: [player]")
+		AssignRole(player, JOB_ALT_VISITOR)
 		assistant_candidates -= player
-	Debug("DO, AC1 end")
+	// Debug("DO, AC1 end")
 
 	//Select one head
-	Debug("DO, Running Head Check")
+	// Debug("DO, Running Head Check")
 	FillHeadPosition()
-	Debug("DO, Head Check end")
+	// Debug("DO, Head Check end")
 
 	//Other jobs are now checked
-	Debug("DO, Running Standard Check")
+	// Debug("DO, Running Standard Check")
 
 
 	// New job giving system by Donkie
@@ -286,25 +279,23 @@ var/global/datum/controller/occupations/job_master
 					continue
 
 				if(jobban_isbanned(player, job.title))
-					Debug("DO isbanned failed, Player: [player], Job:[job.title]")
+					// Debug("DO isbanned failed, Player: [player], Job:[job.title]")
 					continue
 
 				if(!job.player_old_enough(player.client))
-					Debug("DO player not old enough, Player: [player], Job:[job.title]")
+					// Debug("DO player not old enough, Player: [player], Job:[job.title]")
 					continue
 
-				//VOREStation Add
 				if(!job.player_has_enough_playtime(player.client))
-					Debug("DO player not enough playtime, Player: [player]")
+					// Debug("DO player not enough playtime, Player: [player]")
 					continue
-				//VOREStation Add End
 
 				// If the player wants that job on this level, then try give it to him.
 				if(player.client.prefs.GetJobDepartment(job, level) & job.flag)
 
 					// If the job isn't filled
 					if((job.current_positions < job.spawn_positions) || job.spawn_positions == -1)
-						Debug("DO pass, Player: [player], Level:[level], Job:[job.title]")
+						// Debug("DO pass, Player: [player], Level:[level], Job:[job.title]")
 						AssignRole(player, job.title)
 						unassigned -= player
 						break
@@ -314,33 +305,16 @@ var/global/datum/controller/occupations/job_master
 	for(var/mob/new_player/player in unassigned)
 		if(player.client.prefs.alternate_option == GET_RANDOM_JOB)
 			GiveRandomJob(player)
-	/*
-	Old job system
-	for(var/level = 1 to 3)
-		for(var/datum/job/job in occupations)
-			Debug("Checking job: [job]")
-			if(!job)
-				continue
-			if(!unassigned.len)
-				break
-			if((job.current_positions >= job.spawn_positions) && job.spawn_positions != -1)
-				continue
-			var/list/candidates = FindOccupationCandidates(job, level)
-			while(candidates.len && ((job.current_positions < job.spawn_positions) || job.spawn_positions == -1))
-				var/mob/new_player/candidate = pick(candidates)
-				Debug("Selcted: [candidate], for: [job.title]")
-				AssignRole(candidate, job.title)
-				candidates -= candidate*/
 
-	Debug("DO, Standard Check end")
+	// Debug("DO, Standard Check end")
 
-	Debug("DO, Running AC2")
+	// Debug("DO, Running AC2")
 
 	// For those who wanted to be assistant if their preferences were filled, here you go.
 	for(var/mob/new_player/player in unassigned)
 		if(player.client.prefs.alternate_option == BE_ASSISTANT)
-			Debug("AC2 Assistant located, Player: [player]")
-			AssignRole(player, JOB_ALT_VISITOR) //VOREStation Edit - Visitor not Assistant
+			// Debug("AC2 Assistant located, Player: [player]")
+			AssignRole(player, JOB_ALT_VISITOR)
 
 	//For ones returning to lobby
 	for(var/mob/new_player/player in unassigned)
@@ -351,7 +325,7 @@ var/global/datum/controller/occupations/job_master
 	return 1
 
 
-/datum/controller/occupations/proc/EquipRank(var/mob/living/carbon/human/H, var/rank, var/joined_late = 0)
+/datum/controller/subsystem/occupations/proc/EquipRank(var/mob/living/carbon/human/H, var/rank, var/joined_late = 0)
 	if(!H)	return null
 
 	var/datum/job/job = GetJob(rank)
@@ -385,7 +359,6 @@ var/global/datum/controller/occupations/job_master
 			H.buckled.set_dir(H.dir)
 
 	if(job)
-
 		//Equip custom gear loadout.
 		var/list/custom_equip_slots = list()
 		var/list/custom_equip_leftovers = list()
@@ -473,7 +446,7 @@ var/global/datum/controller/occupations/job_master
 
 	H.job = rank
 	log_game("JOINED [key_name(H)] as \"[rank]\"")
-	log_game("SPECIES [key_name(H)] is a: \"[H.species.name]\"") //VOREStation Add
+	log_game("SPECIES [key_name(H)] is a: \"[H.species.name]\"")
 
 	// If they're head, give them the account info for their department
 	if(H.mind && job.department_accounts)
@@ -585,7 +558,7 @@ var/global/datum/controller/occupations/job_master
 	BITSET(H.hud_updateflag, SPECIALROLE_HUD)
 	return H
 
-/datum/controller/occupations/proc/LoadJobs(jobsfile) //ran during round setup, reads info from jobs.txt -- Urist
+/datum/controller/subsystem/occupations/proc/LoadJobs(jobsfile) //ran during round setup, reads info from jobs.txt -- Urist
 	if(!CONFIG_GET(flag/load_jobs_from_txt))
 		return 0
 
@@ -620,7 +593,7 @@ var/global/datum/controller/occupations/job_master
 	return 1
 
 
-/datum/controller/occupations/proc/HandleFeedbackGathering()
+/datum/controller/subsystem/occupations/proc/HandleFeedbackGathering()
 	for(var/datum/job/job in occupations)
 		var/tmp_str = "|[job.title]|"
 
@@ -639,11 +612,9 @@ var/global/datum/controller/occupations/job_master
 			if(!job.player_old_enough(player.client))
 				level6++
 				continue
-			//VOREStation Add
 			if(!job.player_has_enough_playtime(player.client))
 				level6++
 				continue
-			//VOREStation Add End
 			if(player.client.prefs.GetJobDepartment(job, 1) & job.flag)
 				level1++
 			else if(player.client.prefs.GetJobDepartment(job, 2) & job.flag)
@@ -655,7 +626,7 @@ var/global/datum/controller/occupations/job_master
 		tmp_str += "HIGH=[level1]|MEDIUM=[level2]|LOW=[level3]|NEVER=[level4]|BANNED=[level5]|YOUNG=[level6]|-"
 		feedback_add_details("job_preferences",tmp_str)
 
-/datum/controller/occupations/proc/LateSpawn(var/client/C, var/rank)
+/datum/controller/subsystem/occupations/proc/LateSpawn(var/client/C, var/rank)
 
 	var/datum/spawnpoint/spawnpos
 	var/fail_deadly = FALSE

@@ -123,6 +123,7 @@ var/global/list/runlevel_flags = list(RUNLEVEL_LOBBY, RUNLEVEL_SETUP, RUNLEVEL_G
 #define INIT_ORDER_DBCORE			39
 #define INIT_ORDER_MEDIA_TRACKS		38 // Gotta get that lobby music up, yo
 #define INIT_ORDER_INPUT			37
+#define INIT_ORDER_OCCUPATIONS		36
 #define INIT_ORDER_CHEMISTRY		35
 #define INIT_ORDER_ROBOT_SPRITES	34
 #define INIT_ORDER_VIS				32
@@ -137,6 +138,7 @@ var/global/list/runlevel_flags = list(RUNLEVEL_LOBBY, RUNLEVEL_SETUP, RUNLEVEL_G
 #define INIT_ORDER_TRANSCORE		15
 #define INIT_ORDER_ATOMS			14
 #define INIT_ORDER_MACHINES			10
+#define INIT_ORDER_RADIOS			9
 #define INIT_ORDER_SHUTTLES			3
 #define INIT_ORDER_TIMER			1
 #define INIT_ORDER_DEFAULT			0
@@ -152,6 +154,7 @@ var/global/list/runlevel_flags = list(RUNLEVEL_LOBBY, RUNLEVEL_SETUP, RUNLEVEL_G
 #define INIT_ORDER_AI_FAST			-23
 #define INIT_ORDER_GAME_MASTER		-24
 #define INIT_ORDER_PERSISTENCE		-25
+#define INIT_ORDER_AUTOTRANSFER		-26
 #define INIT_ORDER_SKYBOX			-30 //Visual only, irrelevant to gameplay, but needs to be late enough to have overmap populated fully
 #define INIT_ORDER_TICKER			-50
 #define INIT_ORDER_MAPRENAME		-60 //Initiating after Ticker to ensure everything is loaded and everything we rely on us working

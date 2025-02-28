@@ -18,7 +18,7 @@
 
 /decl/hierarchy/outfit/job/equip_id(mob/living/carbon/human/H, rank, assignment)
 	var/obj/item/card/id/C = ..()
-	var/datum/job/J = job_master.GetJob(rank)
+	var/datum/job/J = SSoccupations.GetJob(rank)
 	if(J)
 		C.access = J.get_access()
 	if(H.mind)

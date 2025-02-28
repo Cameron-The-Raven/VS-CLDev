@@ -56,16 +56,16 @@
 	//VOREStation Add End
 	if(!(pref.player_alt_titles)) pref.player_alt_titles = new()
 
-	if(!job_master)
+	if(!SSoccupations)
 		return
 
-	for(var/datum/job/job in job_master.occupations)
+	for(var/datum/job/job in SSoccupations.occupations)
 		var/alt_title = pref.player_alt_titles[job.title]
 		if(alt_title && !(alt_title in job.alt_titles))
 			pref.player_alt_titles -= job.title
 
 /datum/category_item/player_setup_item/occupation/content(mob/user, limit = 25, list/splitJobs = list())
-	if(!job_master)
+	if(!SSoccupations)
 		return
 
 	. = list()
@@ -247,7 +247,7 @@
 
 	else if(href_list["job_info"])
 		var/rank = href_list["job_info"]
-		var/datum/job/job = job_master.GetJob(rank)
+		var/datum/job/job = SSoccupations.GetJob(rank)
 		var/dat = list()
 
 		dat += "<p style='background-color: [job.selection_color]'><br><br><p>"
@@ -293,7 +293,7 @@
 		pref.player_alt_titles[job.title] = new_title
 
 /datum/category_item/player_setup_item/occupation/proc/SetJob(mob/user, role, level)
-	var/datum/job/job = job_master.GetJob(role)
+	var/datum/job/job = SSoccupations.GetJob(role)
 	if(!job)
 		return 0
 

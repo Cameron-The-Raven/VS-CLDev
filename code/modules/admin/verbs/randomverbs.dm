@@ -540,10 +540,10 @@ Traitors and the like can also be revived with the previous role mostly intact.
 	//If desired, apply equipment.
 	if(equipment)
 		if(charjob)
-			job_master.EquipRank(new_character, charjob, 1)
+			SSoccupations.EquipRank(new_character, charjob, 1)
 			if(new_character.mind)
 				new_character.mind.assigned_role = charjob
-				new_character.mind.role_alt_title = job_master.GetPlayerAltTitle(new_character, charjob)
+				new_character.mind.role_alt_title = SSoccupations.GetPlayerAltTitle(new_character, charjob)
 
 	//If desired, add records.
 	if(records)
@@ -688,8 +688,8 @@ Traitors and the like can also be revived with the previous role mostly intact.
 	if (!holder)
 		return
 
-	if(job_master)
-		for(var/datum/job/job in job_master.occupations)
+	if(SSoccupations)
+		for(var/datum/job/job in SSoccupations.occupations)
 			to_chat(src, "[job.title]: [job.total_positions]")
 	feedback_add_details("admin_verb","LFS") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 

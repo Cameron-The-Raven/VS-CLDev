@@ -21,11 +21,13 @@ var/global/last_tick_duration = 0
 			qdel(master_controller)
 		master_controller = src
 
+	/* Moved to SSoccupations
 	if(!job_master)
 		job_master = new /datum/controller/occupations()
 		job_master.SetupOccupations()
 		job_master.LoadJobs("config/jobs.txt")
 		admin_notice(span_danger("Job setup complete"), R_DEBUG)
+	*/
 
 	if(!syndicate_code_phrase)		syndicate_code_phrase	= generate_code_phrase()
 	if(!syndicate_code_response)	syndicate_code_response	= generate_code_phrase()
@@ -36,7 +38,7 @@ var/global/last_tick_duration = 0
 	// setupgenetics() Moved to SSatoms
 	// SetupXenoarch() - Moved to SSxenoarch
 
-	transfer_controller = new
+	// transfer_controller = new - Move to SStransfer_controller
 	admin_notice(span_danger("Initializations complete."), R_DEBUG)
 
 // #if UNIT_TEST

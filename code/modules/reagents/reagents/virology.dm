@@ -44,6 +44,7 @@
 	id = REAGENT_ID_PHORONVIRUSFOOD
 	description = "Mutates viruses when mixed in blood. This one seems to be the strongest."
 	color = "#A69DA9"
+	atmo_flags = 0 // Ignore phoron gas' inheretance here.
 
 /datum/reagent/toxin/phoron/phoronvirusfood/weak
 	name = REAGENT_WEAKPHORONVIRUSFOOD

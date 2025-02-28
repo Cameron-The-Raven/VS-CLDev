@@ -68,20 +68,16 @@ SUBSYSTEM_DEF(chemistry)
 	mouse_opacity = 0
 	plane = ABOVE_MOB_PLANE
 
-/atom/movable/gas_visuals/Initialize(mapload, ico)
-	. = ..()
-	icon_state = ico
-
 //Chemical Gasses - Initialises all atmospheric gasses
 /datum/controller/subsystem/chemistry/proc/initialize_gas_data()
 	for(var/key in chemical_reagents)
 		var/datum/reagent/gas = chemical_reagents[key]
-		if(gas.id in atmo_gases)
-			error("Duplicate gas id `[gas.id]`")
-			continue
 		if(gas.atmo_flags & IS_XGM_GAS)
+			if(gas.id in atmo_gases)
+				CRASH("Duplicate gas id `[gas.id]`")
 			atmo_gases[gas.id] = gas
-			gas.tile_overlay = new /atom/movable/gas_visuals(null, gas.id)
+			gas.tile_overlay = new /atom/movable/gas_visuals(null)
+			gas.tile_overlay.icon_state = gas.id
 
 /datum/controller/subsystem/chemistry/proc/get_gas_name(var/id)
 	if(!atmo_gases[id])

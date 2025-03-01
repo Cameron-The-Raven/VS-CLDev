@@ -161,6 +161,10 @@
 #define span_darkpink(str) ("<span class='darkpink'>" + str + "</span>")
 #define span_rose(str) ("<span class='rose'>" + str + "</span>")
 
+// Flashing colors
+#define span_hypnophrase(str) ("<span class='hypnophrase'>" + str + "</span>")
+#define span_majorcritical(str) ("<span class='painflash'>" + str + "</span>")
+
 /* System and Debug */
 // System filter
 #define span_boldannounce(str) ("<span class='boldannounce'>" + str + "</span>")

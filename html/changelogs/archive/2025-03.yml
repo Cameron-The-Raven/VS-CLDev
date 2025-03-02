@@ -5,3 +5,6 @@
   - bugfix: motion tracking ability now lets you properly motion track
   - qol: Motion tracker subsystem can be toggled off for hide and seek modes
   - bugfix: no more randomly invisible marker beacons
+2025-03-02:
+  Kashargul:
+  - admin: fix internet audio player

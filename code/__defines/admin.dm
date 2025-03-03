@@ -7,7 +7,7 @@
 #define MUTE_PRAY      0x8
 #define MUTE_ADMINHELP 0x10
 #define MUTE_DEADCHAT  0x20
-#define MUTE_ALL       0xFFFF
+#define MUTE_ALL       (~0)
 
 // Number of identical messages required to get the spam-prevention auto-mute thing to trigger warnings and automutes.
 #define SPAM_TRIGGER_WARNING  5

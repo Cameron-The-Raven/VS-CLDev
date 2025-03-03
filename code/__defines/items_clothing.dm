@@ -133,7 +133,7 @@
 #define HAND_LEFT   0x800
 #define HAND_RIGHT  0x1000
 #define HANDS       0x1800	// HAND_LEFT | HAND_RIGHT
-#define FULL_BODY   0xFFFF
+#define FULL_BODY   (~0)
 
 // Bitflags for the percentual amount of protection a piece of clothing which covers the body part offers.
 // Used with human/proc/get_heat_protection() and human/proc/get_cold_protection().

@@ -1462,3 +1462,59 @@ $border-width-px: $border-width * 1px;
   color: #0077ff;
   font-family: Wingdings, Webdings;
 }
+
+.hypnophrase {
+  color: #0d0d0d;
+  font-weight: bold;
+  animation: hypnocolor 1500ms infinite;
+}
+
+@keyframes hypnocolor {
+  0% {
+    color: #202020;
+  }
+
+  25% {
+    color: #4b02ac;
+  }
+
+  50% {
+    color: #9f41f1;
+  }
+
+  75% {
+    color: #541c9c;
+  }
+
+  100% {
+    color: #7adbf3;
+  }
+}
+
+.painflash {
+  color: #0d0d0d;
+  font-weight: bold;
+  animation: paincycle 1500ms infinite;
+}
+
+@keyframes paincycle {
+  0% {
+    color: #a41010;
+  }
+
+  25% {
+    color: #b72b08;
+  }
+
+  50% {
+    color: #e7380c;
+  }
+
+  75% {
+    color: #b72b08;
+  }
+
+  100% {
+    color: #a41010;
+  }
+}

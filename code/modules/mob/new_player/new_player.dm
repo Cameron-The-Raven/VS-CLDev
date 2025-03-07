@@ -187,6 +187,7 @@
 			client.prefs.dress_preview_mob(mannequin)
 			var/mob/observer/dead/observer = new(mannequin)
 			observer.moveToNullspace() //Let's not stay in our doomed mannequin
+			qdel(mannequin) //We're not used anymore, so goodbye!
 
 			spawning = 1
 			if(client.media)
@@ -524,7 +525,7 @@
 
 	if(chosen_species && use_species_name)
 		// Have to recheck admin due to no usr at roundstart. Latejoins are fine though.
-		if(is_alien_whitelisted(chosen_species))
+		if(is_alien_whitelisted(src.client, chosen_species))
 			new_character = new(T, use_species_name)
 
 	if(!new_character)
@@ -600,9 +601,6 @@
 	src << browse(null, "window=News") //closes news window
 	panel.close()
 
-/mob/new_player/proc/has_admin_rights()
-	return check_rights(R_ADMIN, 0, src)
-
 /mob/new_player/get_species()
 	var/datum/species/chosen_species
 	if(client.prefs.species)
@@ -611,7 +609,7 @@
 	if(!chosen_species)
 		return SPECIES_HUMAN
 
-	if(is_alien_whitelisted(chosen_species))
+	if(is_alien_whitelisted(src.client, chosen_species))
 		return chosen_species.name
 
 	return SPECIES_HUMAN

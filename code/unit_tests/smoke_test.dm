@@ -45,30 +45,34 @@
 	// sleepy del
 	var/ref = new /obj/item/communicator(container)
 	qdel(ref)
+	ref = null
 	sleep(1)
 	if(check_valid(test_index,"SLEEPY ON CREATE"))
 		number_of_issues++
 	clear_inv(container)
 
 	// spawn magic
-	var/ref = new /obj/item/communicator(container)
+	ref = new /obj/item/communicator(container)
 	qdel(ref)
+	ref = null
 	spawn(1)
 		if(check_valid(test_index,"SPAWN ON CREATE"))
 			number_of_issues++
 		clear_inv(container)
 
 	// sleepy del
-	var/ref = new /obj/item/communicator(container)
-	sleep(1)
-	qdel(ref)
+	ref = new /obj/item/communicator(container)
 	if(check_valid(test_index,"SLEEPY DEL"))
 		number_of_issues++
+	sleep(1)
+	qdel(ref)
+	ref = null
 
 	// spawn magic
-	var/ref = new /obj/item/communicator(container)
+	ref = new /obj/item/communicator(container)
 	spawn(1)
 		qdel(ref)
+		ref = null
 	if(check_valid(test_index,"SPAWN DEL"))
 		number_of_issues++
 

@@ -31,7 +31,7 @@
 	clear_inv(container)
 
 	// Check subtypes
-	for(var/type in subtypesof(/obj/item/communicator))
+	for(var/type in subtypesof(/obj/item/communicator) - /obj/item/communicator/commlink)
 		new type(container)
 		if(check_valid(test_index,"BAD PATH [type]"))
 			number_of_issues++

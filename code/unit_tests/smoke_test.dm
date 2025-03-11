@@ -16,6 +16,7 @@
 	clear_inv(container)
 	if(check_valid(test_index,"STANDARD QDEL"))
 		number_of_issues++
+	clear_inv(container)
 
 	// Del communicator
 	new /obj/item/communicator(container)
@@ -29,10 +30,49 @@
 		number_of_issues++
 	clear_inv(container)
 
+	// Del communicator
+	new /obj/item/communicator/smoke(container)
+	if(check_valid(test_index,"BAD PATH"))
+		number_of_issues++
+	clear_inv(container)
+
 	// nullspace spawn
 	new /obj/item/communicator(null)
 	if(check_valid(test_index,"NULLSPACED"))
 		number_of_issues++
+
+	// sleepy del
+	var/ref = new /obj/item/communicator(container)
+	qdel(ref)
+	sleep(1)
+		if(check_valid(test_index,"SLEEPY ON CREATE"))
+			number_of_issues++
+		clear_inv(container)
+
+	// spawn magic
+	var/ref = new /obj/item/communicator(container)
+	qdel(ref)
+	spawn(1)
+		if(check_valid(test_index,"SPAWN ON CREATE"))
+			number_of_issues++
+		clear_inv(container)
+
+	// sleepy del
+	var/ref = new /obj/item/communicator(container)
+	sleep(1)
+		qdel(ref)
+	if(check_valid(test_index,"SLEEPY DEL"))
+		number_of_issues++
+
+	// spawn magic
+	var/ref = new /obj/item/communicator(container)
+	spawn(1)
+		qdel(ref)
+	if(check_valid(test_index,"SPAWN DEL"))
+		number_of_issues++
+
+	// prewipe
+	clear_inv(container)
 
 	// big one
 	for(var/i = 1 to 1000)

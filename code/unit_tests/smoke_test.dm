@@ -30,11 +30,12 @@
 		number_of_issues++
 	clear_inv(container)
 
-	// Del communicator
-	new /obj/item/communicator/smoke(container)
-	if(check_valid(test_index,"BAD PATH"))
-		number_of_issues++
-	clear_inv(container)
+	// Check subtypes
+	for(var/type in subtypesof(/obj/item/communicator))
+		new type(container)
+		if(check_valid(test_index,"BAD PATH [type]"))
+			number_of_issues++
+		clear_inv(container)
 
 	// nullspace spawn
 	new /obj/item/communicator(null)
@@ -45,9 +46,9 @@
 	var/ref = new /obj/item/communicator(container)
 	qdel(ref)
 	sleep(1)
-		if(check_valid(test_index,"SLEEPY ON CREATE"))
-			number_of_issues++
-		clear_inv(container)
+	if(check_valid(test_index,"SLEEPY ON CREATE"))
+		number_of_issues++
+	clear_inv(container)
 
 	// spawn magic
 	var/ref = new /obj/item/communicator(container)
@@ -60,7 +61,7 @@
 	// sleepy del
 	var/ref = new /obj/item/communicator(container)
 	sleep(1)
-		qdel(ref)
+	qdel(ref)
 	if(check_valid(test_index,"SLEEPY DEL"))
 		number_of_issues++
 

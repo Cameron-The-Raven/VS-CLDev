@@ -6,23 +6,31 @@
 
 /obj/machinery/computer/am_engine
 	name = "Antimatter Engine Console"
-	icon = 'icons/obj/stationobjs.dmi'
-	icon_state = "comm_computer"
-	req_access = list(ACCESS_ENGINE)
+	icon_screen = "turbinecomp"
+	icon_keyboard = "id_key"
+	req_access = list(access_engine)
 	var/engine_id = 0
 	var/authenticated = 0
-	var/obj/machinery/power/am_engine/engine/connected_E = null
-	var/obj/machinery/power/am_engine/injector/connected_I = null
+	var/datum/weakref/connected_E
+	var/datum/weakref/connected_I
 	var/state = STATE_DEFAULT
 
 /obj/machinery/computer/am_engine/Initialize(mapload)
-	. = ..()
-	for(var/obj/machinery/power/am_engine/engine/E in world)
-		if(E.engine_id == src.engine_id)
-			src.connected_E = E
-	for(var/obj/machinery/power/am_engine/injector/I in world)
-		if(I.engine_id == src.engine_id)
-			src.connected_I = I
+	..()
+	return INITIALIZE_HINT_LATELOAD
+
+/obj/machinery/computer/am_engine/LateInitialize()
+	check_components()
+
+/obj/machinery/computer/am_engine/proc/check_components()
+	if(!connected_E?.resolve())
+		for(var/obj/machinery/power/am_engine/engine/E in get_area(src))
+			if(E.engine_id == engine_id)
+				connected_E = WEAKREF(E)
+	if(!connected_I?.resolve())
+		for(var/obj/machinery/power/am_engine/injector/I in get_area(src))
+			if(I.engine_id == engine_id)
+				connected_I = WEAKREF(I)
 
 /obj/machinery/computer/am_engine/Topic(href, href_list)
 	if(..())
@@ -34,35 +42,39 @@
 	switch(href_list["operation"])
 		// main interface
 		if("activate")
-			src.connected_E.engine_process()
+			check_components()
+			var/obj/machinery/power/am_engine/engine/engine = connected_E?.resolve()
+			engine?.engine_go()
 		if("engine")
-			src.state = STATE_ENGINE
+			state = STATE_ENGINE
 		if("injector")
-			src.state = STATE_INJECTOR
+			state = STATE_INJECTOR
 		if("main")
-			src.state = STATE_DEFAULT
+			state = STATE_DEFAULT
 		if("login")
 			var/mob/M = usr
 			var/obj/item/card/id/I = M.get_active_hand()
 			if (I && istype(I))
-				if(src.check_access(I))
+				if(check_access(I))
 					authenticated = 1
 		if("deactivate")
-			src.connected_E.stopping = 1
+			check_components()
+			var/obj/machinery/power/am_engine/engine/engine = connected_E?.resolve()
+			engine?.engine_shutdown()
 		if("logout")
 			authenticated = 0
 
-	src.updateUsrDialog(usr)
+	updateUsrDialog(usr)
 
 /obj/machinery/computer/am_engine/attack_ai(var/mob/user as mob)
-	return src.attack_hand(user)
+	return attack_hand(user)
 
 /obj/machinery/computer/am_engine/attack_hand(var/mob/user as mob)
 	if(..())
 		return
 	user.machine = src
 	var/dat = "<head><title>Engine Computer</title></head><body>"
-	switch(src.state)
+	switch(state)
 		if(STATE_DEFAULT)
 			if (src.authenticated)
 				dat += "<BR>\[ <A href='byond://?src=\ref[src];operation=logout'>Log Out</A> \]<br>"
@@ -71,20 +83,26 @@
 			else
 				dat += "<BR>\[ <A href='byond://?src=\ref[src];operation=login'>Log In</A> \]"
 		if(STATE_INJECTOR)
-			if(src.connected_I.injecting)
-				dat += "<BR>\[ Injecting \]<br>"
+			check_components()
+			var/obj/machinery/power/am_engine/injector/inject = connected_I?.resolve()
+			if(isnull(inject))
+				dat += "<BR>\[ DISCONNECTED \]<br>"
+			else if(inject.injecting)
+				dat += "<BR>\[ Injection in progress\]<br>"
 			else
-				dat += "<BR>\[ Injecting not in progress \]<br>"
+				dat += "<BR>\[ Not injecting \]<br>"
 		if(STATE_ENGINE)
-			if(src.connected_E.stopping)
-				dat += "<BR>\[ STOPPING \]"
-			else if(src.connected_E.operating && !src.connected_E.stopping)
+			check_components()
+			var/obj/machinery/power/am_engine/engine/engine = connected_E?.resolve()
+			if(!engine)
+				dat += "<BR>\[ DISCONNECTED \]"
+			else if(engine.datum_flags & DF_ISPROCESSING)
 				dat += "<BR>\[ <A href='byond://?src=\ref[src];operation=deactivate'>Emergency Stop</A> \]"
 			else
 				dat += "<BR>\[ <A href='byond://?src=\ref[src];operation=activate'>Activate Engine</A> \]"
-			dat += "<BR>Contents:<br>[src.connected_E.H_fuel]kg of Hydrogen<br>[src.connected_E.antiH_fuel]kg of Anti-Hydrogen<br>"
+			dat += "<BR>Contents:<br>[engine.H_fuel]kg of Hydrogen<br>[engine.antiH_fuel]kg of Anti-Hydrogen<br>"
 
-	dat += "<BR>\[ [(src.state != STATE_DEFAULT) ? "<A href='byond://?src=\ref[src];operation=main'>Main Menu</A> | " : ""]<A href='byond://?src=\ref[user];mach_close=communications'>Close</A> \]"
+	dat += "<BR>\[ [(state != STATE_DEFAULT) ? "<A href='byond://?src=\ref[src];operation=main'>Main Menu</A> | " : ""]<A href='byond://?src=\ref[user];mach_close=communications'>Close</A> \]"
 	user << browse("<html>[dat]</html>", "window=communications;size=400x500")
 	onclose(user, "communications")
 

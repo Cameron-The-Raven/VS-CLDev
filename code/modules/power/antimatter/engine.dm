@@ -1,90 +1,54 @@
 /obj/machinery/power/am_engine
+	name = DEVELOPER_WARNING_NAME
 	icon = 'icons/am_engine.dmi'
+	icon_state = "core_off"
 	density = TRUE
 	anchored = TRUE
 	flags = ON_BORDER
 
-/obj/machinery/power/am_engine/bits
-	name = "Antimatter Engine"
-	icon_state = "1"
+/proc/convert2energy(mass)
+	return mass * (SPEED_OF_LIGHT ** 2)
 
+/obj/machinery/power/am_engine/proc/check_components()
+	return
+
+//engine
 /obj/machinery/power/am_engine/engine
 	name = "Antimatter Engine"
-	icon_state = "am_engine"
+	icon_state = "core_off"
 	var/engine_id = 0
 	var/H_fuel = 0
 	var/antiH_fuel = 0
-	var/operating = 0
-	var/stopping = 0
-	var/obj/machinery/power/am_engine/injector/connected = null
-
-/obj/machinery/power/am_engine/injector
-	name = "Injector"
-	icon_state = "injector"
-	var/engine_id = 0
-	var/injecting = 0
-	var/fuel = 0
-	var/obj/machinery/power/am_engine/engine/connected = null
-
-//injector
-
-/obj/machinery/power/am_engine/injector/Initialize(mapload)
-	. = ..()
-	var/link_loc = get_step(src, NORTH)
-	src.connected = locate(/obj/machinery/power/am_engine/engine, get_step(link_loc, NORTH))
-
-/obj/machinery/power/am_engine/injector/attackby(obj/item/fuel/F, mob/user)
-	if( (stat & BROKEN) || !connected) return
-
-	if(istype(F, /obj/item/fuel/H))
-		if(injecting)
-			to_chat(user, "There's already a fuel rod in the injector!")
-			return
-		to_chat(user, "You insert the rod into the injector")
-		injecting = 1
-		var/fuel = F.fuel
-		qdel(F)
-		spawn( 300 )
-			injecting = 0
-			new/obj/item/fuel(src.loc)
-			connected.H_fuel += fuel
-
-	if(istype(F, /obj/item/fuel/antiH))
-		if(injecting)
-			to_chat(user, "There's already a fuel rod in the injector!")
-			return
-		to_chat(user, "You insert the rod into the injector")
-		injecting = 1
-		var/fuel = F.fuel
-		qdel(F)
-		spawn( 300 )
-			injecting = 0
-			new /obj/item/fuel(src.loc)
-			connected.antiH_fuel += fuel
-
-	return
-
-
-//engine
-
+	var/datum/weakref/connected = null
 
 /obj/machinery/power/am_engine/engine/Initialize(mapload)
-	. = ..()
-	var/link_loc = get_step(src, SOUTH)
-	src.connected = locate(/obj/machinery/power/am_engine/injector, get_step(link_loc, SOUTH))
+	..()
+	return INITIALIZE_HINT_LATELOAD
 
+/obj/machinery/power/am_engine/engine/LateInitialize()
+	check_components()
+
+/obj/machinery/power/am_engine/engine/check_components()
+	if(connected?.resolve())
+		return
+	var/obj/machinery/power/am_engine/injector/I = locate() in get_area(src)
+	connected = WEAKREF(I)
+
+/obj/machinery/power/am_engine/engine/Destroy()
+	if(datum_flags & DF_ISPROCESSING)
+		STOP_MACHINE_PROCESSING(src)
+	. = ..()
 
 /obj/machinery/power/am_engine/engine/proc/engine_go()
-
-	if( (!src.connected) || (stat & BROKEN) )
+	if(datum_flags & DF_ISPROCESSING)
 		return
-
+	check_components()
+	if((!connected?.resolve()) || (stat & BROKEN))
+		return
 	if(!antiH_fuel || !H_fuel)
 		return
 
-	operating = 1
 	var/energy = 0
-
 	if(antiH_fuel == H_fuel)
 		var/mass = antiH_fuel + H_fuel
 		energy = convert2energy(mass)
@@ -100,101 +64,110 @@
 		else
 			H_fuel = 0
 			antiH_fuel = residual_matter
+	visible_message(span_red("\The [src] fires!"),span_red("You hear a loud bang!"), runemessage = "bang")
+	energy = energy*0.75 //Q = k x (delta T)
 
-	for(var/mob/M in hearers(src, null))
-		M.show_message(span_red(text("You hear a loud bang!")))
+	START_MACHINE_PROCESSING(src)
+	var/obj/machinery/power/am_engine/injector/I = connected?.resolve()
+	I.update_icon()
+	update_icon()
 
-	//Q = k x (delta T)
+/obj/machinery/power/am_engine/engine/proc/engine_shutdown()
+	if(!(datum_flags & DF_ISPROCESSING))
+		return
+	visible_message(span_red("\The [src] whirrs down!"),span_red("You hear a low whirring!"), runemessage = "whirr...")
+	STOP_MACHINE_PROCESSING(src)
 
-	energy = energy*0.75
-	operating = 0
+/obj/machinery/power/am_engine/engine/process()
+	var/obj/machinery/power/am_engine/injector/I = connected?.resolve()
+	if(!I || (stat & BROKEN) )
+		STOP_MACHINE_PROCESSING(src)
+		update_icon()
+		return
+	if(!antiH_fuel || !H_fuel)
+		STOP_MACHINE_PROCESSING(src)
+		update_icon()
+		return
 
-	//TODO: DEFERRED Heat tile
+	var/mass				//total mass
+	var/energy				//energy from the reaction
+	var/remaining_H	= 0		//residual matter if H
+	var/remaining_antiH = 0	//residual matter if antiH
+	if(antiH_fuel == H_fuel)
+		//if they're equal then convert the whole mass to energy
+		mass = antiH_fuel + H_fuel
+		energy = convert2energy(mass)
+	else
+		//else if they're not equal determine which isn't equal
+		//and set it equal to either H or antiH so we don't lose anything
+		var/residual_matter = abs(H_fuel - antiH_fuel)
+		mass = antiH_fuel + H_fuel - residual_matter
+		energy = convert2energy(mass)
+		if( H_fuel > antiH_fuel )
+			remaining_H = residual_matter
+		else
+			remaining_antiH = residual_matter
 
-	return
+	if(energy > convert2energy(8e-12))
+		//TOO MUCH ENERGY
+		visible_message(span_red("\The [src] whirrs loudly!"),span_red("You hear a loud whirring!"), runemessage = "whirr")
+		addtimer(src,CALLBACK(src,PROC_REF(attempt_singularity_cascade),energy,H,antiH,mass),20,TIMER_DELETE_ME)
+	else
+		//this amount of energy is okay so it does the proper output thing
+		//E = Pt
+		//Lets say its 86% efficient
+		var/output = 0.86*energy/20
+		add_avail(output)
 
-
-/obj/machinery/power/am_engine/engine/proc/engine_process()
-
-	do
-		if( (!src.connected) || (stat & BROKEN) )
-			return
-
-		if(!antiH_fuel || !H_fuel)
-			return
-
-		if(operating)
-			return
-
-		operating = 1
-
-		sleep(50)
-
-		var/energy	//energy from the reaction
-		var/H		//residual matter if H
-		var/antiH	//residual matter if antiH
-		var/mass	//total mass
-
-		if(antiH_fuel == H_fuel)		//if they're equal then convert the whole mass to energy
-			mass = antiH_fuel + H_fuel
-			energy = convert2energy(mass)
-
-		else	//else if they're not equal determine which isn't equal
-				//and set it equal to either H or antiH so we don't lose anything
-
-			var/residual_matter = abs(H_fuel - antiH_fuel)
-			mass = antiH_fuel + H_fuel - residual_matter
-			energy = convert2energy(mass)
-
-			if( H_fuel > antiH_fuel )
-				H = residual_matter
-			else
-				antiH = residual_matter
-
-
-		if(energy > convert2energy(8e-12))	//TOO MUCH ENERGY
-			for(var/mob/M in hearers(src, null))
-				M.show_message(span_red(text("You hear a loud whirring!")))
-			sleep(20)
-
-			//Q = k x (delta T)
-			//Too much energy so machine panics and dissapates half of it as heat
-			//The rest of the energetic photons then form into H and anti H particles again!
-
-			H_fuel -= H
-			antiH_fuel -= antiH
-			antiH_fuel = antiH_fuel/2
-			H_fuel = H_fuel/2
-
-			energy = convert2energy(H_fuel + antiH_fuel)
-
-			H_fuel += H
-			antiH_fuel += antiH
-
-			if(energy > convert2energy(8e-12))	//FAR TOO MUCH ENERGY STILL
-				for(var/mob/M in hearers(src, null))
-					M.show_message(span_red(text("<big>BANG!</big>")))
-				new /obj/effect/bhole(src.loc)
-
-		else	//this amount of energy is okay so it does the proper output thing
-
-			sleep(60)
-			//E = Pt
-			//Lets say its 86% efficient
-			var/output = 0.86*energy/20
-			add_avail(output)
 	//yeah the machine realises that something isn't right and accounts for it if H or antiH
-			H_fuel -= H
-			antiH_fuel -= antiH
-			antiH_fuel = antiH_fuel/4
-			H_fuel = H_fuel/4
-			H_fuel += H
-			antiH_fuel += antiH
-		operating = 0
-		sleep(100)
+	H_fuel -= remaining_H
+	antiH_fuel -= remaining_antiH
+	antiH_fuel = antiH_fuel/4
 
-	while(!stopping)
+	H_fuel = H_fuel/4
+	H_fuel += remaining_H
+	antiH_fuel += remaining_antiH
 
-	stopping = 0
+	if(H_fuel <= 0)
+		H_fuel = 0
+		I.mat_tank = FALSE
+	if(antiH_fuel <= 0)
+		antiH_fuel = 0
+		I.anti_tank = FALSE
 
-	return
+	I.update_icon()
+
+/obj/machinery/power/am_engine/engine/proc/attempt_singularity_cascade(var/energy,var/H,var/antiH,var/mass)
+	//Q = k x (delta T)
+	//Too much energy so machine panics and dissapates half of it as heat
+	//The rest of the energetic photons then form into H and anti H particles again!
+	H_fuel -= H
+	antiH_fuel -= antiH
+	antiH_fuel = antiH_fuel/2
+	H_fuel = H_fuel/2
+
+	energy = convert2energy(H_fuel + antiH_fuel)
+	H_fuel += H
+	antiH_fuel += antiH
+
+	//FAR TOO MUCH ENERGY STILL
+	if(energy > convert2energy(8e-12))
+		STOP_MACHINE_PROCESSING(src) // we're BYOND saving!
+		var/turf/ground_zero = get_turf(src)
+		if(!ground_zero)
+			return
+		var/ground_zero_range = round(energy / 387)
+		log_and_message_admins("[src] entered an explosive gravity cascade! [ground_zero.x].[ground_zero.y].[ground_zero.z]")
+		visible_message(span_huge(span_bolddanger("BANG")),span_huge(span_bolddanger("BANG")), runemessage = "bang")
+		qdel(src)
+		SSradiation.radiate(ground_zero, energy)
+		new /obj/effect/bhole(ground_zero)
+		explosion(ground_zero, ground_zero_range, ground_zero_range*2, ground_zero_range*3, ground_zero_range*4)
+
+/obj/machinery/power/am_engine/engine/update_icon()
+	if(datum_flags & DF_ISPROCESSING)
+		icon_state = "core_on"
+		set_light(3, 2, "#66FFFF")
+	else
+		icon_state = "core_off"
+		set_light(0)

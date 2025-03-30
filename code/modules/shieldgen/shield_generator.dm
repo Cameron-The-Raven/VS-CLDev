@@ -50,13 +50,10 @@
 		set_light(0)
 
 
-/obj/machinery/power/shield_generator/Initialize()
+/obj/machinery/power/shield_generator/Initialize(mapload)
 	. = ..()
 	if(!wires)
 		wires = new(src)
-	// TODO - Remove this bit once machines are converted to Initialize
-	if(ispath(circuit))
-		circuit = new circuit(src)
 	default_apply_parts()
 	connect_to_network()
 

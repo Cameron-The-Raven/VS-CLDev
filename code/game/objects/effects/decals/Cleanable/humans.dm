@@ -157,8 +157,8 @@ var/global/list/image/splatter_cache=list()
 				user.ContractDisease(D)
 
 /obj/effect/decal/cleanable/blood/splatter
-        random_icon_states = list("mgibbl1", "mgibbl2", "mgibbl3", "mgibbl4", "mgibbl5")
-        amount = 2
+		random_icon_states = list("mgibbl1", "mgibbl2", "mgibbl3", "mgibbl4", "mgibbl5")
+		amount = 2
 
 /obj/effect/decal/cleanable/blood/drip
 	name = "drips of blood"
@@ -265,12 +265,12 @@ var/global/list/image/splatter_cache=list()
 	var/list/datum/disease/viruses = list()
 	var/dry = 0 // Keeps the lag down
 
-/obj/effect/decal/cleanable/mucus/Initialize()
+/obj/effect/decal/cleanable/mucus/mapped/Initialize(mapload)
 	. = ..()
 	VARSET_IN(src, dry, TRUE, DRYING_TIME * 2)
 
 //This version should be used for admin spawns and pre-mapped virus vectors (e.g. in PoIs), this version does not dry
-/obj/effect/decal/cleanable/mucus/mapped/Initialize()
+/obj/effect/decal/cleanable/mucus/mapped/Initialize(mapload)
 	. = ..()
 	viruses |= new /datum/disease/advance
 

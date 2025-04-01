@@ -140,7 +140,7 @@
 	var/tmp/digested_prey_count = 0				// Amount of prey that have been digested
 
 	var/item_digest_mode = IM_DIGEST_FOOD	// Current item-related mode from item_digest_modes
-	var/contaminates = TRUE					// Whether the belly will contaminate stuff
+	var/contaminates = FALSE					// Whether the belly will contaminate stuff
 	var/contamination_flavor = "Generic"	// Determines descriptions of contaminated items
 	var/contamination_color = "green"		// Color of contamination overlay
 
@@ -1213,7 +1213,7 @@
 	else
 		log_debug("[src] (\ref[src]) doesn't have an owner, and dropped someone at a latespawn point!")
 		var/fallback = pick(latejoin)
-		return get_turf(fallback)
+		return fallback
 
 //Yes, it's ""safe"" to drop items here
 /obj/belly/AllowDrop()

@@ -126,7 +126,7 @@
 			if(!istype(D1, /datum/disease/advance))
 				var/keep = TRUE
 				for(var/datum/disease/D2 in preserve)
-					if(D1.IsSame(D2))
+					if(D1.is_same(D2))
 						keep = FALSE
 						break
 				if(keep)
@@ -136,7 +136,7 @@
 			if(!istype(D1, /datum/disease/advance))
 				var/keep = TRUE
 				for(var/datum/disease/D2 in preserve)
-					if(D1.IsSame(D2))
+					if(D1.is_same(D2))
 						keep = FALSE
 						break
 				if(keep)

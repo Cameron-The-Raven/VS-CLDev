@@ -282,7 +282,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 	if(length(symptoms) > 1)
 		var/s = safepick(symptoms)
 		if(s)
-			remove_symptom(s)
+			RemoveSymptom(s)
 			Refresh(TRUE)
 	return
 
@@ -336,18 +336,18 @@ GLOBAL_LIST_INIT(advance_cures, list(
 	if(length(symptoms) < (VIRUS_SYMPTOM_LIMIT - 1) + rand(-1, 1))
 		symptoms += S
 	else
-		remove_symptom(pick(symptoms))
+		RemoveSymptom(pick(symptoms))
 		symptoms += S
 	S.OnAdd(src)
 	Refresh()
 
 /// Simply removes the symptom.
-/datum/disease/advance/proc/remove_symptom(datum/symptom/S)
+/datum/disease/advance/proc/RemoveSymptom(datum/symptom/S)
 	symptoms -= S
 	return
 
 /// Neuters a symptom, allowing it only for stats.
-/datum/disease/advance/Neuter(datum/symptom/S)
+/datum/disease/advance/NeuterSymptom(datum/symptom/S)
 	if(!S.neutered)
 		S.neutered = TRUE
 		S.name += " (neutered)"

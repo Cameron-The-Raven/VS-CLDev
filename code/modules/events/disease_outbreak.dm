@@ -53,7 +53,7 @@ GLOBAL_LIST_EMPTY(current_pending_diseases)
 	while(chosen_infect)
 		if(!isemptylist(candidates))
 			var/mob/living/carbon/human/H = pick(candidates)
-			H.ForceContractDisease(chosen_disease)
+			H.force_contract_disease(chosen_disease)
 			candidates -= H
 		chosen_infect--
 
@@ -63,21 +63,21 @@ GLOBAL_LIST_EMPTY(current_pending_diseases)
 //Creates a virus with a harmful effect, guaranteed to be spreadable by contact or airborne
 /datum/event/disease_outbreak/proc/create_virus(max_severity = 6)
 	var/datum/disease/advance/A = new /datum/disease/advance
-	A.symptoms = A.GenerateSymptomsBySeverity(max_severity - 1, max_severity, 2) //Choose "Payload" symptoms
-	A.AssignProperties(A.GenerateProperties())
+	A.symptoms = A.generate_symptoms_by_severity(max_severity - 1, max_severity, 2) //Choose "Payload" symptoms
+	A.assign_properties(A.generate_properties())
 	var/list/symptoms_to_try = transmissable_symptoms.Copy()
 	while(length(symptoms_to_try))
 		if(A.spread_text != "Blood")
 			break
 		if(length(A.symptoms) < VIRUS_SYMPTOM_LIMIT)	//Ensure the virus is spreadable by adding symptoms that boost transmission
 			var/datum/symptom/TS = pick_n_take(symptoms_to_try)
-			A.AddSymptom(new TS)
+			A.add_symptom(new TS)
 		else
 			popleft(A.symptoms)	//We have a full symptom list but are still not transmittable. Try removing one of the "payloads"
 
-		A.AssignProperties(A.GenerateProperties())
+		A.assign_properties(A.generate_properties())
 	A.name = pick(GLOB.alphabet_upper) + num2text(rand(1,9)) + pick(GLOB.alphabet_upper) + num2text(rand(1,9)) + pick("v", "V", "-" + num2text(GLOB.game_year), "")
-	A.Refresh()
+	A.refresh()
 	return A
 
 /datum/event/disease_outbreak/proc/populate_diseases()

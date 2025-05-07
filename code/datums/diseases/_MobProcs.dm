@@ -148,7 +148,7 @@
 
 /mob/living/proc/AirborneContractDisease(datum/disease/D, force_spread)
 	if(((D.spread_flags & DISEASE_SPREAD_AIRBORNE) || force_spread) && prob(50*D.spreading_modifier) - 1)
-		ForceContractDisease(D)
+		force_contract_disease(D)
 
 /mob/living/carbon/AirborneContractDisease(datum/disease/D, force_spread)
 	if(internal)
@@ -157,7 +157,7 @@
 		return
 	..()
 
-/mob/proc/ForceContractDisease(datum/disease/D, respect_carrier)
+/mob/proc/force_contract_disease(datum/disease/D, respect_carrier)
 	if(!CanContractDisease(D))
 		return FALSE
 
@@ -231,7 +231,7 @@
 	var/datum/disease/D = new disease
 
 	if(!H.HasDisease(D))
-		H.ForceContractDisease(D)
+		H.force_contract_disease(D)
 
 		message_admins("[key_name_admin(usr)] has triggered a virus outbreak of [D.name]! Affected mob: [key_name_admin(H)]")
 		log_admin("[key_name_admin(usr)] infected [key_name_admin(H)] with [D.name]")

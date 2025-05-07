@@ -343,7 +343,7 @@
 	if(adv_disease)
 		if(!name)
 			return FALSE
-		adv_disease.AssignName(name)
+		adv_disease.assign_name(name)
 		return TRUE
 	return FALSE
 

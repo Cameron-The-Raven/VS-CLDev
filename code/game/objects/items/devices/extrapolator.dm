@@ -218,8 +218,8 @@
 	var/datum/disease/advance/symptom_holder = new
 	symptom_holder.name = chosen.name
 	symptom_holder.symptoms += chosen
-	symptom_holder.Finalize()
-	symptom_holder.Refresh()
+	symptom_holder.finalize()
+	symptom_holder.refresh()
 	if(do_after(user, extract_time, target = target))
 		create_culture(user, symptom_holder, target)
 		return TRUE

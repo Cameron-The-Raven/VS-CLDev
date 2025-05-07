@@ -64,14 +64,14 @@
 	if(B && B.data)
 		var/datum/disease/advance/D = locate(/datum/disease/advance) in B.data["viruses"]
 		if(D)
-			D.Evolve(level_min, level_max)
+			D.evolve(level_min, level_max)
 
 /decl/chemical_reaction/instant/mix_virus/picky/on_reaction(datum/reagents/holder)
 	var/datum/reagent/blood/B = locate(/datum/reagent/blood) in holder.reagent_list
 	if(B && B.data)
 		var/datum/disease/advance/D = locate(/datum/disease/advance) in B.data["viruses"]
 		if(D)
-			D.PickyEvolve(symptoms)
+			D.picky_evolve(symptoms)
 
 /decl/chemical_reaction/instant/mix_virus/mix_virus_2
 	name = "Mix Virus 2"
@@ -150,7 +150,7 @@
 	if(B && B.data)
 		var/datum/disease/advance/D = locate(/datum/disease/advance) in B.data["viruses"]
 		if(D)
-			D.Devolve()
+			D.devolve()
 
 /decl/chemical_reaction/instant/antibodies
 	name = REAGENT_ANTIBODIES
@@ -171,4 +171,4 @@
 	if(B && B.data)
 		var/datum/disease/advance/D = locate(/datum/disease/advance) in B.data["viruses"]
 		if(D)
-			D.Neuter()
+			D.neuter_symptom()

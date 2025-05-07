@@ -33,8 +33,8 @@
 			symptoms += new chosen_symptom
 	for(var/guaranteed_symptom in guaranteed_symptoms)
 		symptoms += new guaranteed_symptom
-	Finalize()
-	Refresh()
+	finalize()
+	refresh()
 
 /datum/disease/advance/random/macrophage
 	setsymptom = /datum/symptom/macrophage

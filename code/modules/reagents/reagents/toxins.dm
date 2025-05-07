@@ -992,5 +992,5 @@
 	wiki_flag = WIKI_SPOILER
 
 /datum/reagent/salmonella/on_mob_life(mob/living/carbon/M)
-	M.ForceContractDisease(new /datum/disease/food_poisoning(0))
+	M.force_contract_disease(new /datum/disease/food_poisoning(0))
 	return ..()

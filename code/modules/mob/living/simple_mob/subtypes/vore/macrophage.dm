@@ -140,7 +140,7 @@
 		var/obj/belly/belly = loc
 		if(belly)
 			var/mob/living/pred = belly.owner
-			pred.ForceContractDisease(base_disease)
+			pred.force_contract_disease(base_disease)
 	else
 		var/obj/effect/decal/cleanable/mucus/sick = new(loc)
 		sick.pixel_x = rand(-24, 24)

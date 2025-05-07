@@ -1,5 +1,17 @@
 GLOBAL_LIST_EMPTY(archive_diseases)
 
+/// Add a disease to the archive using it's symptoms as a key. Sets the name of the input disease to the archived one if it finds a match. Returns the archived datum.
+/proc/handle_archived_disease(var/datum/disease/advance/D)
+	RETURN_TYPE(/datum/disease/advance)
+	var/the_id = D.GetDiseaseID()
+	// Return the archived datum, update passed disease's name with archived name.
+	if(D.update_from_archived_name(the_id))
+		return GLOB.archive_diseases[the_id]
+	// Make a copy, return the archived entry
+	var/datum/disease/advance/C = D.copy_disease()
+	GLOB.archive_diseases[the_id] = C
+	return C
+
 GLOBAL_LIST_INIT(advance_cures, list(
 	REAGENT_ID_SPACEACILLIN,
 	REAGENT_ID_ORANGEJUICE,
@@ -39,7 +51,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 	var/id = ""
 
 /datum/disease/advance/New()
-	Refresh()
+	refresh()
 
 /datum/disease/advance/Destroy()
 	if(s_processing)
@@ -98,7 +110,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 	if(!(IsSame(D)))
 		var/list/possible_symptoms = shuffle(D.symptoms)
 		for(var/datum/symptom/S in possible_symptoms)
-			AddSymptom(S.CopySymptom())
+			add_symptom(S.CopySymptom())
 
 /datum/disease/advance/proc/HasSymptom(datum/symptom/S)
 	for(var/datum/symptom/symp in symptoms)
@@ -106,7 +118,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 			return TRUE
 	return FALSE
 
-/datum/disease/advance/proc/GenerateSymptomsBySeverity(sev_min, sev_max, amount = 1)
+/datum/disease/advance/proc/generate_symptoms_by_severity(sev_min, sev_max, amount = 1)
 
 	var/list/generated = list()
 
@@ -125,7 +137,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 
 	return generated
 
-/datum/disease/advance/proc/GenerateSymptoms(level_min, level_max, amount_get = 0)
+/datum/disease/advance/proc/generate_symptoms(level_min, level_max, amount_get = 0)
 
 	var/list/generated = list()
 
@@ -152,24 +164,16 @@ GLOBAL_LIST_INIT(advance_cures, list(
 
 	return generated
 
-/datum/disease/advance/proc/Refresh(new_name = FALSE)
-	GenerateProperties()
-	AssignProperties()
+/datum/disease/advance/proc/refresh(new_name = FALSE)
+	generate_properties()
+	assign_properties()
 	id = null
-
-	var/the_id = GetDiseaseID()
-	if(!GLOB.archive_diseases[the_id])
-		GLOB.archive_diseases[the_id] = src // So we don't infinite loop
-		GLOB.archive_diseases[the_id] = copy_disease()
-		if(new_name)
-			AssignName()
+	if(new_name)
+		assign_name()
 	else
-		var/datum/disease/advance/A = GLOB.archive_diseases[GetDiseaseID()]
-		var/actual_name = A.name
-		if(actual_name != "Unknown")
-			name = actual_name
+		handle_archived_disease(src)
 
-/datum/disease/advance/proc/GenerateProperties()
+/datum/disease/advance/proc/generate_properties()
 	resistance = 0
 	stealth = 0
 	stage_rate = 0
@@ -202,21 +206,21 @@ GLOBAL_LIST_INIT(advance_cures, list(
 
 	severity += (max(c2sev, c3sev) + c1sev)
 
-/datum/disease/advance/proc/AssignProperties()
+/datum/disease/advance/proc/assign_properties()
 
 	if(stealth >= 2)
 		visibility_flags |= HIDDEN_SCANNER
 	else
 		visibility_flags &= ~HIDDEN_SCANNER
 
-	SetSpread()
+	set_spread()
 	permeability_mod = max(CEILING(0.4 * transmission, 1), 1)
 	cure_chance = 15 - clamp(resistance, -5, 5) // can be between 10 and 20
 	stage_prob = max(stage_rate, 2)
-	SetSeverity(severity)
-	GenerateCure()
+	set_severity(severity)
+	generate_cure()
 
-/datum/disease/advance/proc/SetSpread()
+/datum/disease/advance/proc/set_spread()
 	switch(transmission)
 		if(-INFINITY to 5)
 			spread_flags = DISEASE_SPREAD_BLOOD
@@ -228,7 +232,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 			spread_flags = DISEASE_SPREAD_BLOOD | DISEASE_SPREAD_FLUIDS | DISEASE_SPREAD_CONTACT
 			spread_text = "On Contact"
 
-/datum/disease/advance/proc/SetSeverity(level_sev)
+/datum/disease/advance/proc/set_severity(level_sev)
 
 	switch(level_sev)
 
@@ -251,54 +255,61 @@ GLOBAL_LIST_INIT(advance_cures, list(
 		else
 			severity = "Unknown"
 
-/datum/disease/advance/proc/GenerateCure()
+/datum/disease/advance/proc/generate_cure()
 	var/res = clamp(resistance - (length(symptoms) / 2), 1, length(GLOB.advance_cures))
 	cures = list(GLOB.advance_cures[res])
 	cure_text = cures[1]
 	return
 
-// Randomly generate a symptom, has a chance to lose or gain a symptom.
-/datum/disease/advance/proc/Evolve(min_level, max_level)
-	var/s = safepick(GenerateSymptoms(min_level, max_level, 1))
+/// Randomly generate a symptom, has a chance to lose or gain a symptom.
+/datum/disease/advance/proc/evolve(min_level, max_level)
+	var/s = safepick(generate_symptoms(min_level, max_level, 1))
 	if(s)
-		AddSymptom(s)
-		Refresh(TRUE)
+		add_symptom(s)
+		refresh(TRUE)
 	return
 
-// Randomly generates a symptom from a given list, has a chance to lose or gain a symptom.
-/datum/disease/advance/proc/PickyEvolve(var/list/datum/symptom/D)
+/// Randomly generates a symptom from a given list, has a chance to lose or gain a symptom.
+/datum/disease/advance/proc/picky_evolve(var/list/datum/symptom/D)
 	var/s = safepick(D)
 	if(s)
-		AddSymptom(new s)
-		Refresh(TRUE)
+		add_symptom(new s)
+		refresh(TRUE)
 	return
 
-// Randomly remove a symptom.
-/datum/disease/advance/proc/Devolve()
+/// Randomly remove a symptom.
+/datum/disease/advance/proc/devolve()
 	if(length(symptoms) > 1)
 		var/s = safepick(symptoms)
 		if(s)
-			RemoveSymptom(s)
-			Refresh(TRUE)
+			remove_symptom(s)
+			refresh(TRUE)
 	return
 
-// Randomly neuter a symptom.
-/datum/disease/advance/proc/Neuter()
+/// Randomly neuter a symptom.
+/datum/disease/advance/proc/neuter_symptom()
 	if(symptoms.len)
 		var/s = safepick(symptoms)
 		if(s)
-			NeuterSymptom(s)
-			Refresh(TRUE)
+			neuter_symptom(s)
+			refresh(TRUE)
 
-// Name the disease.
-/datum/disease/advance/proc/AssignName(new_name = "Unknown")
-	Refresh()
-	var/datum/disease/advance/A = GLOB.archive_diseases[GetDiseaseID()]
-	A.name = new_name
+/// Name the disease. Updates the archived disease datum's name. Then assigns all active datums of the disease with the new name.
+/datum/disease/advance/proc/assign_name(new_name = "Unknown")
+	var/datum/disease/advance/A = handle_archived_disease(src)
+	A.name = new_name // update's the ARCHIVED datum's name!
 	for(var/datum/disease/advance/AD in GLOB.active_diseases)
-		AD.Refresh()
+		AD.update_from_archived_name(AD.GetDiseaseID())
 
-// Return a unique ID of the disease.
+/// Find the archived virus. If the virus has been archived before, use its name. Returns true if the disease was archived and not unknown, false otherwise.
+/datum/disease/advance/proc/update_from_archived_name(var/the_id)
+	var/datum/disease/advance/A = GLOB.archive_diseases[the_id]
+	if(!A || A.name == "Unknown")
+		return FALSE
+	name = A.name
+	return TRUE
+
+/// Return a unique ID of the disease.
 /datum/disease/advance/GetDiseaseID()
 	if(!id)
 		var/list/L = list()
@@ -312,13 +323,12 @@ GLOBAL_LIST_INIT(advance_cures, list(
 		id = result
 	return id
 
-/datum/disease/advance/proc/Finalize()
+/datum/disease/advance/proc/finalize()
 	for(var/datum/symptom/S in symptoms)
 		S.OnAdd(src)
 
-// Add a symptom, if it is over the limit (with a small chance to be able to go over)
-// we take a random symptom away and add the new one.
-/datum/disease/advance/proc/AddSymptom(datum/symptom/S)
+/// Add a symptom, if it is over the limit (with a small chance to be able to go over). We take a random symptom away and add the new one.
+/datum/disease/advance/proc/add_symptom(datum/symptom/S)
 
 	if(HasSymptom(S))
 		return
@@ -326,24 +336,24 @@ GLOBAL_LIST_INIT(advance_cures, list(
 	if(length(symptoms) < (VIRUS_SYMPTOM_LIMIT - 1) + rand(-1, 1))
 		symptoms += S
 	else
-		RemoveSymptom(pick(symptoms))
+		remove_symptom(pick(symptoms))
 		symptoms += S
 	S.OnAdd(src)
-	Refresh()
+	refresh()
 
-// Simply removes the symptom.
-/datum/disease/advance/proc/RemoveSymptom(datum/symptom/S)
+/// Simply removes the symptom.
+/datum/disease/advance/proc/remove_symptom(datum/symptom/S)
 	symptoms -= S
 	return
 
-// Neuters a symptom, allowing it only for stats.
-/datum/disease/advance/proc/NeuterSymptom(datum/symptom/S)
+/// Neuters a symptom, allowing it only for stats.
+/datum/disease/advance/neuter_symptom(datum/symptom/S)
 	if(!S.neutered)
 		S.neutered = TRUE
 		S.name += " (neutered)"
 		S.OnRemove(src)
 
-// Mix a list of advance diseases and return the mixed result.
+/// Mix a list of advance diseases and return the mixed result.
 /proc/Advance_Mix(list/D_list)
 
 	var/list/diseases = list()
@@ -370,7 +380,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 
 	// Should be only 1 entry left, but if not let's only return a single entry
 	var/datum/disease/advance/to_return = pick(diseases)
-	to_return.Refresh(new_name = TRUE)
+	to_return.refresh(new_name = TRUE)
 	return to_return
 
 /proc/SetViruses(datum/reagent/R, list/data)
@@ -419,11 +429,11 @@ GLOBAL_LIST_INIT(advance_cures, list(
 		var/new_name = tgui_input_text(src, "Name your new disease.", "New Name")
 		if(!new_name)
 			return FALSE
-		D.Refresh(new_name)
-		D.Finalize()
+		D.refresh(new_name)
+		D.finalize()
 
 		for(var/datum/disease/advance/AD in GLOB.active_diseases)
-			AD.Refresh()
+			AD.refresh()
 
 		H = tgui_input_list(src, "Choose infectee", "Infectees", human_mob_list)
 
@@ -431,7 +441,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 			return FALSE
 
 		if(!H.HasDisease(D))
-			H.ForceContractDisease(D)
+			H.force_contract_disease(D)
 
 		var/list/name_symptoms = list()
 		for(var/datum/symptom/S in D.symptoms)

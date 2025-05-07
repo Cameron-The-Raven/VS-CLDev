@@ -1,7 +1,7 @@
 /mob/proc/HasDisease(datum/disease/D)
 	for(var/thing in GetViruses())
 		var/datum/disease/DD = thing
-		if(DD.is_same(D))
+		if(DD.IsSame(D))
 			return TRUE
 	return FALSE
 

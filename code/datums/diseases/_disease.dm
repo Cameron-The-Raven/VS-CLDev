@@ -169,7 +169,7 @@ GLOBAL_LIST_INIT(diseases, subtypesof(/datum/disease))
 		return
 	addtimer(CALLBACK(src, PROC_REF(check_natural_immunity)), rand(5 MINUTES, 10 MINUTES), TIMER_DELETE_ME)
 
-/datum/disease/proc/is_same(datum/disease/D)
+/datum/disease/proc/IsSame(datum/disease/D)
 	if(ispath(D))
 		return istype(src, D)
 	return istype(src, D.type)

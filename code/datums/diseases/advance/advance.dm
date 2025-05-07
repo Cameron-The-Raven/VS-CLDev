@@ -107,7 +107,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 	return A
 
 /datum/disease/advance/proc/Mix(datum/disease/advance/D)
-	if(!(is_same(D)))
+	if(!(IsSame(D)))
 		var/list/possible_symptoms = shuffle(D.symptoms)
 		for(var/datum/symptom/S in possible_symptoms)
 			add_symptom(S.CopySymptom())

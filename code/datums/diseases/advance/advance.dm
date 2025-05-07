@@ -347,7 +347,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 	return
 
 /// Neuters a symptom, allowing it only for stats.
-/datum/disease/advance/NeuterSymptom(datum/symptom/S)
+/datum/disease/advance/proc/NeuterSymptom(datum/symptom/S)
 	if(!S.neutered)
 		S.neutered = TRUE
 		S.name += " (neutered)"

@@ -138,9 +138,9 @@ var/list/holder_mob_icon_cache = list()
 	if(ismob(loc))
 		var/mob/M = loc
 		M.drop_from_inventory(src) // If it's another item, we can just continue existing, or if it's a turf we'll qdel() in Moved()
+		held.reset_view(null)
 		to_chat(M, span_warning("\The [held] wriggles out of your grip!"))
 		to_chat(held, span_warning("You wiggle out of [M]'s grip!"))
-		held.reset_view(null)
 	else if(istype(loc, /obj/item/clothing/accessory/holster))
 		var/obj/item/clothing/accessory/holster/holster = loc
 		if(holster.holstered == src)

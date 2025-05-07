@@ -165,15 +165,15 @@ GLOBAL_LIST_INIT(advance_cures, list(
 	return generated
 
 /datum/disease/advance/proc/Refresh(new_name = FALSE)
-	generate_properties()
-	assign_properties()
+	GenerateProperties()
+	AssignProperties()
 	id = null
 	if(new_name)
-		assign_name()
+		AssignName()
 	else
 		handle_archived_disease(src)
 
-/datum/disease/advance/proc/generate_properties()
+/datum/disease/advance/proc/GenerateProperties()
 	resistance = 0
 	stealth = 0
 	stage_rate = 0
@@ -206,7 +206,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 
 	severity += (max(c2sev, c3sev) + c1sev)
 
-/datum/disease/advance/proc/assign_properties()
+/datum/disease/advance/proc/AssignProperties()
 
 	if(stealth >= 2)
 		visibility_flags |= HIDDEN_SCANNER
@@ -287,15 +287,15 @@ GLOBAL_LIST_INIT(advance_cures, list(
 	return
 
 /// Randomly neuter a symptom.
-/datum/disease/advance/proc/neuter_symptom()
+/datum/disease/advance/proc/Neuter()
 	if(symptoms.len)
 		var/s = safepick(symptoms)
 		if(s)
-			neuter_symptom(s)
+			Neuter(s)
 			Refresh(TRUE)
 
 /// Name the disease. Updates the archived disease datum's name. Then assigns all active datums of the disease with the new name.
-/datum/disease/advance/proc/assign_name(new_name = "Unknown")
+/datum/disease/advance/proc/AssignName(new_name = "Unknown")
 	var/datum/disease/advance/A = handle_archived_disease(src)
 	A.name = new_name // update's the ARCHIVED datum's name!
 	for(var/datum/disease/advance/AD in GLOB.active_diseases)
@@ -347,7 +347,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 	return
 
 /// Neuters a symptom, allowing it only for stats.
-/datum/disease/advance/neuter_symptom(datum/symptom/S)
+/datum/disease/advance/Neuter(datum/symptom/S)
 	if(!S.neutered)
 		S.neutered = TRUE
 		S.name += " (neutered)"

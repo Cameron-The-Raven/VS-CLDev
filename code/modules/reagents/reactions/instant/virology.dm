@@ -171,4 +171,4 @@
 	if(B && B.data)
 		var/datum/disease/advance/D = locate(/datum/disease/advance) in B.data["viruses"]
 		if(D)
-			D.neuter_symptom()
+			D.Neuter()

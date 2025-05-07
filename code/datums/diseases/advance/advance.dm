@@ -213,14 +213,14 @@ GLOBAL_LIST_INIT(advance_cures, list(
 	else
 		visibility_flags &= ~HIDDEN_SCANNER
 
-	set_spread()
+	SetSpread()
 	permeability_mod = max(CEILING(0.4 * transmission, 1), 1)
 	cure_chance = 15 - clamp(resistance, -5, 5) // can be between 10 and 20
 	stage_prob = max(stage_rate, 2)
-	set_severity(severity)
-	generate_cure()
+	SetSeverity(severity)
+	GenerateCure()
 
-/datum/disease/advance/proc/set_spread()
+/datum/disease/advance/proc/SetSpread()
 	switch(transmission)
 		if(-INFINITY to 5)
 			spread_flags = DISEASE_SPREAD_BLOOD
@@ -232,7 +232,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 			spread_flags = DISEASE_SPREAD_BLOOD | DISEASE_SPREAD_FLUIDS | DISEASE_SPREAD_CONTACT
 			spread_text = "On Contact"
 
-/datum/disease/advance/proc/set_severity(level_sev)
+/datum/disease/advance/proc/SetSeverity(level_sev)
 
 	switch(level_sev)
 
@@ -255,7 +255,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 		else
 			severity = "Unknown"
 
-/datum/disease/advance/proc/generate_cure()
+/datum/disease/advance/proc/GenerateCure()
 	var/res = clamp(resistance - (length(symptoms) / 2), 1, length(GLOB.advance_cures))
 	cures = list(GLOB.advance_cures[res])
 	cure_text = cures[1]
@@ -291,7 +291,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 	if(symptoms.len)
 		var/s = safepick(symptoms)
 		if(s)
-			Neuter(s)
+			NeuterSymptom(s)
 			Refresh(TRUE)
 
 /// Name the disease. Updates the archived disease datum's name. Then assigns all active datums of the disease with the new name.

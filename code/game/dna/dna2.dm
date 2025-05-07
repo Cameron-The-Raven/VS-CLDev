@@ -84,36 +84,46 @@ GLOBAL_LIST_EMPTY_TYPED(dna_genes_bad, /datum/gene/trait)
 
 // Make a copy of this strand.
 // USE THIS WHEN COPYING STUFF OR YOU'LL GET CORRUPTION!
-/datum/dna/proc/Clone(var/datum/dna/new_dna)
-	// Optionally allows you to pass in a datum for cloning to, isntead of making a new one
-	if(!new_dna)
-		new_dna = new()
-	// Transfer most variables automagically, but some need a little help
-	for(var/V in vars)
-		switch(V)
-			if("SE" || "UI")
-				continue
-			if("body_markings")
-				var/list/body_markings_genetic = (body_markings - body_marking_nopersist_list)
-				new_dna.body_markings=body_markings_genetic.Copy()
-			else
-				if(islist(vars[V]))
-					var/list/L = V
-					new_dna.vars[V] = L.Copy()
-				else
-					new_dna.vars[V] = vars[V]
-	// Update UI/SE lists and then ensure they're good
-	new_dna.dirtyUI = TRUE
-	new_dna.dirtySE = TRUE
+/datum/dna/proc/Clone()
+	var/datum/dna/new_dna = new()
+	new_dna.unique_enzymes=unique_enzymes
+	new_dna.b_type=b_type
+	new_dna.real_name=real_name
+	new_dna.species=species
+	new_dna.body_markings=body_markings.Copy()
+	new_dna.base_species=base_species
+	new_dna.custom_species=custom_species
+	new_dna.species_traits=species_traits.Copy()
+	new_dna.blood_color=blood_color
+	new_dna.blood_reagents=blood_reagents
+	new_dna.scale_appearance = scale_appearance
+	new_dna.offset_override = offset_override
+	new_dna.synth_markings = synth_markings
+	new_dna.custom_speech_bubble = custom_speech_bubble
+	new_dna.species_sounds = species_sounds
+	new_dna.gender_specific_species_sounds = gender_specific_species_sounds
+	new_dna.species_sounds_male = species_sounds_male
+	new_dna.species_sounds_female = species_sounds_female
+	new_dna.grad_style = grad_style
+	new_dna.r_grad = r_grad
+	new_dna.g_grad = g_grad
+	new_dna.b_grad = b_grad
+	new_dna.custom_say=custom_say
+	new_dna.custom_ask=custom_ask
+	new_dna.custom_whisper=custom_whisper
+	new_dna.custom_exclaim=custom_exclaim
+	new_dna.custom_heat=custom_heat
+	new_dna.custom_cold=custom_cold
+	new_dna.digitigrade=src.digitigrade
+	var/list/body_markings_genetic = (body_markings - body_marking_nopersist_list)
+	new_dna.body_markings=body_markings_genetic.Copy()
 	for(var/b=1;b<=DNA_SE_LENGTH;b++)
 		new_dna.SE[b]=SE[b]
 		if(b<=DNA_UI_LENGTH)
 			new_dna.UI[b]=UI[b]
 	new_dna.UpdateUI()
 	new_dna.UpdateSE()
-
 	return new_dna
-
 ///////////////////////////////////////
 // UNIQUE IDENTITY
 ///////////////////////////////////////

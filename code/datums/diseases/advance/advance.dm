@@ -8,7 +8,7 @@ GLOBAL_LIST_EMPTY(archive_diseases)
 	if(D.update_from_archived_name(the_id))
 		return GLOB.archive_diseases[the_id]
 	// Make a copy, return the archived entry
-	var/datum/disease/advance/C = D.copy_disease()
+	var/datum/disease/advance/C = D.CopyDisease()
 	GLOB.archive_diseases[the_id] = C
 	return C
 
@@ -118,7 +118,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 			return TRUE
 	return FALSE
 
-/datum/disease/advance/proc/generate_symptoms_by_severity(sev_min, sev_max, amount = 1)
+/datum/disease/advance/proc/GenerateSymptomsBySeverity(sev_min, sev_max, amount = 1)
 
 	var/list/generated = list()
 
@@ -137,7 +137,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 
 	return generated
 
-/datum/disease/advance/proc/generate_symptoms(level_min, level_max, amount_get = 0)
+/datum/disease/advance/proc/GenerateSymptoms(level_min, level_max, amount_get = 0)
 
 	var/list/generated = list()
 
@@ -262,15 +262,15 @@ GLOBAL_LIST_INIT(advance_cures, list(
 	return
 
 /// Randomly generate a symptom, has a chance to lose or gain a symptom.
-/datum/disease/advance/proc/evolve(min_level, max_level)
-	var/s = safepick(generate_symptoms(min_level, max_level, 1))
+/datum/disease/advance/proc/Evolve(min_level, max_level)
+	var/s = safepick(GenerateSymptoms(min_level, max_level, 1))
 	if(s)
 		add_symptom(s)
 		refresh(TRUE)
 	return
 
 /// Randomly generates a symptom from a given list, has a chance to lose or gain a symptom.
-/datum/disease/advance/proc/picky_evolve(var/list/datum/symptom/D)
+/datum/disease/advance/proc/PickyEvolve(var/list/datum/symptom/D)
 	var/s = safepick(D)
 	if(s)
 		add_symptom(new s)
@@ -278,7 +278,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 	return
 
 /// Randomly remove a symptom.
-/datum/disease/advance/proc/devolve()
+/datum/disease/advance/proc/Devolve()
 	if(length(symptoms) > 1)
 		var/s = safepick(symptoms)
 		if(s)

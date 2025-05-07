@@ -7,7 +7,7 @@
 	var/inflame_progress = 0
 
 /mob/living/carbon/human/proc/appendicitis()
-	return force_contract_disease(new /datum/disease/appendicitis)
+	return ForceContractDisease(new /datum/disease/appendicitis)
 
 /*
 /obj/item/organ/internal/appendix/process()

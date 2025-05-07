@@ -51,7 +51,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 	var/id = ""
 
 /datum/disease/advance/New()
-	refresh()
+	Refresh()
 
 /datum/disease/advance/Destroy()
 	if(s_processing)
@@ -110,7 +110,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 	if(!(IsSame(D)))
 		var/list/possible_symptoms = shuffle(D.symptoms)
 		for(var/datum/symptom/S in possible_symptoms)
-			add_symptom(S.CopySymptom())
+			AddSymptom(S.CopySymptom())
 
 /datum/disease/advance/proc/HasSymptom(datum/symptom/S)
 	for(var/datum/symptom/symp in symptoms)
@@ -164,7 +164,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 
 	return generated
 
-/datum/disease/advance/proc/refresh(new_name = FALSE)
+/datum/disease/advance/proc/Refresh(new_name = FALSE)
 	generate_properties()
 	assign_properties()
 	id = null
@@ -265,16 +265,16 @@ GLOBAL_LIST_INIT(advance_cures, list(
 /datum/disease/advance/proc/Evolve(min_level, max_level)
 	var/s = safepick(GenerateSymptoms(min_level, max_level, 1))
 	if(s)
-		add_symptom(s)
-		refresh(TRUE)
+		AddSymptom(s)
+		Refresh(TRUE)
 	return
 
 /// Randomly generates a symptom from a given list, has a chance to lose or gain a symptom.
 /datum/disease/advance/proc/PickyEvolve(var/list/datum/symptom/D)
 	var/s = safepick(D)
 	if(s)
-		add_symptom(new s)
-		refresh(TRUE)
+		AddSymptom(new s)
+		Refresh(TRUE)
 	return
 
 /// Randomly remove a symptom.
@@ -283,7 +283,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 		var/s = safepick(symptoms)
 		if(s)
 			remove_symptom(s)
-			refresh(TRUE)
+			Refresh(TRUE)
 	return
 
 /// Randomly neuter a symptom.
@@ -292,7 +292,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 		var/s = safepick(symptoms)
 		if(s)
 			neuter_symptom(s)
-			refresh(TRUE)
+			Refresh(TRUE)
 
 /// Name the disease. Updates the archived disease datum's name. Then assigns all active datums of the disease with the new name.
 /datum/disease/advance/proc/assign_name(new_name = "Unknown")
@@ -323,12 +323,12 @@ GLOBAL_LIST_INIT(advance_cures, list(
 		id = result
 	return id
 
-/datum/disease/advance/proc/finalize()
+/datum/disease/advance/proc/Finalize()
 	for(var/datum/symptom/S in symptoms)
 		S.OnAdd(src)
 
 /// Add a symptom, if it is over the limit (with a small chance to be able to go over). We take a random symptom away and add the new one.
-/datum/disease/advance/proc/add_symptom(datum/symptom/S)
+/datum/disease/advance/proc/AddSymptom(datum/symptom/S)
 
 	if(HasSymptom(S))
 		return
@@ -339,7 +339,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 		remove_symptom(pick(symptoms))
 		symptoms += S
 	S.OnAdd(src)
-	refresh()
+	Refresh()
 
 /// Simply removes the symptom.
 /datum/disease/advance/proc/remove_symptom(datum/symptom/S)
@@ -380,7 +380,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 
 	// Should be only 1 entry left, but if not let's only return a single entry
 	var/datum/disease/advance/to_return = pick(diseases)
-	to_return.refresh(new_name = TRUE)
+	to_return.Refresh(new_name = TRUE)
 	return to_return
 
 /proc/SetViruses(datum/reagent/R, list/data)
@@ -429,11 +429,11 @@ GLOBAL_LIST_INIT(advance_cures, list(
 		var/new_name = tgui_input_text(src, "Name your new disease.", "New Name")
 		if(!new_name)
 			return FALSE
-		D.refresh(new_name)
-		D.finalize()
+		D.Refresh(new_name)
+		D.Finalize()
 
 		for(var/datum/disease/advance/AD in GLOB.active_diseases)
-			AD.refresh()
+			AD.Refresh()
 
 		H = tgui_input_list(src, "Choose infectee", "Infectees", human_mob_list)
 
@@ -441,7 +441,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 			return FALSE
 
 		if(!H.HasDisease(D))
-			H.force_contract_disease(D)
+			H.ForceContractDisease(D)
 
 		var/list/name_symptoms = list()
 		for(var/datum/symptom/S in D.symptoms)

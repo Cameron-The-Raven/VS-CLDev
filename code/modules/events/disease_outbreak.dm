@@ -53,7 +53,7 @@ GLOBAL_LIST_EMPTY(current_pending_diseases)
 	while(chosen_infect)
 		if(!isemptylist(candidates))
 			var/mob/living/carbon/human/H = pick(candidates)
-			H.force_contract_disease(chosen_disease)
+			H.ForceContractDisease(chosen_disease)
 			candidates -= H
 		chosen_infect--
 
@@ -71,13 +71,13 @@ GLOBAL_LIST_EMPTY(current_pending_diseases)
 			break
 		if(length(A.symptoms) < VIRUS_SYMPTOM_LIMIT)	//Ensure the virus is spreadable by adding symptoms that boost transmission
 			var/datum/symptom/TS = pick_n_take(symptoms_to_try)
-			A.add_symptom(new TS)
+			A.AddSymptom(new TS)
 		else
 			popleft(A.symptoms)	//We have a full symptom list but are still not transmittable. Try removing one of the "payloads"
 
 		A.assign_properties(A.generate_properties())
 	A.name = pick(GLOB.alphabet_upper) + num2text(rand(1,9)) + pick(GLOB.alphabet_upper) + num2text(rand(1,9)) + pick("v", "V", "-" + num2text(GLOB.game_year), "")
-	A.refresh()
+	A.Refresh()
 	return A
 
 /datum/event/disease_outbreak/proc/populate_diseases()

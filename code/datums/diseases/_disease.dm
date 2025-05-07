@@ -174,7 +174,7 @@ GLOBAL_LIST_INIT(diseases, subtypesof(/datum/disease))
 		return istype(src, D)
 	return istype(src, D.type)
 
-/datum/disease/proc/CopyDisease()
+/datum/disease/proc/copy_disease()
 	var/static/list/copy_vars = list(
 		"visibility_flags",
 		"disease_flags",

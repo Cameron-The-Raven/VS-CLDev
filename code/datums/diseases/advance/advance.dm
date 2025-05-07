@@ -79,7 +79,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 		remove_virus()
 	qdel(src)
 
-/datum/disease/advance/CopyDisease()
+/datum/disease/advance/copy_disease()
 	var/datum/disease/advance/A = ..()
 	QDEL_LIST(A.symptoms)
 	for(var/datum/symptom/S as anything in symptoms)
@@ -160,7 +160,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 	var/the_id = GetDiseaseID()
 	if(!GLOB.archive_diseases[the_id])
 		GLOB.archive_diseases[the_id] = src // So we don't infinite loop
-		GLOB.archive_diseases[the_id] = CopyDisease()
+		GLOB.archive_diseases[the_id] = copy_disease()
 		if(new_name)
 			AssignName()
 	else
@@ -349,7 +349,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 	var/list/diseases = list()
 
 	for(var/datum/disease/advance/A in D_list)
-		diseases += A.CopyDisease()
+		diseases += A.copy_disease()
 
 	if(!length(diseases))
 		return null
@@ -378,7 +378,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 		var/list/preserve = list()
 		if(istype(data) && data["viruses"])
 			for(var/datum/disease/A in data["viruses"])
-				preserve += A.CopyDisease()
+				preserve += A.copy_disease()
 			R.data = data.Copy()
 		if(length(preserve))
 			R.data["viruses"] = preserve

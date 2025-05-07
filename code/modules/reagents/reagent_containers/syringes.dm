@@ -414,7 +414,7 @@
 	if(iscarbon(target) && LAZYLEN(target.IsInfected()))
 		LAZYINITLIST(viruses)
 		var/datum/disease/virus = pick(target.IsInfected())
-		viruses[hash] = virus.CopyDisease()
+		viruses[hash] = virus.copy_disease()
 
 	//Dirtiness should be very low if you're the first injectee. If you're spam-injecting 4 people in a row around you though,
 	//This gives the last one a 30% chance of infection.

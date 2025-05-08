@@ -1,11 +1,11 @@
 GLOBAL_LIST_EMPTY(archive_diseases)
 
 /// Add a disease to the archive using it's symptoms as a key. Sets the name of the input disease to the archived one if it finds a match. Returns the archived datum.
-/proc/handle_archived_disease(var/datum/disease/advance/D)
+/proc/handle_archived_disease(var/datum/disease/advance/D,var/allow_copy=TRUE)
 	RETURN_TYPE(/datum/disease/advance)
 	var/the_id = D.GetDiseaseID()
 	// Return the archived datum, update passed disease's name with archived name.
-	if(D.update_from_archived_name(the_id))
+	if(D.update_from_archived_name(the_id) || !allow_copy)
 		return GLOB.archive_diseases[the_id]
 	// Make a copy, return the archived entry
 	var/datum/disease/advance/C = D.CopyDisease()
@@ -51,7 +51,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 	var/id = ""
 
 /datum/disease/advance/New()
-	Refresh()
+	Refresh(FALSE,TRUE)
 
 /datum/disease/advance/Destroy()
 	if(s_processing)
@@ -164,14 +164,14 @@ GLOBAL_LIST_INIT(advance_cures, list(
 
 	return generated
 
-/datum/disease/advance/proc/Refresh(new_name = FALSE)
+/datum/disease/advance/proc/Refresh(new_name = FALSE,new_virus = FALSE)
 	GenerateProperties()
 	AssignProperties()
 	id = null
 	if(new_name)
 		AssignName()
 	else
-		handle_archived_disease(src)
+		handle_archived_disease(src,is_fresh)
 
 /datum/disease/advance/proc/GenerateProperties()
 	resistance = 0
@@ -296,7 +296,7 @@ GLOBAL_LIST_INIT(advance_cures, list(
 
 /// Name the disease. Updates the archived disease datum's name. Then assigns all active datums of the disease with the new name.
 /datum/disease/advance/proc/AssignName(new_name = "Unknown")
-	var/datum/disease/advance/A = handle_archived_disease(src)
+	var/datum/disease/advance/A = handle_archived_disease(src,TRUE)
 	A.name = new_name // update's the ARCHIVED datum's name!
 	for(var/datum/disease/advance/AD in GLOB.active_diseases)
 		AD.update_from_archived_name(AD.GetDiseaseID())

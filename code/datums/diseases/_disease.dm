@@ -175,7 +175,7 @@ GLOBAL_LIST_INIT(diseases, subtypesof(/datum/disease))
 	return istype(src, D.type)
 
 /datum/disease/proc/CopyDisease()
-	var/static/list/copy_vars = list(
+	var/list/copy_vars = list(
 		"visibility_flags",
 		"disease_flags",
 		"spread_flags",
@@ -194,7 +194,7 @@ GLOBAL_LIST_INIT(diseases, subtypesof(/datum/disease))
 		"permeability_mod",
 		"danger",
 		"required_organs",
-		"strain_data",
+		"strain_data"
 	)
 
 	var/datum/disease/D = copy_type ? new copy_type() : new type()

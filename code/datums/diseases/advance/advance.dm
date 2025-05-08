@@ -1,16 +1,17 @@
 GLOBAL_LIST_EMPTY(archive_diseases)
 
 /// Add a disease to the archive using it's symptoms as a key. Sets the name of the input disease to the archived one if it finds a match. Returns the archived datum.
-/proc/handle_archived_disease(var/datum/disease/advance/D,var/allow_copy=TRUE)
+/proc/handle_archived_disease(var/datum/disease/advance/D,var/new_virus=TRUE)
 	RETURN_TYPE(/datum/disease/advance)
 	var/the_id = D.GetDiseaseID()
 	// Return the archived datum, update passed disease's name with archived name.
-	if(D.update_from_archived_name(the_id) || !allow_copy)
+	if(D.update_from_archived_name(the_id))
 		return GLOB.archive_diseases[the_id]
 	// Make a copy, return the archived entry
-	var/datum/disease/advance/C = D.CopyDisease()
-	GLOB.archive_diseases[the_id] = C
-	return C
+	if(new_virus)
+		var/datum/disease/advance/C = D.CopyDisease()
+		GLOB.archive_diseases[the_id] = C
+		return C
 
 GLOBAL_LIST_INIT(advance_cures, list(
 	REAGENT_ID_SPACEACILLIN,

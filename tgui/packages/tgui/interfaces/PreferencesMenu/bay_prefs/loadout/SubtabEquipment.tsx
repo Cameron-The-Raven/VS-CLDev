@@ -69,6 +69,7 @@ export const SubtabEquipment = (props: {
             <Button onClick={() => act('set_ringtone')}>
               {ringtone || 'None'}
             </Button>
+            <Button onClick={() => act('test_ringtone')}>Test</Button>
           </LabeledList.Item>
           <LabeledList.Item label="Spawn With Shoes">
             <Button onClick={() => act('toggle_shoes')}>

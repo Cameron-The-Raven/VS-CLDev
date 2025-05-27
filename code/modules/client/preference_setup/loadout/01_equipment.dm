@@ -33,32 +33,33 @@
 	save_data["shoe_hater"] 				= pref.shoe_hater
 	save_data["no_jacket"]					= pref.no_jacket
 
-var/global/list/valid_ringtones = list(
-		"beep",
-		"boom",
-		"slip",
-		"honk",
-		"SKREE",
-		"xeno",
-		"spark",
-		"rad",
-		"servo",
-		"buh-boop",
-		"trombone",
-		"whistle",
-		"chirp",
-		"slurp",
-		"pwing",
-		"clack",
-		"bzzt",
-		"chimes",
-		"prbt",
-		"bark",
-		"bork",
-		"roark",
-		"chitter",
-		"squish"
-		)
+GLOBAL_LIST_INIT(device_ringtones, list("beep" = 'sound/machines/twobeep.ogg',
+										"boom" = 'sound/effects/explosionfar.ogg',
+										"slip" = 'sound/misc/slip.ogg',
+										"honk" = 'sound/items/bikehorn.ogg',
+										"SKREE" = 'sound/voice/shriek1.ogg',
+										// "holy" = 'sound/items/PDA/ambicha4-short.ogg',
+										"xeno" = 'sound/voice/hiss1.ogg',
+										"dust" = 'sound/effects/supermatter.ogg',
+										"spark" = 'sound/effects/sparks4.ogg',
+										"rad" = 'sound/items/geiger/high1.ogg',
+										"servo" = 'sound/machines/rig/rigservo.ogg',
+										"buh-boop" = 'sound/misc/buh-boop.ogg',
+										"trombone" = 'sound/misc/sadtrombone.ogg',
+										"whistle" = 'sound/misc/boatswain.ogg',
+										"chirp" = 'sound/misc/nymphchirp.ogg',
+										"slurp" = 'sound/items/drink.ogg',
+										"pwing" = 'sound/items/nif_tone_good.ogg',
+										"clack" = 'sound/items/storage/toolbox.ogg',
+										"bzzt" = 'sound/misc/null.ogg',	//vibrate mode
+										"chimes" = 'sound/misc/notice3.ogg',
+										"prbt" = 'sound/voice/prbt.ogg',
+										"bark" = 'sound/voice/bark2.ogg',
+										"bork" = 'sound/voice/bork.ogg',
+										"roark" = 'sound/voice/roarbark.ogg',
+										"chitter" = 'sound/voice/moth/moth_chitter.ogg',
+										"squish" = 'sound/effects/slime_squish.ogg'
+										))
 
 // Moved from /datum/preferences/proc/copy_to()
 /datum/category_item/player_setup_item/loadout/equipment/copy_to_mob(var/mob/living/carbon/human/character)
@@ -235,7 +236,7 @@ var/global/list/valid_ringtones = list(
 			return TOPIC_REFRESH
 
 		if("set_ringtone")
-			var/choice = tgui_input_list(user, "Please select a ringtone. All of these choices come with an associated preset sound. Alternately, select \"Other\" to specify manually.", "Character Preference", valid_ringtones + "Other", pref.ringtone)
+			var/choice = tgui_input_list(user, "Please select a ringtone. All of these choices come with an associated preset sound. Alternately, select \"Other\" to specify manually.", "Character Preference", GLOB.device_ringtones + "Other", pref.ringtone)
 			if(!choice)
 				return TOPIC_NOACTION
 			if(choice == "Other")
@@ -245,6 +246,12 @@ var/global/list/valid_ringtones = list(
 			else
 				pref.ringtone = choice
 			return TOPIC_REFRESH
+
+		if("test_ringtone")
+			var/S = 'sound/machines/twobeep.ogg'
+			if(pref.ringtone in GLOB.device_ringtones)
+				S = GLOB.device_ringtones[pref.ringtone]
+			SEND_SOUND(user.client, S)
 
 		if("toggle_shoes")
 			pref.shoe_hater = !pref.shoe_hater

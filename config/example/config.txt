@@ -408,9 +408,6 @@ EVENT_FIRST_RUN_MAJOR upper 100
 ## set a message to give to players when they respawn
 RESPAWN_MESSAGE If you're respawning as the same character or job hopping (changing jobs without an HoP), make sure you've waited at least 30 minutes. Don't abuse this function for non-vore related deaths & avoid using metaknowledge.
 
-## Strength of ambient star light. Set to 0 or less to turn off. A value of 1 is unlikely to have a noticeable effect in most lightning systems.
-STARLIGHT 0
-
 ## Defines which races are allowed to join as ERT, in singular form. If unset, defaults to only human. Casing matters, separate using ;
 ## Example races include: Human, Tajara, Skrell, Unathi
 ## FIXME: Unused config. Only uncomment if changed in code.

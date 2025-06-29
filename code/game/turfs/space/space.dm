@@ -13,8 +13,6 @@
 	var/forced_dirs = 0 //Force this one to pretend it's an overedge turf
 
 /turf/space/Initialize(mapload)
-	if(CONFIG_GET(flag/starlight))
-		update_starlight()
 
 	//Sprite stuff only beyond here
 	if(keep_sprite)
@@ -72,12 +70,6 @@
 
 /turf/space/is_solid_structure()
 	return locate(/obj/structure/lattice, src) //counts as solid structure if it has a lattice
-
-/turf/space/proc/update_starlight()
-	if(locate(/turf/simulated) in orange(src,1))
-		set_light(CONFIG_GET(flag/starlight))
-	else
-		set_light(0)
 
 /turf/space/attackby(obj/item/C as obj, mob/user as mob)
 

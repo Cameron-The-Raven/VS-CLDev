@@ -12,11 +12,7 @@
 	var/passenger_allowed = 1
 
 	var/active_engines = 0
-	var/train_length = 0
 	var/latch_on_start = 1
-
-	var/obj/vehicle/train/lead
-	var/obj/vehicle/train/tow
 
 	var/open_top = TRUE
 
@@ -28,6 +24,7 @@
 	for(var/obj/vehicle/train/T in orange(1, src))
 		if(latch_on_start)
 			latch(T, null)
+	AddComponent(/datum/component/towing_link)
 
 /obj/vehicle/train/Move()
 	var/old_loc = get_turf(src)
@@ -78,11 +75,13 @@
 // Vehicle procs
 //-------------------------------------------
 /obj/vehicle/train/explode()
-	if (tow)
-		tow.unattach()
-	unattach()
+	unlatch_tow(null)
 	..()
 
+/obj/vehicle/train/unlatch_tow(mob/user)
+	. = ..()
+	for(var/obj/vehicle/train/car in .)
+		car.update_stats()
 
 //-------------------------------------------
 // Interaction procs
@@ -109,9 +108,12 @@
 	if(user.buckled || user.stat || user.restrained() || !Adjacent(user) || !user.Adjacent(C) || !istype(C) || (user == C && !user.canmove))
 		return
 	if(istype(C,/obj/vehicle/train))
-		latch(C, user)
-	else if(!load(C, user))
+		if(SEND_SIGNAL(C, COMSIG_TOWING_CONNECT, src, user))
+			update_stats()
+		return
+	if(!load(C, user))
 		to_chat(user, span_red("You were unable to load [C] on [src]."))
+		return
 
 /obj/vehicle/train/attack_hand(mob/user as mob)
 	if(user.stat || user.restrained() || !Adjacent(user))
@@ -125,94 +127,6 @@
 		load(user, user)				//else try climbing on board
 	else
 		return 0
-
-/obj/vehicle/train/verb/unlatch_v()
-	set name = "Unlatch"
-	set desc = "Unhitches this train from the one in front of it."
-	set category = "Vehicle"
-	set src in view(1)
-
-	if(!ishuman(usr))
-		return
-
-	if(!usr.canmove || usr.stat || usr.restrained() || !Adjacent(usr))
-		return
-
-	unattach(usr)
-
-
-//-------------------------------------------
-// Latching/unlatching procs
-//-------------------------------------------
-
-//attempts to attach src as a follower of the train T
-//Note: there is a modified version of this in code\modules\vehicles\cargo_train.dm specifically for cargo train engines
-/obj/vehicle/train/proc/attach_to(obj/vehicle/train/T, mob/user)
-	if (get_dist(src, T) > 1)
-		if(user)
-			to_chat(user, span_red("[src] is too far away from [T] to hitch them together."))
-		return
-
-	if (lead)
-		if(user)
-			to_chat(user, span_red("[src] is already hitched to something."))
-		return
-
-	if (T.tow)
-		if(user)
-			to_chat(user, span_red("[T] is already towing something."))
-		return
-
-	//check for cycles.
-	var/obj/vehicle/train/next_car = T
-	while (next_car)
-		if (next_car == src)
-			if(user)
-				to_chat(user, span_red("That seems very silly."))
-			return
-		next_car = next_car.lead
-
-	//latch with src as the follower
-	lead = T
-	T.tow = src
-	set_dir(lead.dir)
-
-	if(user)
-		to_chat(user, span_blue("You hitch [src] to [T]."))
-
-	update_stats()
-
-
-//detaches the train from whatever is towing it
-/obj/vehicle/train/proc/unattach(mob/user)
-	if (!lead)
-		to_chat(user, span_red("[src] is not hitched to anything."))
-		return
-
-	lead.tow = null
-	lead.update_stats()
-
-	to_chat(user, span_blue("You unhitch [src] from [lead]."))
-	lead = null
-
-	update_stats()
-
-/obj/vehicle/train/proc/latch(obj/vehicle/train/T, mob/user)
-	if(!istype(T) || !Adjacent(T))
-		return 0
-
-	var/T_dir = get_dir(src, T)	//figure out where T is wrt src
-
-	if(dir == T_dir) 	//if car is ahead
-		src.attach_to(T, user)
-	else if(reverse_direction(dir) == T_dir)	//else if car is behind
-		T.attach_to(src, user)
-
-//returns 1 if this is the lead car of the train
-/obj/vehicle/train/proc/is_train_head()
-	if (lead)
-		return 0
-	return 1
 
 //-------------------------------------------------------
 // Stat update procs

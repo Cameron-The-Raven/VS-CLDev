@@ -741,6 +741,14 @@
 ///called when you wash your face at a sink: (num/strength)
 #define COMSIG_COMPONENT_CLEAN_FACE_ACT "clean_face_act"
 
+//Towing link
+
+#define COMSIG_TOWING_CONNECT "towing_connect"
+
+#define COMSIG_TOWING_DISCONNECT "towing_disconnect"
+
+#define COMSIG_TOWING_REBUILD "towing_rebuild"
+
 //Reagent holder
 
 ///from base of /datum/reagents/proc/handle_reactions(): (list/decl/chemical_reaction)

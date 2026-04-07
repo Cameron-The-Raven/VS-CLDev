@@ -64,16 +64,19 @@
 		return FALSE
 	return TRUE
 
-/obj/item/multitool/proc/state_buffer(mob/user)
+/obj/item/multitool/proc/get_buffer_string()
 	var/atom/atom_buff = get_buffered_link()
-	var/atom_string = "empty."
+	var/buffer_string = "empty."
 	if(atom_buff)
-		var/area/at_area = get_area(atom_buff)
-		var/area_string = " from somewhere."
-		if(at_area)
-			area_string = " in \the [at_area]."
-		atom_string = "loaded with \a [atom_buff][area_string]"
-	to_chat(user, span_notice("The buffer is [atom_string]"))
+		if(isatom(atom_buff))
+			var/area/at_area = get_area(atom_buff)
+			var/area_string = " from somewhere."
+			if(at_area)
+				area_string = " in \the [at_area]."
+			buffer_string = "loaded with \a [atom_buff][area_string]"
+		else
+			buffer_string = "loaded with data."
+	return span_notice("The buffer is [buffer_string]")
 
 /obj/item/multitool/Destroy()
 	. = ..()
@@ -93,7 +96,7 @@
 		return
 
 	update_icon()
-	state_buffer(user)
+	to_chat(user, get_buffer_string())
 	var/choice = tgui_alert(user, "What do you want to do with \the [src]?", "Multitool Menu", list("Switch Mode", "Clear Buffers", "Cancel"))
 	switch(choice)
 		if("Clear Buffers")
@@ -122,6 +125,10 @@
 	accepting_refs = (toolmode == MULTITOOL_MODE_INTCIRCUITS)
 
 	return
+
+/obj/item/multitool/examine(mob/user)
+	. = ..()
+	. += get_buffer_string()
 
 /datum/category_item/catalogue/anomalous/precursor_a/alien_multitool
 	name = "Precursor Alpha Object - Pulse Tool"

@@ -255,7 +255,7 @@
 				user.visible_message("[user] unsecures [src] from the floor.", "You unsecure [src] from the floor.")
 	else if(istype(W, /obj/item/multitool))
 		var/obj/item/multitool/M = W
-		M.connecting = src
+		M.set_buffered_machine(src)
 		to_chat(user, span_notice("You load connection data from [src] to [M]."))
 		M.update_icon()
 		return

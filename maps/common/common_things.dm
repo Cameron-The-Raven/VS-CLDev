@@ -325,11 +325,8 @@
 
 /obj/item/multitool/scioutpost/Initialize(mapload)
 	. = ..()
-	for(var/obj/machinery/power/quantumpad/scioutpost/outpost in world)
-		connectable = outpost
-		if(connectable)
-			icon_state = "multitool_red"
-		return
+	set_buffered_machine(locate(/obj/machinery/power/quantumpad/scioutpost))
+	icon_state = "multitool_red"
 
 /obj/machinery/power/quantumpad/scioutpost
 

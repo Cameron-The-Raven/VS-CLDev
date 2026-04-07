@@ -18,8 +18,9 @@
 /obj/machinery/computer/rdservercontrol/attackby(obj/item/I, user)
 	if(istype(I, /obj/item/multitool))
 		var/obj/item/multitool/tool = I
-		if(!QDELETED(tool.buffer) && istype(tool.buffer, /datum/techweb))
-			stored_research = tool.buffer
+		var/datum/techweb/buffered = tool.get_buffered_machine()
+		if(istype(buffered))
+			stored_research = buffered
 			balloon_alert(user, "techweb connected")
 
 /obj/machinery/computer/rdservercontrol/emag_act(var/remaining_charges, var/mob/user, var/emag_source)

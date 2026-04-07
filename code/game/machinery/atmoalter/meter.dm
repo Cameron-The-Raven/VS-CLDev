@@ -128,7 +128,7 @@
 		if(open) // For setting up the meter to be used by other devices over radio.
 			id = tgui_input_text(user, "Please insert an ID tag for [src], example 'exhaust_pipe'.", "Set ID Tag", id, MAX_NAME_LEN)
 			var/obj/item/multitool/tool = W
-			tool.connectable = src
+			tool.set_buffered_machine(src)
 			return
 
 		for(var/obj/machinery/atmospherics/pipe/P in loc)

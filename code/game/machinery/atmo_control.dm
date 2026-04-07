@@ -152,7 +152,7 @@
 					return
 
 				var/obj/item/multitool/M = tool
-				M.connectable = src
+				M.set_buffered_machine(src)
 				to_chat(user, span_notice("You save [src] into [M]'s buffer."))
 
 	return TRUE
@@ -251,14 +251,14 @@
 	switch(choice)
 		if("Add")
 			// Device must be a meter or gas sensor.
-			var/obj/machinery/device = tool.connectable
+			var/obj/machinery/device = tool.get_buffered_machine()
 			if(!device || !(istype(device, /obj/machinery/meter)) && !(istype(device, /obj/machinery/air_sensor)))
 				to_chat(user, span_warning("Error: No device in multitool buffer, or incompatible device is not a sensor or meter."))
 				return
 
 			var/device_name = tgui_input_text(user, "Enter a name for the Sensor/Meter.", "Name")
 			if (!device_name || !Adjacent(user))
-				to_chat(user, span_warning("Error: No name was given for [tool.connectable]."))
+				to_chat(user, span_warning("Error: No name was given for [device]."))
 				return
 
 			if(istype(device, /obj/machinery/air_sensor))
@@ -268,7 +268,7 @@
 				var/obj/machinery/meter/M = device
 				sensors[M.id] = device_name
 
-			to_chat(user, span_notice("You have added the [tool.connectable] to the [src] under the name [device_name]!"))
+			to_chat(user, span_notice("You have added the [device] to the [src] under the name [device_name]!"))
 
 		if("Remove")
 			// Creates an associative mapping of Names to Tags, from Tags to Names.
@@ -424,12 +424,11 @@
 
 	switch(choice)
 		if ("Set")
-			to_chat(user, span_notice("The buffer is [tool.connectable]"))
-			if (!istype(tool.connectable, /obj/machinery/atmospherics/unary/vent_pump))
+			var/obj/machinery/atmospherics/unary/vent_pump/pump = tool.get_buffered_machine()
+			if(!istype(pump))
 				to_chat(user, span_notice("Error: Buffer is either empty, or object in buffer is invalid. Device should be a Unary Vent."))
 				return
 
-			var/obj/machinery/atmospherics/unary/vent_pump/pump = tool.connectable
 			output_tag = pump.id_tag
 			pump.external_pressure_bound = 0
 			pump.external_pressure_bound_default = 0
@@ -448,11 +447,11 @@
 
 	switch(choice)
 		if ("Set")
-			if (!istype(tool.connectable, /obj/machinery/atmospherics/unary/outlet_injector))
+			var/obj/machinery/atmospherics/unary/outlet_injector/injector = tool.get_buffered_machine()
+			if (!istype(injector))
 				to_chat(user, span_notice("Error: Buffer is either empty, or object in buffer is invalid. Device should be Injector"))
 				return
 
-			var/obj/machinery/atmospherics/unary/outlet_injector/injector = tool.connectable
 			input_tag = injector.id
 			to_chat(user, span_notice("You have set the inlet"))
 			return
@@ -594,11 +593,11 @@
 
 	switch(choice)
 		if ("Set")
-			if (!istype(tool.connectable, /obj/machinery/atmospherics/unary/vent_pump))
+			var/obj/machinery/atmospherics/unary/vent_pump/pump = tool.get_buffered_machine()
+			if (!istype(pump))
 				to_chat(user, span_warning("Error: Buffer is either empty, or object in buffer is invalid. Device should be Air Vent"))
 				return
 
-			var/obj/machinery/atmospherics/unary/vent_pump/pump = tool.connectable
 			output_tag = pump.id_tag
 			pump.external_pressure_bound = 0
 			pump.external_pressure_bound_default = 0
@@ -617,12 +616,11 @@
 
 	switch(choice)
 		if ("Set")
-			to_chat(user, span_notice("The buffer is [tool.connectable]"))
-			if (!istype(tool.connectable, /obj/machinery/atmospherics/unary/outlet_injector))
+			var/obj/machinery/atmospherics/unary/outlet_injector/injector = tool.get_buffered_machine()
+			if (!istype(injector))
 				to_chat(user, span_warning("Error: Buffer is either empty, or object in buffer is invalid. Device should be Injector"))
 				return
 
-			var/obj/machinery/atmospherics/unary/outlet_injector/injector = tool.connectable
 			input_tag = injector.id
 			to_chat(user, span_notice("You have set the inlet!"))
 			return

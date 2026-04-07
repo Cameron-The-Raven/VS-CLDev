@@ -717,20 +717,20 @@
 /obj/machinery/body_scanconsole/attackby(var/obj/item/I, var/mob/user)
 	if(computer_deconstruction_screwdriver(user, I))
 		return
-	else if(istype(I, /obj/item/multitool)) //Did you want to link it?
-		var/obj/item/multitool/P = I
-		if(P.connectable)
-			if(istype(P.connectable, /obj/machinery/bodyscanner))
-				var/obj/machinery/bodyscanner/C = P.connectable
-				scanner = C
-				C.console = src
-				to_chat(user, span_warning(" You link the [src] to the [P.connectable]!"))
-		else
-			to_chat(user, span_warning(" You store the [src] in the [P]'s buffer!"))
-			P.connectable = src
+
+	if(istype(I, /obj/item/multitool)) //Did you want to link it?
+		var/obj/item/multitool/tool = I
+		var/obj/machinery/bodyscanner/bscanner = tool.get_buffered_machine()
+		if(bscanner)
+			if(istype(bscanner, /obj/machinery/bodyscanner))
+				scanner = bscanner
+				bscanner.console = src
+				to_chat(user, span_warning(" You link the [src] to the [bscanner]!"))
+			return
+		to_chat(user, span_warning(" You store the [src] in the [tool]'s buffer!"))
+		tool.set_buffered_machine(src)
 		return
-	else
-		return attack_hand(user)
+	return attack_hand(user)
 
 /obj/machinery/body_scanconsole/power_change()
 	update_icon()

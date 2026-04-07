@@ -66,9 +66,10 @@
 			user.visible_message("[user] inserts [W] into \the [src]'s GPS device slot.", span_notice("You insert [W] into \the [src]'s GPS device slot."))
 	else if(istype(W, /obj/item/multitool))
 		var/obj/item/multitool/M = W
-		if(M.connectable && istype(M.connectable, /obj/machinery/telepad))
-			telepad = M.connectable
-			M.connectable = null
+		var/obj/machinery/telepad/pad = M.get_buffered_machine()
+		if(istype(pad))
+			telepad = pad
+			M.set_buffered_machine(null)
 			to_chat(user, span_warning("You upload the data from the [W.name]'s buffer."))
 	else
 		return ..()

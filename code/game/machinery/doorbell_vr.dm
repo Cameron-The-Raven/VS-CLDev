@@ -54,9 +54,9 @@
 		return
 	else if(panel_open && istype(W, /obj/item/multitool))
 		var/obj/item/multitool/M = W
-		if(M.connectable && istype(M.connectable, /obj/machinery/button/doorbell))
-			var/obj/machinery/button/doorbell/B = M.connectable
-			id_tag = B.id
+		var/obj/machinery/button/doorbell/bell = M.get_buffered_machine()
+		if(istype(bell))
+			id_tag = bell.id
 			to_chat(user, span_notice("You upload the data from \the [W]'s buffer."))
 		return
 	..()
@@ -136,7 +136,7 @@
 			name = t
 	else if(panel_open && istype(W, /obj/item/multitool))
 		var/obj/item/multitool/M = W
-		M.connectable = src
+		M.set_buffered_machine(src)
 		to_chat(user, span_notice("You save the data in \the [M]'s buffer."))
 	else if(W.has_tool_quality(TOOL_WRENCH))
 		to_chat(user, span_notice("You start to unwrench \the [src]."))

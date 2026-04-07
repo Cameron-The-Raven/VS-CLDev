@@ -25,14 +25,34 @@
 	var/list/modes = list(MULTITOOL_MODE_STANDARD, MULTITOOL_MODE_INTCIRCUITS)
 
 	origin_tech = list(TECH_MAGNET = 1, TECH_ENGINEERING = 1)
-	var/obj/machinery/telecomms/buffer // simple machine buffer for device linkage
-	var/obj/machinery/clonepod/connecting //same for cryopod linkage
-	var/obj/machinery/connectable	//Used to connect machinery.
-	var/weakref_wiring //Used to store weak references for integrated circuitry. This is now the Omnitool.
 	toolspeed = 1
 	tool_qualities = list(TOOL_MULTITOOL)
 
+	VAR_PRIVATE/datum/weakref/machine_link_buffer // simple machine buffer for device linkage
+	var/weakref_wiring //Used to store weak references for integrated circuitry. This is now the Omnitool.
+
 	var/uplink = FALSE
+
+/obj/item/multitool/proc/set_buffered_machine(var/obj/machinery/machine)
+	if(machine == null)
+		machine_link_buffer = null
+		return
+	machine_link_buffer = WEAKREF(machine)
+
+/obj/item/multitool/proc/get_buffered_machine()
+	RETURN_TYPE(/obj/machinery)
+	var/atom/buffer = machine_link_buffer?.resolve()
+	if(QDELETED(buffer))
+		return null
+	return buffer
+
+/obj/item/multitool/proc/state_buffer(mob/user)
+	var/obj/machinery/link = get_buffered_machine()
+	to_chat(user, span_notice("The buffer is [link ? link : "empty"]"))
+
+/obj/item/multitool/proc/Destroy()
+	. = ..()
+	machine_link_buffer = null
 
 /obj/item/multitool/attack_self(mob/living/user)
 	. = ..(user)
@@ -52,9 +72,7 @@
 	switch(choice)
 		if("Clear Buffers")
 			to_chat(user,span_notice("You clear \the [src]'s memory."))
-			buffer = null
-			connecting = null
-			connectable = null
+			set_buffered_machine(null)
 			weakref_wiring = null
 			accepting_refs = 0
 			if(toolmode == MULTITOOL_MODE_INTCIRCUITS)

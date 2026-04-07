@@ -128,15 +128,15 @@ handles linking back and forth.
 	SIGNAL_HANDLER
 
 	. = NONE
-	if (!QDELETED(M.buffer) && istype(M.buffer, /obj/machinery/ore_silo))
-		if (silo == M.buffer)
+	var/obj/machinery/ore_silo/new_silo = M.get_buffered_machine()
+	if (!QDELETED(new_silo) && istype(new_silo, /obj/machinery/ore_silo))
+		if (silo == new_silo)
 			to_chat(user, span_warning("[parent] is already connected to [silo]!"))
 			return FALSE
-		if(!check_z_level(M.buffer))
+		if(!check_z_level(new_silo))
 			to_chat(user, span_warning("[parent] is too far away to get a connection signal!"))
 			return FALSE
 
-		var/obj/machinery/ore_silo/new_silo = M.buffer
 		var/datum/component/material_container/new_container = new_silo.GetComponent(/datum/component/material_container)
 		if (silo)
 			silo.ore_connected_machines -= src

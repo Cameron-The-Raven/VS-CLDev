@@ -183,7 +183,7 @@
 
 			if("-SAVE TO BUFFER-")
 				var/obj/item/multitool/tool = W
-				tool.connectable = src
+				tool.set_buffered_machine(src)
 				to_chat(user, span_notice("You copied the [src] into the [tool]'s buffer!"))
 
 		return ..()

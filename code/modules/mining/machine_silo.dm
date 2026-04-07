@@ -69,7 +69,7 @@
 		return
 	if(istype(W, /obj/item/multitool))
 		var/obj/item/multitool/M = W
-		M.buffer = src
+		M.set_buffered_machine(src)
 		balloon_alert(user, "saved to multitool buffer")
 		return
 	. = ..()

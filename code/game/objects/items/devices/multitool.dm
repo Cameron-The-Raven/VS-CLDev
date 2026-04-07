@@ -49,15 +49,15 @@
 /// Gets the datum or atom currently stored in the multitool's buffer
 /obj/item/multitool/proc/get_buffered_link()
 	RETURN_TYPE(/atom)
-	var/atom/buffer = buffer?.resolve()
-	if(QDELETED(buffer))
+	var/atom/atom_buff = buffer?.resolve()
+	if(QDELETED(atom_buff))
 		return null
-	return buffer
+	return atom_buff
 
 /// Returns true if the buffer currently holds a datum of the type type/subtype provided
 /obj/item/multitool/proc/filter_buffer(mob/user, expected_typepath)
-	var/atom/buffer = buffer?.resolve()
-	if(!istype(buffer, expected_typepath))
+	var/atom/atom_buff = buffer?.resolve()
+	if(!istype(atom_buff, expected_typepath))
 		if(user)
 			var/atom/as_atom = expected_typepath // MUST BE ATOMS, DO NOT USE THIS TO FILTER FOR DATUMS LIKE TECHWEB LINKS
 			to_chat(user, span_warning("Error: Buffer is either empty, or object in buffer is invalid. Requires \a [initial(as_atom.name)]"))
@@ -65,10 +65,10 @@
 	return TRUE
 
 /obj/item/multitool/proc/state_buffer(mob/user)
-	var/obj/machinery/link = get_buffered_link()
-	to_chat(user, span_notice("The buffer is [link ? link : "empty"]"))
+	var/atom/atom_buff = get_buffered_link()
+	to_chat(user, span_notice("The buffer is [atom_buff ? atom_buff : "empty"]"))
 
-/obj/item/multitool/proc/Destroy()
+/obj/item/multitool/Destroy()
 	. = ..()
 	buffer = null
 
@@ -86,6 +86,7 @@
 		return
 
 	update_icon()
+	state_buffer(user)
 	var/choice = tgui_alert(user, "What do you want to do with \the [src]?", "Multitool Menu", list("Switch Mode", "Clear Buffers", "Cancel"))
 	switch(choice)
 		if("Clear Buffers")

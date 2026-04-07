@@ -67,10 +67,10 @@
 		data["multitool"] = !!P
 		data["multitool_buffer"] = null
 
-		var/obj/machinery/telecomms/linked = P.get_buffered_link()
-		if(istype(linked))
+		var/obj/machinery/telecomms/tcommlink = P.get_buffered_link()
+		if(istype(tcommlink))
 			P.update_icon()
-			data["multitool_buffer"] = list("name" = "[linked]", "id" = "[linked.id]")
+			data["multitool_buffer"] = list("name" = "[tcommlink]", "id" = "[tcommlink.id]")
 
 		var/i = 0
 		var/list/linked = list()

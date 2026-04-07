@@ -604,8 +604,8 @@
 	if(istype(W, /obj/item/multitool) && !anchored) // Only allow programming if unanchored!
 		var/obj/item/multitool/MT = W
 		// First check if they have a windowtint button buffered
-		var/obj/machinery/button/windowtint/buffered_button = MT.get_buffered_machine()
-		if(istype(buffered_button))
+		if(MT.filter_buffer(user, /obj/machinery/button/windowtint))
+			var/obj/machinery/button/windowtint/buffered_button = MT.get_buffered_link()
 			src.id = buffered_button.id
 			to_chat(user, span_notice("\The [src] is linked to \the [buffered_button] with ID '[id]'."))
 			return TRUE
@@ -677,9 +677,7 @@
 				to_chat(user, span_notice("The new ID of \the [src] is '[id]'. To reset this, rebuild the control."))
 		if(id)
 			// It already has an ID (or they just set one), buffer it for copying to windows.
-			to_chat(user, span_notice("You store \the [src] ID ('[id]') in \the [MT]'s buffer!"))
-			MT.set_buffered_machine(src)
-			MT.update_icon()
+			MT.set_buffered_link(user, src)
 		return TRUE
 	. = ..()
 

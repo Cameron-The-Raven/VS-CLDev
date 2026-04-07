@@ -18,7 +18,7 @@
 /obj/machinery/computer/rdservercontrol/attackby(obj/item/I, user)
 	if(istype(I, /obj/item/multitool))
 		var/obj/item/multitool/tool = I
-		var/datum/techweb/buffered = tool.get_buffered_machine()
+		var/datum/techweb/buffered = tool.get_buffered_link()
 		if(istype(buffered))
 			stored_research = buffered
 			balloon_alert(user, "techweb connected")

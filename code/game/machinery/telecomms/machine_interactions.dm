@@ -67,7 +67,7 @@
 		data["multitool"] = !!P
 		data["multitool_buffer"] = null
 
-		var/obj/machinery/telecomms/linked = P.get_buffered_machine()
+		var/obj/machinery/telecomms/linked = P.get_buffered_link()
 		if(istype(linked))
 			P.update_icon()
 			data["multitool_buffer"] = list("name" = "[linked]", "id" = "[linked.id]")
@@ -343,7 +343,7 @@
 
 		if("link")
 			if(P)
-				var/obj/machinery/telecomms/buffered = P.get_buffered_machine()
+				var/obj/machinery/telecomms/buffered = P.get_buffered_link()
 				if(istype(buffered) && buffered != src)
 					if(!(src in buffered.links))
 						buffered.links.Add(src)
@@ -358,13 +358,13 @@
 				. = TRUE
 
 		if("buffer")
-			P.set_buffered_machine(src)
+			P.set_buffered_link(null, src)
 			set_temp("-% Successfully stored \ref[src] [name] in buffer %-", "average")
 			. = TRUE
 
 		if("flush")
 			set_temp("-% Buffer successfully flushed. %-", "average")
-			P.set_buffered_machine(null)
+			P.set_buffered_link(null, null)
 			. = TRUE
 
 		if("cleartemp")

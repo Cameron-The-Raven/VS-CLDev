@@ -325,7 +325,7 @@
 
 /obj/item/multitool/scioutpost/Initialize(mapload)
 	. = ..()
-	set_buffered_machine(locate(/obj/machinery/power/quantumpad/scioutpost))
+	set_buffered_link(null, locate(/obj/machinery/power/quantumpad/scioutpost))
 	icon_state = "multitool_red"
 
 /obj/machinery/power/quantumpad/scioutpost

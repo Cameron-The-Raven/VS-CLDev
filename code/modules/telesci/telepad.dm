@@ -40,8 +40,7 @@
 	if(panel_open)
 		if(istype(W, /obj/item/multitool))
 			var/obj/item/multitool/M = W
-			M.set_buffered_machine(src)
-			to_chat(user, span_warning("You save the data in the [M.name]'s buffer."))
+			M.set_buffered_link(user, src)
 			return 1
 
 	return ..()

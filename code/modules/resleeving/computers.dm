@@ -87,12 +87,13 @@
 /obj/machinery/computer/transhuman/resleeving/attackby(obj/item/W as obj, mob/user as mob)
 	if(istype(W, /obj/item/multitool))
 		var/obj/item/multitool/M = W
-		var/obj/machinery/clonepod/transhuman/P = M.get_buffered_machine()
-		if(istype(P) && !(P in pods))
-			pods += P
-			P.connected = src
-			P.name = "[initial(P.name)] #[pods.len]"
-			to_chat(user, span_notice("You connect [P] to [src]."))
+		if(M.filter_buffer(user, /obj/machinery/clonepod/transhuman))
+			var/obj/machinery/clonepod/transhuman/P = M.get_buffered_link()
+			if(!(P in pods))
+				pods += P
+				P.connected = src
+				P.name = "[initial(P.name)] #[pods.len]"
+				to_chat(user, span_notice("You connect [P] to [src]."))
 	else if(istype(W, /obj/item/disk/transcore) && !our_db.core_dumped)
 		user.unEquip(W)
 		disk = W

@@ -29,4 +29,4 @@
 
 /obj/item/multitool/station_buffered/Initialize(mapload)
 	. = ..()
-	set_buffered_machine(locate(/obj/machinery/telecomms/hub/preset/sd))
+	set_buffered_link(null, locate(/obj/machinery/telecomms/hub/preset/sd))

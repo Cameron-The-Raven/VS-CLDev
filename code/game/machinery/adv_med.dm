@@ -720,15 +720,14 @@
 
 	if(istype(I, /obj/item/multitool)) //Did you want to link it?
 		var/obj/item/multitool/tool = I
-		var/obj/machinery/bodyscanner/bscanner = tool.get_buffered_machine()
-		if(bscanner)
+		if(tool.filter_buffer(user, /obj/machinery/bodyscanner))
+			var/obj/machinery/bodyscanner/bscanner = tool.get_buffered_link()
 			if(istype(bscanner, /obj/machinery/bodyscanner))
 				scanner = bscanner
 				bscanner.console = src
 				to_chat(user, span_warning(" You link the [src] to the [bscanner]!"))
 			return
-		to_chat(user, span_warning(" You store the [src] in the [tool]'s buffer!"))
-		tool.set_buffered_machine(src)
+		tool.set_buffered_link(user, src)
 		return
 	return attack_hand(user)
 

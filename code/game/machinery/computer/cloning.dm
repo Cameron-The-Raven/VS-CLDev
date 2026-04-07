@@ -103,12 +103,15 @@
 			return
 	else if(istype(W, /obj/item/multitool))
 		var/obj/item/multitool/M = W
-		var/obj/machinery/clonepod/P = M.get_buffered_machine()
-		if(istype(P) && !(P in pods))
-			pods += P
-			P.connected = src
-			P.name = "[initial(P.name)] #[pods.len]"
-			to_chat(user, span_notice("You connect [P] to [src]."))
+		if(M.filter_buffer(user, /obj/machinery/clonepod))
+			var/obj/machinery/clonepod/P = M.get_buffered_link()
+			if(!(P in pods))
+				pods += P
+				P.connected = src
+				P.name = "[initial(P.name)] #[pods.len]"
+				to_chat(user, span_notice("You connect \the [P] to \the [src]."))
+			else
+				to_chat(user, span_notice("\The [P] is already linked to \the [src]."))
 	else
 		return ..()
 

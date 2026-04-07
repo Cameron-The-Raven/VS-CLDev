@@ -72,13 +72,12 @@
 		//VOREStation Addition End
 		if(panel_open)
 			var/obj/item/multitool/M = I
-			M.set_buffered_machine(src)
-			to_chat(user, span_notice("You save the data in [I]'s buffer."))
+			M.set_buffered_link(user, src)
 			return 1
 		else
 			var/obj/item/multitool/M = I
-			var/obj/machinery/power/quantumpad/pad = M.get_buffered_machine()
-			if(istype(pad))
+			if(M.filter_buffer(user, /obj/machinery/power/quantumpad))
+				var/obj/machinery/power/quantumpad/pad = M.get_buffered_link()
 				linked_pad = pad
 				to_chat(user, span_notice("You link [src] to the one in [I]'s buffer."))
 				update_icon()

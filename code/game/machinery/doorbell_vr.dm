@@ -54,8 +54,8 @@
 		return
 	else if(panel_open && istype(W, /obj/item/multitool))
 		var/obj/item/multitool/M = W
-		var/obj/machinery/button/doorbell/bell = M.get_buffered_machine()
-		if(istype(bell))
+		if(M.filter_buffer(user, /obj/machinery/button/doorbell))
+			var/obj/machinery/button/doorbell/bell = M.get_buffered_link()
 			id_tag = bell.id
 			to_chat(user, span_notice("You upload the data from \the [W]'s buffer."))
 		return
@@ -136,8 +136,7 @@
 			name = t
 	else if(panel_open && istype(W, /obj/item/multitool))
 		var/obj/item/multitool/M = W
-		M.set_buffered_machine(src)
-		to_chat(user, span_notice("You save the data in \the [M]'s buffer."))
+		M.set_buffered_link(user, src)
 	else if(W.has_tool_quality(TOOL_WRENCH))
 		to_chat(user, span_notice("You start to unwrench \the [src]."))
 		playsound(src, 'sound/items/Ratchet.ogg', 50, 1)

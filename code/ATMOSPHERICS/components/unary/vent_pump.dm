@@ -462,7 +462,7 @@
 
 		if("-SAVE TO BUFFER-")
 			var/obj/item/multitool/tool = W
-			tool.set_buffered_machine(src)
+			tool.set_buffered_link(user, src)
 
 		if("Direction")
 			pump_direction = !pump_direction

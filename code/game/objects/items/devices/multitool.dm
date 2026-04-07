@@ -28,31 +28,49 @@
 	toolspeed = 1
 	tool_qualities = list(TOOL_MULTITOOL)
 
-	VAR_PRIVATE/datum/weakref/machine_link_buffer // simple machine buffer for device linkage
+	VAR_PRIVATE/datum/weakref/buffer // simple machine buffer for device linkage
 	var/weakref_wiring //Used to store weak references for integrated circuitry. This is now the Omnitool.
 
 	var/uplink = FALSE
 
-/obj/item/multitool/proc/set_buffered_machine(var/obj/machinery/machine)
-	if(machine == null)
-		machine_link_buffer = null
+/// Stores a buffered link to a datum or atom to be linked to another object
+/obj/item/multitool/proc/set_buffered_link(mob/user, datum/thing)
+	if(thing == null)
+		buffer = null
+		if(user)
+			to_chat(user, span_notice("You clear \the [src]'s buffer!"))
+		update_icon()
 		return
-	machine_link_buffer = WEAKREF(machine)
+	buffer = WEAKREF(thing)
+	if(user)
+		to_chat(user, span_notice("You copied \the [thing] into \the [src]'s buffer!"))
+	update_icon()
 
-/obj/item/multitool/proc/get_buffered_machine()
-	RETURN_TYPE(/obj/machinery)
-	var/atom/buffer = machine_link_buffer?.resolve()
+/// Gets the datum or atom currently stored in the multitool's buffer
+/obj/item/multitool/proc/get_buffered_link()
+	RETURN_TYPE(/atom)
+	var/atom/buffer = buffer?.resolve()
 	if(QDELETED(buffer))
 		return null
 	return buffer
 
+/// Returns true if the buffer currently holds a datum of the type type/subtype provided
+/obj/item/multitool/proc/filter_buffer(mob/user, expected_typepath)
+	var/atom/buffer = buffer?.resolve()
+	if(!istype(buffer, expected_typepath))
+		if(user)
+			var/atom/as_atom = expected_typepath // MUST BE ATOMS, DO NOT USE THIS TO FILTER FOR DATUMS LIKE TECHWEB LINKS
+			to_chat(user, span_warning("Error: Buffer is either empty, or object in buffer is invalid. Requires \a [initial(as_atom.name)]"))
+		return FALSE
+	return TRUE
+
 /obj/item/multitool/proc/state_buffer(mob/user)
-	var/obj/machinery/link = get_buffered_machine()
+	var/obj/machinery/link = get_buffered_link()
 	to_chat(user, span_notice("The buffer is [link ? link : "empty"]"))
 
 /obj/item/multitool/proc/Destroy()
 	. = ..()
-	machine_link_buffer = null
+	buffer = null
 
 /obj/item/multitool/attack_self(mob/living/user)
 	. = ..(user)
@@ -71,8 +89,7 @@
 	var/choice = tgui_alert(user, "What do you want to do with \the [src]?", "Multitool Menu", list("Switch Mode", "Clear Buffers", "Cancel"))
 	switch(choice)
 		if("Clear Buffers")
-			to_chat(user,span_notice("You clear \the [src]'s memory."))
-			set_buffered_machine(null)
+			set_buffered_link(user, null)
 			weakref_wiring = null
 			accepting_refs = 0
 			if(toolmode == MULTITOOL_MODE_INTCIRCUITS)

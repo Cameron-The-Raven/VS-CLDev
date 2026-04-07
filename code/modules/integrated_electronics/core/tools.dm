@@ -180,12 +180,12 @@
 
 /obj/item/multitool/update_icon()
 	if(selected_io)
-		if(get_buffered_machine())
+		if(get_buffered_link())
 			icon_state = "multitool_tracking"
 		else
 			icon_state = "multitool_red"
 	else
-		if(get_buffered_machine())
+		if(get_buffered_link())
 			icon_state = "multitool_tracking_fail"
 		else if(accepting_refs)
 			icon_state = "multitool_ref_scan"

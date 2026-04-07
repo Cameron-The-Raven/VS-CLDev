@@ -150,10 +150,8 @@
 				id_tag = tgui_input_text(user, "Please insert an ID tag for [src], example 'burn_chamber'.", "Set ID Tag", id_tag, MAX_NAME_LEN, FALSE)
 				if(!id_tag || !Adjacent(user))
 					return
-
 				var/obj/item/multitool/M = tool
-				M.set_buffered_machine(src)
-				to_chat(user, span_notice("You save [src] into [M]'s buffer."))
+				M.set_buffered_link(user, src)
 
 	return TRUE
 #undef ONOFF_TOGGLE
@@ -251,8 +249,8 @@
 	switch(choice)
 		if("Add")
 			// Device must be a meter or gas sensor.
-			var/obj/machinery/device = tool.get_buffered_machine()
-			if(!device || !(istype(device, /obj/machinery/meter)) && !(istype(device, /obj/machinery/air_sensor)))
+			var/obj/machinery/device = tool.get_buffered_link()
+			if (!istype(device, /obj/machinery/meter) && !istype(device, /obj/machinery/air_sensor))
 				to_chat(user, span_warning("Error: No device in multitool buffer, or incompatible device is not a sensor or meter."))
 				return
 
@@ -424,10 +422,9 @@
 
 	switch(choice)
 		if ("Set")
-			var/obj/machinery/atmospherics/unary/vent_pump/pump = tool.get_buffered_machine()
-			if(!istype(pump))
-				to_chat(user, span_notice("Error: Buffer is either empty, or object in buffer is invalid. Device should be a Unary Vent."))
+			if(!tool.filter_buffer(user, /obj/machinery/atmospherics/unary/vent_pump))
 				return
+			var/obj/machinery/atmospherics/unary/vent_pump/pump = tool.get_buffered_link()
 
 			output_tag = pump.id_tag
 			pump.external_pressure_bound = 0
@@ -447,10 +444,9 @@
 
 	switch(choice)
 		if ("Set")
-			var/obj/machinery/atmospherics/unary/outlet_injector/injector = tool.get_buffered_machine()
-			if (!istype(injector))
-				to_chat(user, span_notice("Error: Buffer is either empty, or object in buffer is invalid. Device should be Injector"))
+			if(!tool.filter_buffer(user, /obj/machinery/atmospherics/unary/outlet_injector))
 				return
+			var/obj/machinery/atmospherics/unary/outlet_injector/injector = tool.get_buffered_link()
 
 			input_tag = injector.id
 			to_chat(user, span_notice("You have set the inlet"))
@@ -593,10 +589,9 @@
 
 	switch(choice)
 		if ("Set")
-			var/obj/machinery/atmospherics/unary/vent_pump/pump = tool.get_buffered_machine()
-			if (!istype(pump))
-				to_chat(user, span_warning("Error: Buffer is either empty, or object in buffer is invalid. Device should be Air Vent"))
+			if(!tool.filter_buffer(user, /obj/machinery/atmospherics/unary/vent_pump))
 				return
+			var/obj/machinery/atmospherics/unary/vent_pump/pump = tool.get_buffered_link()
 
 			output_tag = pump.id_tag
 			pump.external_pressure_bound = 0
@@ -616,10 +611,9 @@
 
 	switch(choice)
 		if ("Set")
-			var/obj/machinery/atmospherics/unary/outlet_injector/injector = tool.get_buffered_machine()
-			if (!istype(injector))
-				to_chat(user, span_warning("Error: Buffer is either empty, or object in buffer is invalid. Device should be Injector"))
+			if(!tool.filter_buffer(user, /obj/machinery/atmospherics/unary/outlet_injector))
 				return
+			var/obj/machinery/atmospherics/unary/outlet_injector/injector = tool.get_buffered_link()
 
 			input_tag = injector.id
 			to_chat(user, span_notice("You have set the inlet!"))

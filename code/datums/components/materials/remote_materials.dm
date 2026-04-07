@@ -128,8 +128,8 @@ handles linking back and forth.
 	SIGNAL_HANDLER
 
 	. = NONE
-	var/obj/machinery/ore_silo/new_silo = M.get_buffered_machine()
-	if (!QDELETED(new_silo) && istype(new_silo, /obj/machinery/ore_silo))
+	if(M.filter_buffer(user, /obj/machinery/ore_silo))
+		var/obj/machinery/ore_silo/new_silo = M.get_buffered_link()
 		if (silo == new_silo)
 			to_chat(user, span_warning("[parent] is already connected to [silo]!"))
 			return FALSE

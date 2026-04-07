@@ -66,7 +66,14 @@
 
 /obj/item/multitool/proc/state_buffer(mob/user)
 	var/atom/atom_buff = get_buffered_link()
-	to_chat(user, span_notice("The buffer is [atom_buff ? atom_buff : "empty"]"))
+	var/atom_string = "empty."
+	if(atom_buff)
+		var/area/at_area = get_area(atom_buff)
+		var/area_string = " from somewhere."
+		if(at_area)
+			area_string = " in \the [at_area]."
+		atom_string = "loaded with \a [atom_buff][area_string]"
+	to_chat(user, span_notice("The buffer is [atom_string]"))
 
 /obj/item/multitool/Destroy()
 	. = ..()

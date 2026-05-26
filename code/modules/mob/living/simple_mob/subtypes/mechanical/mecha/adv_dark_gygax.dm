@@ -139,8 +139,6 @@
 // Charges a tesla shot, while emitting a dangerous electric field. The exosuit is immune to electric damage while this is ongoing.
 // It also briefly blinds anyone looking directly at the mech without flash protection.
 /mob/living/simple_mob/mechanical/mecha/combat/gygax/dark/advanced/proc/electric_defense(atom/target)
-	set waitfor = FALSE
-
 	// Temporary immunity to shock to avoid killing themselves with their own attack.
 	var/old_shock_resist = shock_resist
 	shock_resist = 1
@@ -151,13 +149,17 @@
 	energy_ball.orbit(src, 32, TRUE, 1 SECOND)
 
 	visible_message(span_warning("\The [src] creates \an [energy_ball] around itself!"))
-
 	playsound(src, 'sound/effects/lightning_chargeup.ogg', 100, 1, extrarange = 30)
+	addtimer(CALLBACK(src, PROC_REF(electric_shock_loop), target, 0, old_shock_resist), 1 SECOND, TIMER_DELETE_ME)
+
+/mob/living/simple_mob/mechanical/mecha/combat/gygax/dark/advanced/proc/electric_shock_loop(atom/target, bolts_fired, old_shock_resist)
+	SHOULD_NOT_OVERRIDE(TRUE)
+	PRIVATE_PROC(TRUE)
 
 	// Shock nearby things that aren't ourselves.
-	for(var/i = 1 to 10)
-		energy_ball.adjust_scale(0.5 + (i/10))
-		energy_ball.set_light(i/2, i/2, "#0000FF")
+	if(bolts_fired <= 10)
+		energy_ball.adjust_scale(0.5 + (bolts_fired / 10))
+		energy_ball.set_light(bolts_fired / 2, bolts_fired / 2, "#0000FF")
 		for(var/thing in range(3, src))
 			// This is stupid because mechs are stupid and not mobs.
 			if(isliving(thing))
@@ -167,15 +169,16 @@
 					continue
 				if(L.stat)
 					continue // Otherwise it can get pretty laggy if there's loads of corpses around.
-				L.inflict_shock_damage(i * 2)
+				L.inflict_shock_damage(bolts_fired * 2)
 				if(L && L.has_AI()) // Some mobs delete themselves when dying.
 					L.ai_holder.react_to_attack(src)
 
 			else if(istype(thing, /obj/mecha))
 				var/obj/mecha/M = thing
-				M.take_damage(i * 2, "energy") // Mechs don't have a concept for siemens so energy armor check is the best alternative.
+				M.take_damage(bolts_fired * 2, "energy") // Mechs don't have a concept for siemens so energy armor check is the best alternative.
 
-		sleep(1 SECOND)
+		addtimer(CALLBACK(src, PROC_REF(electric_shock_loop), target, ++bolts_fired, old_shock_resist), 1 SECOND, TIMER_DELETE_ME)
+		return
 
 	// Shoot a tesla bolt, and flashes people who are looking at the mecha without sufficent eye protection.
 	visible_message(span_warning("\The [energy_ball] explodes in a flash of light, sending a shock everywhere!"))
@@ -192,9 +195,6 @@
 	// Get rid of our energy ball.
 	energy_ball.stop_orbit()
 	qdel(energy_ball)
-
-	sleep(1 SECOND)
-	// Resist resistance to old value.
 	shock_resist = old_shock_resist // Not using initial() in case the value gets modified by an admin or something.
 
 #undef ELECTRIC_ZAP_POWER

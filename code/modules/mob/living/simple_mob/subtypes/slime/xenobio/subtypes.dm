@@ -638,24 +638,28 @@
 			qdel(src)
 
 /mob/living/simple_mob/slime/xenobio/oil/apply_melee_effects(atom/A)
-	if(isliving(A))
-		var/mob/living/L = A
-		if(ishuman(L))
-			var/mob/living/carbon/human/H = A
-			if(istype(H.species, /datum/species/monkey))
-				return ..()// Don't blow up when just eatting monkeys.
+	if(!isliving(A))
+		return ..()
 
-		else if(isslime(L))
-			return ..()
+	var/mob/living/L = A
+	if(ishuman(L))
+		var/mob/living/carbon/human/H = A
+		if(istype(H.species, /datum/species/monkey))
+			return ..()// Don't blow up when just eatting monkeys.
 
-		// Otherwise blow ourselves up.
-		say(pick("Sacrifice...!", "Sssss...", "Boom...!"))
-		set_AI_busy(TRUE)
-		sleep(2 SECONDS)
-		log_and_message_admins("has suicide-bombed themselves while trying to kill \the [L].", src)
-		explode()
+	else if(isslime(L))
+		return ..()
 
-	return ..()
+	// Otherwise blow ourselves up.
+	say(pick("Sacrifice...!", "Sssss...", "Boom...!"))
+	set_AI_busy(TRUE)
+	addtimer(CALLBACK(src, PROC_REF(resolve_self_destruct), L), 2 SECONDS, TIMER_DELETE_ME)
+
+/mob/living/simple_mob/slime/xenobio/oil/proc/resolve_self_destruct(mob/living/target)
+	SHOULD_NOT_OVERRIDE(TRUE)
+	PRIVATE_PROC(TRUE)
+	log_and_message_admins("has suicide-bombed themselves while trying to kill \the [target].", src)
+	explode()
 
 /mob/living/simple_mob/slime/xenobio/oil/ex_act(severity)
 	log_and_message_admins("exploded due to a chain reaction with another explosion.", src)

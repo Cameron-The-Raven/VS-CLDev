@@ -242,6 +242,7 @@
 
 // Override this for the actual special attack.
 /mob/living/simple_mob/proc/do_special_attack(atom/A)
+	SHOULD_NOT_SLEEP(TRUE)
 	return FALSE
 
 // Sleeps the proc that called it for the correct amount of time.

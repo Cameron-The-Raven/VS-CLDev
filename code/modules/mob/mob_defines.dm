@@ -21,8 +21,22 @@
 
 	var/datum/mind/mind
 
-	var/stat = 0 //Whether a mob is alive or dead. TODO: Move this to living - Nodrak
+	var/stat = CONSCIOUS //Whether a mob is alive or dead.
 	var/next_move = null // world.time when mob is next allowed to self-move.
+
+	/**
+	 * Whether and how a mob is incapacitated
+	 *
+	 * Normally being restrained, agressively grabbed, or in stasis counts as incapacitated
+	 * unless there is a flag being used to check if it's ignored
+	 *
+	 * * bitflags: (see code/__DEFINES/status_effects.dm)
+	 * * INCAPABLE_RESTRAINTS - if our mob is in a restraint (handcuffs)
+	 * * INCAPABLE_STASIS - if our mob is in stasis (stasis bed, etc.)
+	 * * INCAPABLE_GRAB - if our mob is being agressively grabbed
+	 *
+	**/
+	VAR_FINAL/incapacitated = NONE
 
 	//Not in use yet
 	var/obj/effect/organstructure/organStructure = null
@@ -168,6 +182,8 @@
 
 	var/voice_name = "unidentifiable voice"
 
+	var/list/ventcraw_item_admin_allow = null // If this is a list, it will be appended to the default list of items the mob is allowed to ventcrawl with
+
 	var/faction = FACTION_NEUTRAL //Used for checking whether hostile simple animals will attack you, possibly more stuff later
 
 	var/can_be_antagged = FALSE // To prevent pAIs/mice/etc from getting antag in autotraitor and future auto- modes. Uses inheritance instead of a bunch of typechecks.
@@ -191,7 +207,7 @@
 	var/mob/living/carbon/LAssailant = null
 
 //Wizard mode, but can be used in other modes thanks to the brand new "Give Spell" badmin button
-	var/list/spell/spell_list = list()
+	var/list/datum/spell/spell_list = list()
 
 //Changlings, but can be used in other modes
 //	var/obj/effect/proc_holder/changpower/list/power_list = list()
@@ -253,6 +269,9 @@
 	///For storing what do_after's someone has, key = string, value = amount of interactions of that type happening.
 	var/list/do_afters
 
+	///Allows a datum to intercept all click calls this mob is the source of
+	var/datum/click_intercept
+
 	var/datum/focus //What receives our keyboard inputs. src by default
 	/// dict of custom stat tabs with data
 	var/list/list/misc_tabs = list()
@@ -266,3 +285,6 @@
 	var/vent_crawl_time = 4.5 SECONDS // Time to animate entering a vent
 	VAR_PRIVATE/is_motion_tracking = FALSE // Prevent multiple unsubs and resubs, also used to check if the vis layer is enabled, use has_motiontracking() to get externally.
 	VAR_PRIVATE/wants_to_see_motion_echos = TRUE
+
+	var/is_slipping = FALSE
+	var/slip_protect = 1

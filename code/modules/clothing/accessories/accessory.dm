@@ -82,7 +82,7 @@
 	return mob_overlay
 
 //when user attached an accessory to S
-/obj/item/clothing/accessory/proc/on_attached(var/obj/item/clothing/S, var/mob/user)
+/obj/item/clothing/accessory/proc/on_attached(obj/item/clothing/S, mob/user)
 	if(!istype(S))
 		return
 	has_suit = S
@@ -98,7 +98,7 @@
 		to_chat(user, span_notice("You attach \the [src] to \the [has_suit]."))
 		add_fingerprint(user)
 
-/obj/item/clothing/accessory/proc/on_removed(var/mob/user)
+/obj/item/clothing/accessory/proc/on_removed(mob/user)
 	if(!has_suit)
 		return
 	has_suit.cut_overlay(get_inv_overlay())
@@ -109,7 +109,7 @@
 	has_suit = null
 	if(QDELETED(src))
 		return
-	if(user)
+	if(user && !issilicon(user))
 		user.put_in_hands(src)
 		add_fingerprint(user)
 	else if(get_turf(src))		//We actually exist in space
@@ -254,6 +254,11 @@
 										sound = "a light, rhythmic, mechanical clicking"
 									else
 										sound = span_warning("no heartbeat")
+									if(istype(heart, /obj/item/organ/internal/heart/machine/anomalock))
+										var/obj/item/organ/internal/heart/machine/anomalock/zap_heart = heart
+										if(zap_heart.core)
+											user.electrocute_act(15, src)
+											user.emote("scream")
 								else
 									switch(M.pulse)
 										if(PULSE_NONE)
@@ -316,7 +321,7 @@
 							sound = "anything"
 
 				user.visible_message("[user] places [src] against [M]'s [body_part] and listens attentively.", "You place [src] against [their] [body_part]. You [sound_strength] [sound].")
-				return
+				return ITEM_INTERACT_SUCCESS
 	return ..(M,user)
 
 //Medals
@@ -476,6 +481,7 @@
 	var/breath_masked = FALSE
 	var/obj/item/clothing/mask/breath/breathmask
 	actions_types = list(/datum/action/item_action/pull_on_gaiter)
+	special_handling = TRUE
 
 /obj/item/clothing/accessory/gaiter/update_clothing_icon()
 	. = ..()
@@ -493,7 +499,7 @@
 		item_flags &= ~FLEXIBLEMATERIAL
 	. = ..()
 
-/obj/item/clothing/accessory/gaiter/AltClick(mob/user)
+/obj/item/clothing/accessory/gaiter/click_alt(mob/user)
 	. = ..()
 	if(breath_masked && breathmask)
 		to_chat(user, span_notice("You pull [breathmask] out from behind [src], and it drops to your feet."))
@@ -504,6 +510,9 @@
 		item_flags |= FLEXIBLEMATERIAL
 
 /obj/item/clothing/accessory/gaiter/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	var/gaiterstring = "You pull [src] "
 	if(src.icon_state == initial(icon_state))
 		src.icon_state = "[icon_state]_up"

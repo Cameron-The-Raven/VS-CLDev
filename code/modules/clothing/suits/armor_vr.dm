@@ -19,7 +19,7 @@
 	icon_state = "wolf_item"
 	item_state = "heavy_wolf_armor"
 
-/obj/item/clothing/suit/armor/vest/wolftaur/mob_can_equip(var/mob/living/carbon/human/H, slot, disable_warning = 0)
+/obj/item/clothing/suit/armor/vest/wolftaur/mob_can_equip(mob/living/carbon/human/H, slot, disable_warning = FALSE, ignore_obstruction, go_over_slot = FALSE)
 	if(..())
 		if(istype(H) && istype(H.tail_style, /datum/sprite_accessory/tail/taur/wolf))
 			return ..()
@@ -69,12 +69,10 @@
 	icon_state = "ge_armorcent"
 
 /obj/item/clothing/suit/storage/vest/wardencoat/alt2
-	icon = 'icons/inventory/suit/item.dmi'
-	icon_override = 'icons/inventory/suit/mob.dmi'
+	icon_state = "warden_jacket_old"
 
 /obj/item/clothing/suit/storage/vest/hoscoat/jensen/alt
-	icon = 'icons/inventory/suit/item.dmi'
-	icon_override = 'icons/inventory/suit/mob.dmi'
+	icon_state = "hostrench_old"
 
 // Armor Versions Here
 /obj/item/clothing/suit/armor/combat/crusader

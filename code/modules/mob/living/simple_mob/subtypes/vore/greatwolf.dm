@@ -103,7 +103,7 @@
 	return
 
 
-/mob/living/simple_mob/vore/greatwolf/attackby(var/obj/item/O, var/mob/user) // Trade food for people!
+/mob/living/simple_mob/vore/greatwolf/attackby(obj/item/O, mob/user) // Trade food for people!
 	if(istype(O, /obj/item/reagent_containers/food))
 		qdel(O)
 		playsound(src,'sound/vore/gulp.ogg', rand(10,50), 1)
@@ -131,7 +131,7 @@
 	B.contamination_color = "grey"
 	B.contamination_flavor = "Wet"
 	B.belly_fullscreen_color = "#c47cb4"
-	B.belly_fullscreen = "anim_belly"
+	B.belly_fullscreen = "VBOanim_belly1"
 
 	B.emote_lists[DM_HOLD] = list(
 		"The wolf's idle wandering helps its stomach gently churn around you, slimily squelching against your figure.",

@@ -14,23 +14,34 @@
 
       const MAX_MESSAGES = 1000;
 
+      const urlParams = new URLSearchParams(window.location.search);
+      const storeValue = `${urlParams.get('store')}-${INDEXED_DB_NAME}`;
+
+      if (navigator.storage && navigator.storage.persist) {
+        navigator.storage.persist().then((persistent) => {
+          console.log(
+            `Indexed DB state: ${persistent ? 'Persistent' : 'Not persistent'}`,
+          );
+        });
+      }
+
       const dbPromise = new Promise((resolve, reject) => {
         const indexedDB = window.indexedDB;
-        const req = indexedDB.open(INDEXED_DB_NAME, INDEXED_DB_VERSION);
+        const req = indexedDB.open(storeValue, INDEXED_DB_VERSION);
         req.onupgradeneeded = (event) => {
           try {
             if (event.oldVersion < 1) {
               req.result.createObjectStore(INDEXED_DB_STORE_NAME);
             }
           } catch (err) {
-            reject(new Error('Failed to upgrade IDB: ' + req.error));
+            reject(new Error(`Failed to upgrade IDB: ${req.error}`));
           }
         };
 
         req.onsuccess = () => resolve(req.result);
 
         req.onerror = () => {
-          reject(new Error('Failed to open IDB: ' + req.error));
+          reject(new Error(`Failed to open IDB: ${req.error}`));
         };
       });
 

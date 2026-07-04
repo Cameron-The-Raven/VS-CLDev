@@ -9,7 +9,7 @@
 	icon_living = "mouse_gray"
 	icon_dead = "mouse_gray_dead"
 	icon_rest = "mouse_gray_sleep"
-	faction = "mouse_army"
+	faction = FACTION_MOUSE_ARMY
 
 	maxHealth = 50
 	health = 50
@@ -326,7 +326,7 @@
 	. = ..()
 	break_cloak()
 
-/mob/living/simple_mob/animal/space/mouse_army/stealth/hit_with_weapon(obj/item/O, mob/living/user, effective_force, hit_zone)
+/mob/living/simple_mob/animal/space/mouse_army/stealth/hit_with_weapon(obj/item/O, mob/living/user, effective_force, hit_zone, hide_attack_message)
 	. = ..()
 	break_cloak()
 
@@ -366,7 +366,7 @@
 	icon = 'icons/mob/mouse_army.dmi'
 	icon_state = "whisker"
 	wreckage = /obj/structure/loot_pile/mecha/mouse_tank
-	faction = "mouse_army"
+	faction = FACTION_MOUSE_ARMY
 
 	maxHealth = 150
 	armor = list(

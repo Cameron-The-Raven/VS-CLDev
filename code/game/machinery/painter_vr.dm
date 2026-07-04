@@ -101,11 +101,11 @@
 // 		inserted = null
 // 	return ..()
 
-/obj/machinery/gear_painter/AltClick(mob/user)
+/obj/machinery/gear_painter/click_alt(mob/user)
 	. = ..()
 	drop_item(user)
 
-/obj/machinery/gear_painter/proc/drop_item(var/mob/user)
+/obj/machinery/gear_painter/proc/drop_item(mob/user)
 	if(!oview(1,src))
 		return
 	if(!inserted)

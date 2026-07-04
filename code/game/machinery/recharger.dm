@@ -16,7 +16,8 @@ GLOBAL_LIST_INIT(allowed_recharger_devices, list(
 	/obj/item/paicard,
 	/obj/item/personal_shield_generator,
 	/obj/item/gun/projectile/cell_loaded,
-	/obj/item/ammo_magazine/cell_mag
+	/obj/item/ammo_magazine/cell_mag,
+	/obj/item/medigun_backpack
 	))
 
 GLOBAL_LIST_INIT(allowed_wallcharger_devices, list(
@@ -58,6 +59,13 @@ GLOBAL_LIST_INIT(recharger_battery_exempt, list(
 /obj/machinery/recharger/Initialize(mapload)
 	. = ..()
 	default_apply_parts()
+
+/obj/machinery/recharger/Destroy()
+	if(charging)
+		charging.update_icon()
+		charging.forceMove(src.loc)
+		charging = null
+	. = ..()
 
 /obj/machinery/recharger/examine(mob/user)
 	. = ..()
@@ -310,3 +318,4 @@ GLOBAL_LIST_INIT(recharger_battery_exempt, list(
 	icon_state_idle = "wrecharger0"
 	portable = FALSE
 	circuit = /obj/item/circuitboard/recharger/wrecharger
+	flags = WALL_ITEM

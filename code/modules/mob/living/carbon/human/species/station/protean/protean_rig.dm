@@ -33,7 +33,7 @@
 	var/assimilated_rig
 	var/can_assimilate_rig = FALSE
 
-/obj/item/rig/protean/relaymove(mob/user, var/direction)
+/obj/item/rig/protean/relaymove(mob/user, direction)
 	if(user.stat || user.stunned)
 		return
 	forced_move(direction, user, 0)
@@ -49,7 +49,7 @@
 /obj/item/rig/protean/ex_act(severity)
 	return
 
-/obj/item/rig/protean/Initialize(mapload, var/mob/living/carbon/human/P)
+/obj/item/rig/protean/Initialize(mapload, mob/living/carbon/human/P)
 	if(P)
 		var/datum/species/protean/S = P.species
 		S.OurRig = src
@@ -73,7 +73,7 @@
 	. = ..()
 
 
-/obj/item/rig/proc/AssimilateBag(var/mob/living/carbon/human/P, var/spawned, var/obj/item/storage/backpack/B)
+/obj/item/rig/proc/AssimilateBag(mob/living/carbon/human/P, spawned, obj/item/storage/backpack/B)
 	if(istype(B,/obj/item/storage/backpack))
 		if(spawned)
 			B = P.back
@@ -116,7 +116,7 @@
 	name = "mass"
 	desc = "A helmet-shaped clump of nanomachines."
 	light_overlay = "should not use a light overlay"
-	species_restricted = list(SPECIES_PROTEAN, SPECIES_HUMAN, SPECIES_SKRELL, SPECIES_TAJARAN, SPECIES_UNATHI, SPECIES_NEVREAN, SPECIES_AKULA, SPECIES_SERGAL, SPECIES_ZORREN_HIGH, SPECIES_VULPKANIN, SPECIES_PROMETHEAN, SPECIES_XENOHYBRID, SPECIES_VOX, SPECIES_TESHARI, SPECIES_VASILISSAN, SPECIES_XENOMORPH_HYBRID)
+	species_restricted = list(SPECIES_PROTEAN, SPECIES_HUMAN, SPECIES_SKRELL, SPECIES_TAJARAN, SPECIES_UNATHI, SPECIES_NEVREAN, SPECIES_AKULA, SPECIES_SERGAL, SPECIES_ZORREN_HIGH, SPECIES_VULPKANIN, SPECIES_PROMETHEAN, SPECIES_XENOHYBRID, SPECIES_VOX, SPECIES_TESHARI, SPECIES_VASILISSAN, SPECIES_XENOMORPH_HYBRID, SPECIES_SHADEKIN, SPECIES_SHADEKIN_CREW)
 	sprite_sheets = list(
 		SPECIES_PROTEAN			 = 'icons/mob/head.dmi',
 		SPECIES_HUMAN			 = 'icons/mob/head.dmi',
@@ -134,7 +134,8 @@
 		SPECIES_TESHARI 		 = 'icons/mob/species/teshari/helmet.dmi',
 		SPECIES_VASILISSAN		 = 'icons/mob/species/skrell/helmet.dmi',
 		SPECIES_VOX				 = 'icons/mob/species/vox/head.dmi',
-		SPECIES_XENOMORPH_HYBRID = 'icons/mob/species/xenomorph_hybrid/helmet.dmi'
+		SPECIES_XENOMORPH_HYBRID = 'icons/mob/species/xenomorph_hybrid/helmet.dmi',
+		SPECIES_SHADEKIN		 = 'icons/mob/head.dmi',
 		)
 
 	sprite_sheets_obj = list(
@@ -154,7 +155,8 @@
 		SPECIES_TESHARI 		 = 'icons/mob/head.dmi',
 		SPECIES_VASILISSAN		 = 'icons/mob/head.dmi',
 		SPECIES_VOX				 = 'icons/mob/head.dmi',
-		SPECIES_XENOMORPH_HYBRID = 'icons/mob/head.dmi'
+		SPECIES_XENOMORPH_HYBRID = 'icons/mob/head.dmi',
+		SPECIES_SHADEKIN		 = 'icons/mob/head.dmi',
 		)
 	icon = 'icons/inventory/head/item.dmi'
 	default_worn_icon = 'icons/mob/head.dmi'
@@ -165,7 +167,7 @@
 	name = "mass"
 	desc = "Glove-shaped clusters of nanomachines."
 	siemens_coefficient= 0
-	species_restricted = list(SPECIES_PROTEAN, SPECIES_HUMAN, SPECIES_SKRELL, SPECIES_TAJARAN, SPECIES_UNATHI, SPECIES_NEVREAN, SPECIES_AKULA, SPECIES_SERGAL, SPECIES_ZORREN_HIGH, SPECIES_VULPKANIN, SPECIES_PROMETHEAN, SPECIES_XENOHYBRID, SPECIES_VOX, SPECIES_TESHARI, SPECIES_VASILISSAN, SPECIES_XENOMORPH_HYBRID)
+	species_restricted = list(SPECIES_PROTEAN, SPECIES_HUMAN, SPECIES_SKRELL, SPECIES_TAJARAN, SPECIES_UNATHI, SPECIES_NEVREAN, SPECIES_AKULA, SPECIES_SERGAL, SPECIES_ZORREN_HIGH, SPECIES_VULPKANIN, SPECIES_PROMETHEAN, SPECIES_XENOHYBRID, SPECIES_VOX, SPECIES_TESHARI, SPECIES_VASILISSAN, SPECIES_XENOMORPH_HYBRID, SPECIES_SHADEKIN, SPECIES_SHADEKIN_CREW)
 	sprite_sheets = list(
 		SPECIES_PROTEAN			 = 'icons/mob/hands.dmi',
 		SPECIES_HUMAN			 = 'icons/mob/hands.dmi',
@@ -183,7 +185,8 @@
 		SPECIES_TESHARI 		 = 'icons/mob/species/teshari/hands.dmi',
 		SPECIES_VASILISSAN		 = 'icons/mob/hands.dmi',
 		SPECIES_VOX				 = 'icons/mob/species/vox/gloves.dmi',
-		SPECIES_XENOMORPH_HYBRID = 'icons/mob/species/xenomorph_hybrid/gloves.dmi'
+		SPECIES_XENOMORPH_HYBRID = 'icons/mob/species/xenomorph_hybrid/gloves.dmi',
+		SPECIES_SHADEKIN		 = 'icons/mob/hands.dmi'
 		)
 
 	sprite_sheets_obj = list(
@@ -202,7 +205,8 @@
 		SPECIES_TESHARI 		 = 'icons/mob/hands.dmi',
 		SPECIES_VASILISSAN		 = 'icons/mob/hands.dmi',
 		SPECIES_VOX				 = 'icons/mob/hands.dmi',
-		SPECIES_XENOMORPH_HYBRID = 'icons/mob/hands.dmi'
+		SPECIES_XENOMORPH_HYBRID = 'icons/mob/hands.dmi',
+		SPECIES_SHADEKIN		 = 'icons/mob/hands.dmi'
 		)
 	icon = 'icons/inventory/hands/item.dmi'
 	default_worn_icon = 'icons/mob/hands.dmi'
@@ -212,7 +216,7 @@
 /obj/item/clothing/shoes/magboots/rig/protean
 	name = "mass"
 	desc = "Boot-shaped clusters of nanomachines."
-	species_restricted = list(SPECIES_PROTEAN, SPECIES_HUMAN, SPECIES_SKRELL, SPECIES_TAJARAN, SPECIES_UNATHI, SPECIES_NEVREAN, SPECIES_AKULA, SPECIES_SERGAL, SPECIES_ZORREN_HIGH, SPECIES_VULPKANIN, SPECIES_PROMETHEAN, SPECIES_XENOHYBRID, SPECIES_VOX, SPECIES_TESHARI, SPECIES_VASILISSAN, SPECIES_XENOMORPH_HYBRID)
+	species_restricted = list(SPECIES_PROTEAN, SPECIES_HUMAN, SPECIES_SKRELL, SPECIES_TAJARAN, SPECIES_UNATHI, SPECIES_NEVREAN, SPECIES_AKULA, SPECIES_SERGAL, SPECIES_ZORREN_HIGH, SPECIES_VULPKANIN, SPECIES_PROMETHEAN, SPECIES_XENOHYBRID, SPECIES_VOX, SPECIES_TESHARI, SPECIES_VASILISSAN, SPECIES_XENOMORPH_HYBRID, SPECIES_SHADEKIN, SPECIES_SHADEKIN_CREW)
 	sprite_sheets = list(
 		SPECIES_TESHARI 		 = 'icons/mob/species/teshari/feet.dmi',
 		SPECIES_VOX				 = 'icons/mob/species/vox/shoes.dmi',
@@ -228,7 +232,7 @@
 	name = "mass"
 	desc = "A body-hugging mass of nanomachines."
 	can_breach = 0
-	species_restricted = list(SPECIES_PROTEAN, SPECIES_HUMAN, SPECIES_SKRELL, SPECIES_TAJARAN, SPECIES_UNATHI, SPECIES_NEVREAN, SPECIES_AKULA, SPECIES_SERGAL, SPECIES_ZORREN_HIGH, SPECIES_VULPKANIN, SPECIES_PROMETHEAN, SPECIES_XENOHYBRID, SPECIES_VOX, SPECIES_TESHARI, SPECIES_VASILISSAN, SPECIES_XENOMORPH_HYBRID)
+	species_restricted = list(SPECIES_PROTEAN, SPECIES_HUMAN, SPECIES_SKRELL, SPECIES_TAJARAN, SPECIES_UNATHI, SPECIES_NEVREAN, SPECIES_AKULA, SPECIES_SERGAL, SPECIES_ZORREN_HIGH, SPECIES_VULPKANIN, SPECIES_PROMETHEAN, SPECIES_XENOHYBRID, SPECIES_VOX, SPECIES_TESHARI, SPECIES_VASILISSAN, SPECIES_XENOMORPH_HYBRID, SPECIES_SHADEKIN, SPECIES_SHADEKIN_CREW)
 	allowed = list(POCKET_GENERIC, POCKET_EMERGENCY, POCKET_ALL_TANKS, POCKET_SUIT_REGULATORS, POCKET_EXPLO, /obj/item/storage/backpack)
 	sprite_sheets = list(
 		SPECIES_TESHARI 		 = 'icons/mob/species/teshari/suit.dmi',
@@ -369,7 +373,7 @@
 		if(istype(W,/obj/item/storage/backpack))
 			AssimilateBag(user,0,W)
 
-/obj/item/rig/protean/proc/make_alive(var/mob/living/carbon/human/H, var/partial)
+/obj/item/rig/protean/proc/make_alive(mob/living/carbon/human/H, partial)
 	if(H)
 		H.setToxLoss(0)
 		H.setOxyLoss(0)
@@ -418,14 +422,14 @@
 
 /obj/item/rig/protean/take_hit(damage, source, is_emp=0)
 	return	//We don't do that here
-
+/*
 /obj/item/rig/protean/emp_act(severity, recursive)
 	return	//Same here
-
+*/
 /obj/item/rig/protean/cut_suit()
 	return	//nope
 
-/obj/item/rig/protean/force_rest(var/mob/user)
+/obj/item/rig/protean/force_rest(mob/user)
 	wearer.lay_down()
 	to_chat(user, span_notice("\The [wearer] is now [wearer.resting ? "resting" : "getting up"]."))
 
@@ -506,7 +510,7 @@
 	return results
 
 //Effectively a round about way of letting a Protean wear other rigs.
-/obj/item/rig/protean/proc/AssimilateRig(mob/user, var/obj/item/rig/R)
+/obj/item/rig/protean/proc/AssimilateRig(mob/user, obj/item/rig/R)
 	if(!can_assimilate_rig)
 		to_chat(user, span_warning("You can not place a rig into \the [src]"))
 		return

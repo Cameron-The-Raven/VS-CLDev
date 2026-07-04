@@ -1,6 +1,6 @@
 GLOBAL_LIST_EMPTY(active_radio_jammers)
 
-/proc/is_jammed(var/obj/radio)
+/proc/is_jammed(obj/radio)
 	var/turf/Tr = get_turf(radio)
 	if(!Tr) return 0 //Nullspace radios don't get jammed.
 
@@ -30,7 +30,6 @@ GLOBAL_LIST_EMPTY(active_radio_jammers)
 	var/obj/item/cell/device/weapon/power_source
 	var/tick_cost = 5 //VOREStation Edit - For the ERPs.
 
-	origin_tech = list(TECH_ILLEGAL = 7, TECH_BLUESPACE = 5) //Such technology! Subspace jamming!
 	pickup_sound = 'sound/items/pickup/device.ogg'
 	drop_sound = 'sound/items/drop/device.ogg'
 
@@ -85,6 +84,9 @@ GLOBAL_LIST_EMPTY(active_radio_jammers)
 		return ..()
 
 /obj/item/radio_jammer/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	if(on)
 		turn_off(user)
 	else
@@ -125,8 +127,8 @@ GLOBAL_LIST_EMPTY(active_radio_jammers)
 	jam_range = 255
 	tick_cost = 0
 
-/proc/is_vore_jammed(var/obj/radio)
-	var/atom/current = radio
+///Checks to see if the clothing is in a belly that jams sensors or blocks tracking.
+/proc/is_vore_jammed(atom/current)
 	while(current.loc)
 		if(isbelly(current.loc))
 			var/obj/belly/B = current.loc

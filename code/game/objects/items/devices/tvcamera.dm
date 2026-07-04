@@ -24,6 +24,7 @@
 	qdel(radio)
 	camera = null
 	radio = null
+	showing = null
 	. = ..()
 
 /obj/item/tvcamera/examine()
@@ -48,6 +49,9 @@
 	. = ..()
 
 /obj/item/tvcamera/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	add_fingerprint(user)
 	user.set_machine(src)
 	show_ui(user)
@@ -154,11 +158,11 @@
 
 /obj/item/tvcamera/proc/update_feed()
 	if(camera.status)
-		SEND_SIGNAL(camera, COMSIG_OBSERVER_MOVED) // Forward the movement signal
+		SEND_SIGNAL(camera, COMSIG_MOVABLE_ATTEMPTED_MOVE) // Forward the movement signal
 
 //Assembly by roboticist
 
-/obj/item/robot_parts/head/attackby(var/obj/item/assembly/S, mob/user as mob)
+/obj/item/robot_parts/head/attackby(obj/item/assembly/S, mob/user as mob)
 	if(!istype(S, /obj/item/assembly/infra))
 		..()
 		return

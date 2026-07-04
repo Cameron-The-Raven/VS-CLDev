@@ -14,7 +14,10 @@
 	//matter = list(MAT_STEEL = 50, MAT_GLASS = 50)
 
 /obj/item/binoculars/attack_self(mob/user)
-	zoom()
+	. = ..(user)
+	if(.)
+		return TRUE
+	toggle_zoom(user)
 
 /obj/item/binoculars/spyglass
 	name = "spyglass"

@@ -1211,6 +1211,13 @@
 	do_colouration = 1
 	color_blend_mode = ICON_MULTIPLY
 
+/datum/sprite_accessory/ears/unicorn
+	name = "Horn, unicorn"
+	desc = ""
+	icon_state = "unihorn"
+	do_colouration = 1
+	color_blend_mode = ICON_MULTIPLY
+
 /datum/sprite_accessory/ears/fourlowears
 	name = "Four Horizontal Ears with Frills"
 	desc = ""
@@ -1225,6 +1232,13 @@
 	name = "triceratops frills"
 	icon_state = "triceratops_frill"
 	extra_overlay = "triceratops_frill_spikes"
+	do_colouration = 1
+	color_blend_mode = ICON_MULTIPLY
+
+//'Experimental' headspikes...
+/datum/sprite_accessory/ears/backwards_headspikes
+	name = "backwards headspikes"
+	icon_state = "backwards_headspikes"
 	do_colouration = 1
 	color_blend_mode = ICON_MULTIPLY
 

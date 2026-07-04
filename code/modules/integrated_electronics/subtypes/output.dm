@@ -101,7 +101,6 @@
 	)
 	outputs = list()
 	spawn_flags = IC_SPAWN_DEFAULT|IC_SPAWN_RESEARCH
-	origin_tech = list(TECH_ENGINEERING = 3, TECH_DATA = 3)
 
 /obj/item/integrated_circuit/output/light/advanced/update_lighting()
 	var/new_color = get_pin_data(IC_INPUT, 1)
@@ -145,7 +144,6 @@
 	power_draw_per_use = 100
 
 	spawn_flags = IC_SPAWN_RESEARCH
-	origin_tech = list(TECH_ENGINEERING = 3, TECH_DATA = 4, TECH_ILLEGAL = 1)
 
 	var/mob/living/voice/my_voice
 
@@ -231,7 +229,6 @@
 		"secure day"	= 'sound/voice/bsecureday.ogg',
 		)
 	spawn_flags = IC_SPAWN_RESEARCH
-	origin_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 2, TECH_ILLEGAL = 1)
 
 /obj/item/integrated_circuit/output/sound/medbot
 	name = "medbot sound circuit"
@@ -254,7 +251,6 @@
 		"no"			= 'sound/voice/medbot/mno.ogg',
 		)
 	spawn_flags = IC_SPAWN_RESEARCH
-	origin_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 2, TECH_BIO = 1)
 
 
 // Temporarily removing video camera circuit due to excessive server load it can cause.
@@ -449,11 +445,11 @@
 /obj/item/integrated_circuit/output/holographic_projector/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/recursive_move)
-	RegisterSignal(src, COMSIG_OBSERVER_MOVED, PROC_REF(on_moved))
+	RegisterSignal(src, COMSIG_MOVABLE_ATTEMPTED_MOVE, PROC_REF(on_moved))
 
 /obj/item/integrated_circuit/output/holographic_projector/Destroy()
 	destroy_hologram()
-	UnregisterSignal(src, COMSIG_OBSERVER_MOVED)
+	UnregisterSignal(src, COMSIG_MOVABLE_ATTEMPTED_MOVE)
 	return ..()
 
 /obj/item/integrated_circuit/output/holographic_projector/do_work()

@@ -72,13 +72,14 @@ class IFrameIndexedDbBackend implements StorageBackend {
     this.impl = IMPL_IFRAME_INDEXED_DB;
   }
 
-  async ready(): Promise<boolean | null> {
+  async ready(): Promise<boolean> {
     const iframe = document.createElement('iframe');
+    const iframeStore = `${Byond.storageCdn}?store=${KEY_NAME}`;
     iframe.style.display = 'none';
-    iframe.src = Byond.storageCdn;
+    iframe.src = iframeStore;
 
     const completePromise: Promise<boolean> = new Promise((resolve) => {
-      fetch(Byond.storageCdn, { method: 'HEAD' })
+      fetch(iframeStore, { method: 'HEAD' })
         .then((response) => {
           if (response.status !== 200) {
             resolve(false);
@@ -88,11 +89,14 @@ class IFrameIndexedDbBackend implements StorageBackend {
           resolve(false);
         });
 
-      window.addEventListener('message', (message) => {
-        if (message.data === 'ready') {
+      const handler = (message: MessageEvent) => {
+        if (message.source === this.iframeWindow && message.data === 'ready') {
+          window.removeEventListener('message', handler);
           resolve(true);
         }
-      });
+      };
+
+      window.addEventListener('message', handler);
     });
 
     this.documentElement = document.body.appendChild(iframe);
@@ -106,33 +110,25 @@ class IFrameIndexedDbBackend implements StorageBackend {
   }
 
   async get(key: string): Promise<any> {
-    const promise = new Promise((resolve) => {
-      window.addEventListener('message', (message) => {
-        if (message.data.key && message.data.key === key) {
+    return new Promise((resolve) => {
+      const handler = (message: MessageEvent) => {
+        if (message.source === this.iframeWindow && message.data?.key === key) {
+          window.removeEventListener('message', handler);
           resolve(message.data.value);
         }
-      });
-    });
+      };
 
-    this.iframeWindow.postMessage(
-      { type: 'get', key: `${KEY_NAME}-${key}` },
-      '*',
-    );
-    return promise;
+      window.addEventListener('message', handler);
+      this.iframeWindow.postMessage({ type: 'get', key: key }, '*');
+    });
   }
 
   async set(key: string, value: any): Promise<void> {
-    this.iframeWindow.postMessage(
-      { type: 'set', key: `${KEY_NAME}-${key}`, value: value },
-      '*',
-    );
+    this.iframeWindow.postMessage({ type: 'set', key: key, value: value }, '*');
   }
 
   async remove(key: string): Promise<void> {
-    this.iframeWindow.postMessage(
-      { type: 'remove', key: `${KEY_NAME}-${key}` },
-      '*',
-    );
+    this.iframeWindow.postMessage({ type: 'remove', key: key }, '*');
   }
 
   async clear(): Promise<void> {
@@ -140,7 +136,7 @@ class IFrameIndexedDbBackend implements StorageBackend {
   }
 
   async destroy(): Promise<void> {
-    document.body.removeChild(this.documentElement);
+    this.documentElement?.remove();
   }
 }
 
@@ -156,9 +152,11 @@ class StorageProxy implements StorageBackend {
     this.backendPromise = (async () => {
       // If we have not enabled byondstorage yet, we need to check
       // if we can use the IFrame, or if we need to enable byondstorage
+      console.log(`testHubStorage ${testHubStorage()}`);
       if (!testHubStorage()) {
         // If we have an IFrame URL we can use, and we haven't already enabled
         // byondstorage, we should use the IFrame backend
+        console.log(`storageCdn: ${Byond.storageCdn}`);
         if (Byond.storageCdn) {
           const iframe = new IFrameIndexedDbBackend();
 
@@ -168,8 +166,10 @@ class StorageProxy implements StorageBackend {
             Byond.winset(null, 'browser-options', '+byondstorage');
 
             await new Promise<void>((resolve) => {
-              document.addEventListener('byondstorageupdated', async () => {
-                setTimeout(() => {
+              const handler = async () => {
+                document.removeEventListener('byondstorageupdated', handler);
+
+                setTimeout(async () => {
                   const hub = new HubStorageBackend();
 
                   // Migrate these existing settings from byondstorage to the IFrame
@@ -178,17 +178,21 @@ class StorageProxy implements StorageBackend {
                     'chat-state',
                     'chat-messages',
                   ]) {
-                    hub
-                      .get(setting)
-                      .then((settings) => iframe.set(setting, settings));
+                    const settings = await hub.get(setting);
+                    if (settings !== undefined) {
+                      await iframe.set(setting, settings);
+                    }
                   }
 
-                  iframe.set('byondstorage-migrated', true);
+                  await iframe.set('byondstorage-migrated', true);
+
                   Byond.winset(null, 'browser-options', '-byondstorage');
 
                   resolve();
                 }, 1);
-              });
+              };
+
+              document.addEventListener('byondstorageupdated', handler);
             });
 
             return iframe;

@@ -181,7 +181,7 @@
 	adjusted_name = sane_name
 	return TRUE
 
-/obj/item/toy/plushie/customizable/AltClick(mob/user)
+/obj/item/toy/plushie/customizable/click_alt(mob/user)
 	tgui_interact(user)
 
 /obj/item/toy/plushie/customizable/dragon
@@ -197,8 +197,10 @@
 		"classic_w_misc" = "Wings, Western, Underside",
 		"fairy_w_1" = "Wings, Fairy, L",
 		"fairy_w_2" = "Wings, Fairy, R",
+		"fairy_w_misc" = "Wings, Fairy, L Extra",
 		"angular_w_1" = "Wings, Angular, L",
 		"angular_w_2" = "Wings, Angular, R",
+		"angular_w_misc" = "Wings, Angular, L Extra",
 		"double_h_1" = "Horns, Double, L",
 		"double_h_2" = "Horns, Double, R",
 		"classic_h_1" = "Horns, Classic, L",

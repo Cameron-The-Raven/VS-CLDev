@@ -93,6 +93,8 @@
 /mob/living/carbon/human/buckle_mob(mob/living/M, forced = FALSE, check_loc = TRUE)
 	if(forced)
 		return ..() // Skip our checks
+	if(is_incorporeal(src) || is_incorporeal(M))
+		return FALSE
 	if(!istaurtail(tail_style))
 		return FALSE
 	else
@@ -126,7 +128,7 @@
 /mob/living/carbon/human/MouseDrop_T(mob/living/M, mob/living/user) //Prevention for forced relocation caused by can_buckle. Base proc has no other use.
 	return
 
-/mob/living/carbon/human/proc/taur_mount(var/mob/living/M in living_mobs(1))
+/mob/living/carbon/human/proc/taur_mount(mob/living/M in living_mobs(1))
 	set name = "Taur Mount/Dismount"
 	set category = "Abilities.General"
 	set desc = "Let people ride on you."
@@ -1434,3 +1436,28 @@
 	name = "Tree Roots (Oak)"
 	icon_state = "tree_oak_roots"
 	can_ride = 0
+
+/datum/sprite_accessory/tail/longtail/scug // Wawa
+	name = "Catslug Tail"
+	icon_state = "scug"
+
+/datum/sprite_accessory/tail/longtail/scug/dots
+	name = "Catslug Tail Dotted"
+	extra_overlay =  "scug_markings"
+
+/datum/sprite_accessory/tail/taur/teshari // chickenbutt
+	name = "Teshari dual-color (Taur)"
+	icon = 'icons/mob/human_races/sprite_accessories/taurs_teshari.dmi'
+	icon_loaf = 'icons/mob/vore/taurs_teshari_loaf.dmi'
+	icon_state = "tesh"
+	icon_sprite_tag = "tesh"
+	extra_overlay = "tesh_markings"
+	can_loaf = TRUE
+	belly_variant_when_loaf = TRUE
+	loaf_offset = 4
+	fullness_icons = 1
+	vore_tail_sprite_variant = "Tesh"
+
+/datum/sprite_accessory/tail/taur/teshari/alt
+	name = "Teshari dual-color Alt (Taur)"
+	extra_overlay = "tesh_markings_alt"

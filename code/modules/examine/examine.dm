@@ -12,7 +12,9 @@
 	var/description_antag = null //Malicious red text, for the antags.
 
 //Override these if you need special behaviour for a specific type.
-/atom/proc/get_description_info()
+///What is shown to the user when something is examined. This can be overridden for specific uses.
+///The 'additional_information' list var requires creation in the proc itself. It should check to seee if(additional_information) before trying to do additional_information = list() and adding to it.
+/atom/proc/get_description_info(list/additional_information)
 	if(description_info)
 		return description_info
 	return
@@ -32,7 +34,7 @@
 	return list()
 
 // Quickly adds the boilerplate code to add an image and padding for the image.
-/proc/desc_panel_image(var/icon_state)
+/proc/desc_panel_image(icon_state)
 	return "[icon2html(GLOB.description_icons[icon_state], usr)]&emsp;"
 
 /mob/living/get_description_fluff()
@@ -72,8 +74,8 @@
 	//Could be gone by the time they finally pick something
 	if(!A)
 		return 1
-
-	face_atom(A)
+	if(!is_paralyzed())
+		face_atom(A)
 	var/list/results = A.examine(src)
 	if(!results || !results.len)
 		results = list("You were unable to examine that. Tell a developer!")
@@ -86,7 +88,7 @@
 	to_chat(src, final_string)
 	update_examine_panel(A)
 
-/mob/proc/embedded_info(var/atom/A)
+/mob/proc/embedded_info(atom/A)
 	. = ""
 	if(!(client?.prefs?.read_preference(/datum/preference/choiced/examine_mode) == EXAMINE_MODE_VERBOSE))
 		return
@@ -136,7 +138,7 @@
 		return TRUE
 	return FALSE
 
-/mob/proc/update_examine_panel(var/atom/A)
+/mob/proc/update_examine_panel(atom/A)
 	if(client)
 		var/is_antag = antag_check()
 		client.update_description_holders(A, is_antag)
@@ -211,7 +213,7 @@
 	if(!B)
 		return
 	if(!isbelly(loc) && !istype(loc, /obj/item/holder) && !isAI(src))
-		if(B.z == src.z)
+		if(B.z == src.z && !is_paralyzed())
 			face_atom(B)
 	var/list/results = B.examine(src)
 	if(!results || !results.len)

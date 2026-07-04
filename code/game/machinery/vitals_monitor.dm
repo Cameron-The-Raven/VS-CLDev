@@ -1,8 +1,7 @@
 /obj/item/circuitboard/machine/vitals_monitor
-	name = "circuit board (vitals monitor)"
+	name = T_BOARD("vitals monitor")
 	build_path = /obj/machinery/vitals_monitor
 	board_type = new /datum/frame/frame_types/machine
-	origin_tech = list(TECH_DATA = 3, TECH_BIO = 4, TECH_ENGINEERING = 2)
 	req_components = list(
 		/obj/item/stock_parts/console_screen = 1,
 		/obj/item/cell/high = 1
@@ -44,7 +43,7 @@
 		if(victim.stat != DEAD && !(victim.status_flags & FAKEDEATH))
 			var/obj/item/organ/internal/brain/brain = victim.internal_organs_by_name[O_BRAIN]
 			if(istype(brain))
-				if(victim.getBrainLoss())
+				if(victim.getBrainLoss() || is_changeling(victim) || HAS_TRAIT(victim, UNIQUE_MINDSTRUCTURE))
 					brain_activity = "anomalous"
 				else if(victim.stat == UNCONSCIOUS)
 					brain_activity = "weak"

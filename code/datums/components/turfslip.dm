@@ -11,7 +11,7 @@
 	slipping_dir = owner.dir
 	RegisterSignal(owner, COMSIG_MOVABLE_MOVED, PROC_REF(move_react))
 
-/datum/component/turfslip/proc/start_slip(var/turf/simulated/start, var/is_dirt)
+/datum/component/turfslip/proc/start_slip(turf/simulated/start, is_dirt)
 	var/slip_stun = 6
 	var/floor_type = "wet"
 	var/already_slipping = (slip_dist > 1)
@@ -48,7 +48,7 @@
 
 			if(TURFSLIP_ICE)
 				floor_type = "icy"
-				slip_dist = 1
+				slip_dist = 99 //Eternal slip for ice puzzles
 				slip_stun = 4
 				dirtslip = FALSE
 
@@ -79,7 +79,7 @@
 		if(slip_dist > 4)
 			slip_dist = 4
 
-	else if(ground.wet == TURFSLIP_LUBE)
+	else if(ground.wet >= TURFSLIP_LUBE) // Lube and above slips forever
 		// Lube slips forever, if we re-enter the lube then restore our slip
 		slip_dist = 99
 

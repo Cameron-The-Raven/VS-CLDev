@@ -25,7 +25,6 @@
 	icon_state = "cap_gun"
 	item_state = "revolver"
 	caliber = "caps"
-	origin_tech = list(TECH_COMBAT = 1, TECH_MATERIAL = 1)
 	ammo_type = /obj/item/ammo_casing/cap
 	projectile_type = /obj/item/projectile/bullet/cap
 	matter = list(MAT_STEEL = 1000)
@@ -46,7 +45,6 @@
 	force = 2
 	slot_flags = null
 	caliber = "foam"
-	origin_tech = list(TECH_COMBAT = 1, TECH_MATERIAL = 1)
 	load_method = SINGLE_CASING
 	ammo_type = /obj/item/ammo_casing/afoam_dart
 	projectile_type = /obj/item/projectile/bullet/foam_dart
@@ -80,7 +78,6 @@
 	allowed_magazines = list(/obj/item/ammo_magazine/mfoam_dart/pistol)
 	projectile_type = /obj/item/projectile/bullet/foam_dart
 	caliber = "foam"
-	origin_tech = list(TECH_COMBAT = 1, TECH_MATERIAL = 1)
 	load_method = MAGAZINE
 	matter = list(MAT_PLASTIC = 1000)
 	recoil = null //it's a toy
@@ -129,7 +126,6 @@
 	caliber = "foam"
 	ammo_type = /obj/item/ammo_casing/afoam_dart
 	projectile_type = /obj/item/projectile/bullet/foam_dart
-	origin_tech = list(TECH_COMBAT = 1, TECH_MATERIAL = 1)
 	load_method = SINGLE_CASING
 	max_shells = 6
 	matter = list(MAT_PLASTIC = 1000)
@@ -191,7 +187,6 @@
 	caliber = "foam"
 	w_class = ITEMSIZE_NORMAL
 	load_method = MAGAZINE
-	origin_tech = list(TECH_COMBAT = 1, TECH_MATERIAL = 1)
 	slot_flags = SLOT_BELT
 	magazine_type = /obj/item/ammo_magazine/mfoam_dart/smg
 	allowed_magazines = list(/obj/item/ammo_magazine/mfoam_dart/smg)
@@ -200,8 +195,8 @@
 	recoil = null //it's a toy
 
 	firemodes = list(
-		list(mode_name="semiauto",       burst=1, fire_delay=0.1,    move_delay=null, burst_accuracy=null, dispersion=null),
-		list(mode_name="3-round bursts", burst=3, fire_delay=null, move_delay=2,    burst_accuracy=list(0,-2,-2), dispersion=null)
+		list(mode_name="semiauto",       burst=1, fire_delay=0.1, burst_accuracy=null, dispersion=null),
+		list(mode_name="3-round bursts", burst=3, fire_delay=null,    burst_accuracy=list(0,-2,-2), dispersion=null)
 	)
 
 /obj/item/gun/projectile/automatic/toy/riot
@@ -228,8 +223,12 @@
 	projectile_type = /obj/item/projectile/bullet/foam_dart
 	recoil = null
 	handle_casings = null
+	special_weapon_handling = TRUE
 
-/obj/item/gun/projectile/cyborgtoy/attack_self(var/mob/user)
+/obj/item/gun/projectile/cyborgtoy/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	cleanup = !cleanup
 	to_chat(user, "The [src] is now on [cleanup ? "cleanup" : "battle"] mode.")
 

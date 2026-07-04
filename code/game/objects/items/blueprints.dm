@@ -42,9 +42,12 @@
 	var/can_expand_areas_into = AREA_SPACE	// Can expand station areas only into space.
 	var/can_rename_areas_in = AREA_STATION	// Only station areas can be reanamed
 
-/obj/item/blueprints/attack_self(mob/M as mob)
-	if (!ishuman(M))
-		to_chat(M, "This stack of blue paper means nothing to you.") //monkeys cannot into projecting
+/obj/item/blueprints/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
+	if(!ishuman(user))
+		to_chat(user, "This stack of blue paper means nothing to you.") //monkeys cannot into projecting
 		return
 	interact()
 	return
@@ -111,7 +114,7 @@
 	var/area/A = T.loc
 	return A
 
-/obj/item/blueprints/proc/get_area_type(var/area/A = get_area())
+/obj/item/blueprints/proc/get_area_type(area/A = get_area())
 	for(var/type in SPACE_AREA_TYPES)
 		if(istype(A, type))
 			return AREA_SPACE
@@ -189,7 +192,7 @@
 		interact()
 	return
 
-/obj/item/blueprints/proc/move_turfs_to_area(var/list/turf/turfs, var/area/A)
+/obj/item/blueprints/proc/move_turfs_to_area(list/turf/turfs, area/A)
 	for(var/T in turfs)
 		ChangeArea(T, A)
 
@@ -210,7 +213,7 @@
 
 
 
-/obj/item/blueprints/proc/set_area_machinery_title(var/area/A,var/title,var/oldtitle)
+/obj/item/blueprints/proc/set_area_machinery_title(area/A,title,oldtitle)
 	if (!oldtitle) // or replacetext goes to infinite loop
 		return
 
@@ -236,7 +239,7 @@
  *  Note: The first turf is always allowed, and turfs in its area.
  * @return On success, a list of turfs included in the room.  On failure will return a ROOM_ERR_* constant.
 */
-/obj/item/blueprints/proc/detect_room_ex(var/turf/first, var/allowedAreas = AREA_SPACE)
+/obj/item/blueprints/proc/detect_room_ex(turf/first, allowedAreas = AREA_SPACE)
 	if(!istype(first))
 		return ROOM_ERR_LOLWAT
 	var/list/turf/found = list()
@@ -330,7 +333,7 @@
 				usr.client.images.Remove(i)
 
 // Make sure to turn off the colors when we drop the blueprints.
-/obj/item/blueprints/dropped(mob/user)
+/obj/item/blueprints/dropped(mob/user, equipping, slot)
 	if(areaColor_turfs.len)
 		seeAreaColors_remove()
 	return ..()

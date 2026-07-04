@@ -13,7 +13,7 @@
 	var/min_mob_buckle_size = MOB_SMALL
 	var/max_mob_buckle_size = MOB_LARGE
 
-/obj/structure/bed/chair/wheelchair/Initialize(mapload, var/new_material, var/new_padding_material)
+/obj/structure/bed/chair/wheelchair/Initialize(mapload, new_material, new_padding_material)
 	. = ..()
 	update_icon()
 
@@ -157,7 +157,7 @@
 				user_unbuckle_mob(A, user)
 	return
 
-/obj/structure/bed/chair/wheelchair/CtrlClick(var/mob/user)
+/obj/structure/bed/chair/wheelchair/click_ctrl(mob/user)
 	if(in_range(src, user))
 		if(!ishuman(user))	return
 		if(has_buckled_mobs() && (user in buckled_mobs))

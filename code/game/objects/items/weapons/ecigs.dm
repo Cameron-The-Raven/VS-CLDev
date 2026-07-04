@@ -107,7 +107,7 @@
 		M.update_inv_r_hand(1)
 
 
-/obj/item/clothing/mask/smokable/ecig/attackby(var/obj/item/I, var/mob/user as mob)
+/obj/item/clothing/mask/smokable/ecig/attackby(obj/item/I, mob/user as mob)
 	if(istype(I, /obj/item/reagent_containers/ecig_cartridge))
 		if (ec_cartridge)//can't add second one
 			to_chat(user, span_notice("A cartridge has already been installed."))
@@ -118,17 +118,20 @@
 			update_icon()
 			to_chat(user, span_notice("You insert [I] into [src]."))
 
-/obj/item/clothing/mask/smokable/ecig/attack_self(mob/user as mob)
-	if (active)
-		active=0
+/obj/item/clothing/mask/smokable/ecig/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
+	if(active)
+		active = FALSE
 		STOP_PROCESSING(SSobj, src)
 		to_chat(user, span_notice("You turn off \the [src]. "))
 		update_icon()
 	else
-		if (!ec_cartridge)
+		if(!ec_cartridge)
 			to_chat(user, span_notice("You can't use it with no cartridge installed!."))
 			return
-		active=1
+		active = TRUE
 		START_PROCESSING(SSobj, src)
 		to_chat(user, span_notice("You turn on \the [src]. "))
 		update_icon()

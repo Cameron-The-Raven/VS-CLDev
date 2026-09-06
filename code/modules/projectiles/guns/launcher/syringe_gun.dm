@@ -10,6 +10,7 @@
 	force = 3
 	w_class = ITEMSIZE_TINY
 	var/obj/item/reagent_containers/syringe/syringe
+	var/fired = FALSE
 
 /obj/item/syringe_cartridge/update_icon()
 	underlays.Cut()
@@ -53,7 +54,7 @@
 	if(syringe)
 		//check speed to see if we hit hard enough to trigger the rapid injection
 		//incidentally, this means syringe_cartridges can be used with the pneumatic launcher
-		if(throwingdatum?.speed >= 10 && isliving(hit_atom))
+		if(fired && isliving(hit_atom))
 			var/mob/living/L = hit_atom
 			//unfortuately we don't know where the dart will actually hit, since that's done by the parent.
 			if(L.can_inject() && syringe.reagents)
@@ -67,6 +68,7 @@
 		syringe.update_icon()
 
 	icon_state = initial(icon_state) //reset icon state
+	fired = FALSE //Done firing. Finish up.
 	update_icon()
 
 /obj/item/gun/launcher/syringe
@@ -99,6 +101,7 @@
 
 /obj/item/gun/launcher/syringe/handle_post_fire()
 	..()
+	next.fired = TRUE
 	darts -= next
 	next = null
 

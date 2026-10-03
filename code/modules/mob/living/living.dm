@@ -882,6 +882,8 @@
 
 	resting = !resting
 	to_chat(src, span_notice("You are now [resting ? "resting" : "getting up"]."))
+	allowtilttime = world.time + TILT_INCAPACITATED_WAITTIME
+	how_tilted = 0
 	update_canmove()
 
 //called when the mob receives a bright flash
@@ -1162,7 +1164,8 @@
 				else
 					unbuckle_mob(L)
 				L.Stun(5)
-
+	if(!canmove)
+		allowtilttime = world.time + TILT_INCAPACITATED_WAITTIME
 	return canmove
 
 // Mob holders in these slots will be spilled if the mob goes prone.
@@ -1561,3 +1564,6 @@
 	client.prefs.update_preference_by_type(/datum/preference/toggle/living/ooc_notes_style, ooc_notes_style)
 	if(reopen)
 		ooc_notes_window(user)
+
+/mob/living/proc/CanObtainCentcommMessage()
+	return FALSE

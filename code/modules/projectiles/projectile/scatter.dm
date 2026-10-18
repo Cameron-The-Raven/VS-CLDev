@@ -72,8 +72,7 @@
 
 
 /obj/item/projectile/scatter/flamethrower
-	damage = 0
-	spread_submunition_damage = FALSE
+	damage = 5
 	submunition_spread_max = 100
 	submunition_spread_min = 30
 	force_max_submunition_spread = TRUE
